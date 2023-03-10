@@ -8,10 +8,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->usernameEdit=new QLineEdit(this);
-    //this->usernameEdit->setGeometry(10,ui->chatEdit->y(),61,21);
     this->usernameEdit->setText(QString("Zhangsan"));
     this->usernameEdit->show();
-    //qDebug()<<this->usernameEdit->geometry()<<""<<this->ui->chatEdit->geometry();
 }
 
 MainWindow::~MainWindow()
