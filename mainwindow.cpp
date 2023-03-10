@@ -10,6 +10,8 @@ MainWindow::MainWindow(QWidget *parent)
     this->usernameEdit=new QLineEdit(this);
     this->usernameEdit->setText(QString("Zhangsan"));
     this->usernameEdit->show();
+
+
 }
 
 MainWindow::~MainWindow()
