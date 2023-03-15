@@ -4,7 +4,7 @@
 #include <QTime>
 #include <QElapsedTimer>
 #include <QMessageBox>
-#define TIMELIMIT 2
+#define TIMELIMIT 5
 Widget::Widget(QWidget *parent): QWidget(parent), ui(new Ui::Widget)
 {
     ui->setupUi(this);
@@ -50,7 +50,7 @@ void Widget::updatedisplay()
                 QString content=QString("Time limit exceed");
                 QMessageBox *dialog1=new QMessageBox;
                 dialog1->resize(1000,700);
-                dialog1->information(nullptr, content, "YOU LOSE!");
+                dialog1->information(nullptr, content, "    YOU LOSE!    ");
                 QString min_str=QString::number(0);
                 QString minstr=QString("%2").arg(min_str.toInt(), 2, 10, QLatin1Char('0'));
                 QString sec_str=QString::number(0);
