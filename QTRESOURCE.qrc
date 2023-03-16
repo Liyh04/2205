@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>images/qipan.jpg</file>
-        <file>images/button1.png</file>
-        <file>images/button2.png</file>
-    </qresource>
-</RCC>
