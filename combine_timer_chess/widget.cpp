@@ -37,7 +37,7 @@ void Widget::DrawChessboard()
     pix_chessmap.load(":/images/qipan.jpg");
 
     //改变大小，500*500
-    pix_chessmap=pix_chessmap.scaled(500,500,Qt::KeepAspectRatio);
+    pix_chessmap=pix_chessmap.scaled(500,500,Qt::KeepAspectRatio,Qt::SmoothTransformation);
 
     //画图
     painter_Yujx_board.drawPixmap(PAINT_X,PAINT_Y,pix_chessmap);
@@ -54,8 +54,8 @@ void Widget::DrawChesses()
     QPixmap pix_chessmap_Black;
     pix_chessmap_Black.load(":/images/black.png");
     //改变大小，40*40
-    pix_chessmap_Black=pix_chessmap_Black.scaled(40,40,Qt::KeepAspectRatio);
-    pix_chessmap_White=pix_chessmap_White.scaled(40,40,Qt::KeepAspectRatio);
+    pix_chessmap_Black=pix_chessmap_Black.scaled(40,40,Qt::KeepAspectRatio,Qt::SmoothTransformation);
+    pix_chessmap_White=pix_chessmap_White.scaled(40,40,Qt::KeepAspectRatio,Qt::SmoothTransformation);
 
 
 
