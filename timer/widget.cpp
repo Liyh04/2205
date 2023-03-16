@@ -4,12 +4,12 @@
 #include <QTime>
 #include <QElapsedTimer>
 #include <QMessageBox>
-#define TIMELIMIT 6
+#define TIMELIMIT 10
 Widget::Widget(QWidget *parent): QWidget(parent), ui(new Ui::Widget)
 {
     ui->setupUi(this);
     this->init();
-    ui->groupBox->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
+    //ui->groupBox->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
 
     //mytimer=new QTimer(this);
     //onesec=new QTimer(this);

@@ -13,51 +13,6 @@
   <property name="windowTitle">
    <string>Widget</string>
   </property>
-  <widget class="QGroupBox" name="groupBox">
-   <property name="geometry">
-    <rect>
-     <x>530</x>
-     <y>160</y>
-     <width>201</width>
-     <height>131</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>GroupBox</string>
-   </property>
-   <widget class="QLCDNumber" name="lcd_sec">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>40</y>
-      <width>81</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="digitCount">
-     <number>2</number>
-    </property>
-    <property name="intValue" stdset="0">
-     <number>0</number>
-    </property>
-   </widget>
-   <widget class="QLCDNumber" name="lcd_min">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>40</y>
-      <width>81</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="digitCount">
-     <number>2</number>
-    </property>
-    <property name="intValue" stdset="0">
-     <number>0</number>
-    </property>
-   </widget>
-  </widget>
   <widget class="QPushButton" name="Btnstart">
    <property name="geometry">
     <rect>
@@ -69,6 +24,38 @@
    </property>
    <property name="text">
     <string>start</string>
+   </property>
+  </widget>
+  <widget class="QLCDNumber" name="lcd_sec">
+   <property name="geometry">
+    <rect>
+     <x>640</x>
+     <y>200</y>
+     <width>81</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="digitCount">
+    <number>2</number>
+   </property>
+   <property name="intValue" stdset="0">
+    <number>0</number>
+   </property>
+  </widget>
+  <widget class="QLCDNumber" name="lcd_min">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>200</y>
+     <width>81</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="digitCount">
+    <number>2</number>
+   </property>
+   <property name="intValue" stdset="0">
+    <number>0</number>
    </property>
   </widget>
  </widget>
