@@ -1,5 +1,5 @@
-#ifndef WIDGET_H
-#define WIDGET_H
+#ifndef TIMER_H
+#define TIMER_H
 
 #include <QElapsedTimer>
 #include <QWidget>
@@ -34,4 +34,4 @@ public slots:
 private:
     Ui::Widget *ui;
 };
-#endif // WIDGET_H
+#endif // TIMER_H

@@ -10,13 +10,13 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    widget.cpp
+    timer.cpp
 
 HEADERS += \
-    widget.h
+    timer.h
 
 FORMS += \
-    widget.ui
+    timer.ui
 
 TRANSLATIONS += \
     timer_zh_CN.ts

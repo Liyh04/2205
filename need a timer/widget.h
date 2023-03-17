@@ -8,6 +8,9 @@
 #include<QPushButton>
 #include<QHBoxLayout>//垂直布局
 #include<QVBoxLayout>//水平布局
+#include <QElapsedTimer>
+#include <QWidget>
+#include <QTime>
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
@@ -24,7 +27,9 @@ public:
     QLineEdit *LineEdit2 =new QLineEdit;
     QPushButton *startButton =new QPushButton;
     QPushButton *concedeButton =new QPushButton;
-
+public slots:
+    void updatedisplay();
+    void on_Btnstart_clicked();
 protected:
     //paint
     void paintEvent(QPaintEvent *);
@@ -34,6 +39,12 @@ protected:
 public:
 
     Widget(QWidget *parent = nullptr);
+    void init();
+    QTimer *mytimer;
+    QTimer *onesec;
+    QTime baseTime;
+    QTimer *pTimer;
+    QElapsedTimer *mycounter;
     ~Widget();
 
 //    void StopGame();  //停止当前棋局

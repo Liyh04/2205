@@ -1,5 +1,5 @@
-#include "widget.h"
-#include "ui_widget.h"
+#include "timer.h"
+#include "ui_timer.h"
 #include <QTimer>
 #include <QTime>
 #include <QElapsedTimer>

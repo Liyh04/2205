@@ -1,4 +1,4 @@
-#include "widget.h"
+#include "timer.h"
 
 #include <QApplication>
 #include <QLocale>

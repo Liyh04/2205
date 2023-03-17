@@ -188,6 +188,7 @@ Makefile: ../timer/timer.pro ../../../Qt2/6.4.3/mingw_64/mkspecs/win32-g++/qmake
 		../../../Qt2/6.4.3/mingw_64/mkspecs/features/qt_config.prf \
 		../../../Qt2/6.4.3/mingw_64/mkspecs/win32-g++/qmake.conf \
 		../../../Qt2/6.4.3/mingw_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../../Qt2/6.4.3/mingw_64/mkspecs/features/exclusive_builds.prf \
 		../../../Qt2/6.4.3/mingw_64/mkspecs/features/toolchain.prf \
 		../../../Qt2/6.4.3/mingw_64/mkspecs/features/default_pre.prf \
@@ -218,7 +219,6 @@ Makefile: ../timer/timer.pro ../../../Qt2/6.4.3/mingw_64/mkspecs/win32-g++/qmake
 		../../../Qt2/6.4.3/mingw_64/lib/Qt6Gui.prl \
 		../../../Qt2/6.4.3/mingw_64/lib/Qt6Core.prl \
 		../../../Qt2/6.4.3/mingw_64/lib/Qt6EntryPoint.prl \
-		.qmake.stash \
 		../../../Qt2/6.4.3/mingw_64/mkspecs/features/build_pass.prf \
 		debug/qmake_qmake_qm_files.qrc \
 		release/qmake_qmake_qm_files.qrc
@@ -341,6 +341,7 @@ Makefile: ../timer/timer.pro ../../../Qt2/6.4.3/mingw_64/mkspecs/win32-g++/qmake
 ../../../Qt2/6.4.3/mingw_64/mkspecs/features/qt_config.prf:
 ../../../Qt2/6.4.3/mingw_64/mkspecs/win32-g++/qmake.conf:
 ../../../Qt2/6.4.3/mingw_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 ../../../Qt2/6.4.3/mingw_64/mkspecs/features/exclusive_builds.prf:
 ../../../Qt2/6.4.3/mingw_64/mkspecs/features/toolchain.prf:
 ../../../Qt2/6.4.3/mingw_64/mkspecs/features/default_pre.prf:
@@ -371,7 +372,6 @@ Makefile: ../timer/timer.pro ../../../Qt2/6.4.3/mingw_64/mkspecs/win32-g++/qmake
 ../../../Qt2/6.4.3/mingw_64/lib/Qt6Gui.prl:
 ../../../Qt2/6.4.3/mingw_64/lib/Qt6Core.prl:
 ../../../Qt2/6.4.3/mingw_64/lib/Qt6EntryPoint.prl:
-.qmake.stash:
 ../../../Qt2/6.4.3/mingw_64/mkspecs/features/build_pass.prf:
 debug/qmake_qmake_qm_files.qrc:
 release/qmake_qmake_qm_files.qrc:
