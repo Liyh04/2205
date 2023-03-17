@@ -4,7 +4,7 @@
 #include <QMouseEvent>
 #include <chess.h>
 #include <QDebug>
-
+#include<QHBoxLayout>//垂直布局
 #include <QTimer>
 #include <QTime>
 #include <QElapsedTimer>
@@ -13,23 +13,29 @@
 
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)
 {
+    QPushButton *startButton =new QPushButton;
     #define PAINT_X 114
     #define PAINT_Y 51
     setFixedSize(1000,700);
+   // info1Label->resize(10,50);
+  //  info2Label->resize(10,50);
+//LineEdit1->resize(10,50);
+   // LineEdit2->resize(10,50);
     setWindowTitle("NoGo_group5");
-    cmdLayout->addSpacing(600);
-    info1Label->setText("player1:");
-    info2Label->setText("player2:");
-    startButton->setText("start");
-    concedeButton->setText("concede");
-    cmdLayout->addWidget(info1Label);
-    cmdLayout->addWidget(LineEdit1);
-    cmdLayout->addWidget(info2Label);
-    cmdLayout->addWidget(LineEdit2);
-    cmdLayout->addWidget(startButton);
-    cmdLayout->addWidget(concedeButton);
-
-    setLayout(cmdLayout);
+   // cmdLayout->addSpacing(600);
+   // info1Label->setText("player1:");
+   // info2Label->setText("player2:");
+   // cmdLayout->addWidget(info1Label);
+    //cmdLayout->addWidget(LineEdit1);
+   // cmdLayout->addWidget(info2Label);
+    //cmdLayout->addWidget(LineEdit2);
+    //startButton->resize(10,50);
+    //concedeButton->resize(10,50);
+    //info1Label->resize(10,50);
+    //info2Label->resize(10,50);
+    //LineEdit1->resize(10,50);
+    //LineEdit2->resize(10,50);
+    //setLayout(cmdLayout);
     ui->setupUi(this);
     //设置窗口大小和标题
     this->init();
