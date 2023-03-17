@@ -4,10 +4,11 @@
 #include <QMouseEvent>
 #include <chess.h>
 #include <QDebug>
-#define PAINT_X 114
-#define PAINT_Y 51
+
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)
 {
+    #define PAINT_X 114
+    #define PAINT_Y 51
     setFixedSize(1000,700);
     setWindowTitle("NoGo_group5");
     cmdLayout->addSpacing(600);

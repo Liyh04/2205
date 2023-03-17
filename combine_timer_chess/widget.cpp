@@ -4,12 +4,13 @@
 #include <QMouseEvent>
 #include <chess.h>
 #include <QDebug>
-#define PAINT_X 114
-#define PAINT_Y 51
+
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
 {
+#define PAINT_X 114
+#define PAINT_Y 51
     ui->setupUi(this);
 
     //设置窗口大小和标题
