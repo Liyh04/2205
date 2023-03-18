@@ -62,6 +62,9 @@ public:
     static int n_row;
     static int n_column;
 
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::Widget *ui;
     bool m_isBlackTurn;    //当前该黑棋下

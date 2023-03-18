@@ -13,7 +13,6 @@
 
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)
 {
-    QPushButton *startButton =new QPushButton;
     #define PAINT_X 114
     #define PAINT_Y 51
     setFixedSize(1000,700);
@@ -209,5 +208,13 @@ int Widget::n_column=9;
 Widget::~Widget()
 {
     delete ui;
+}
+
+
+void Widget::on_pushButton_clicked()
+{
+    pTimer->stop();
+    QMessageBox::information(nullptr, "Timeout", "YOU ARE LOSE");
+
 }
 
