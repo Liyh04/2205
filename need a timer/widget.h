@@ -23,7 +23,7 @@ public:
     void restart();
 public slots:
     void updatedisplay();
-    void on_Btnstart_clicked();
+    //void on_Btnstart_clicked();
 protected:
     //paint
     void paintEvent(QPaintEvent *);

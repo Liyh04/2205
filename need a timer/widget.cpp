@@ -176,7 +176,7 @@ void Widget::updatedisplay()
     }
 
 }
-void Widget::on_Btnstart_clicked()
+/*void Widget::on_Btnstart_clicked()
 {
     this->baseTime=this->baseTime.currentTime();
 
@@ -184,7 +184,7 @@ void Widget::on_Btnstart_clicked()
 
     ui->Btnstart->setEnabled(false);
 
-}
+}*/
 //初始化静态成员
 int Widget::height=50;
 int Widget::width=50;
