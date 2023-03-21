@@ -170,6 +170,7 @@ void Widget::updatedisplay()
                 QString secstr=QString("%2").arg(sec_str.toInt(), 2, 10, QLatin1Char('0'));
                 this->ui->lcd_min->display(minstr);
                 this->ui->lcd_sec->display(secstr);
+                restart();
             });
          }
     }
@@ -196,6 +197,11 @@ Widget::~Widget()
 void Widget::on_pushButton_clicked()
 {
     pTimer->stop();
-    QMessageBox::information(nullptr, "GIVE UP", "YOU LOSE");
-}
+    QMessageBox::information(nullptr, "Surrender", "YOU LOSE");
+    restart();
 
+}
+void Widget::restart(){
+    m_Chess.clear();
+    this->baseTime=this->baseTime.currentTime();
+}

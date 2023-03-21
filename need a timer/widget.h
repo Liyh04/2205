@@ -20,7 +20,7 @@ class Widget : public QWidget
     Q_OBJECT
 
 public:
-
+    void restart();
 public slots:
     void updatedisplay();
     //void on_Btnstart_clicked();
