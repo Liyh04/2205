@@ -20,18 +20,6 @@ class Widget : public QWidget
     Q_OBJECT
 
 public:
-    //QVBoxLayout *cmdLayout =new QVBoxLayout;
-    //QHBoxLayout *cmd1Layout=new QHBoxLayout;
-    //QHBoxLayout *cmd2Layout=new QHBoxLayout;
-    //QHBoxLayout *cmd3Layout=new QHBoxLayout;
-   // QHBoxLayout *cmd4Layout=new QHBoxLayout;
-   // QHBoxLayout *cmd5Layout=new QHBoxLayout;
-  //  QHBoxLayout *cmd6Layout=new QHBoxLayout;
-   // QLabel *info1Label =new QLabel;
-   // QLabel *info2Label =new QLabel;
-  //  QLineEdit *LineEdit1 =new QLineEdit;
-   // QLineEdit *LineEdit2 =new QLineEdit;
-   // QVBoxLayout *mainLayout=new QVBoxLayout;
 
 public slots:
     void updatedisplay();
@@ -39,7 +27,6 @@ public slots:
 protected:
     //paint
     void paintEvent(QPaintEvent *);
-
     //mouse
     void mousePressEvent(QMouseEvent *);
 public:

@@ -16,25 +16,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)
     #define PAINT_X 114
     #define PAINT_Y 51
     setFixedSize(1000,700);
-   // info1Label->resize(10,50);
-  //  info2Label->resize(10,50);
-//LineEdit1->resize(10,50);
-   // LineEdit2->resize(10,50);
     setWindowTitle("NoGo_group5");
-   // cmdLayout->addSpacing(600);
-   // info1Label->setText("player1:");
-   // info2Label->setText("player2:");
-   // cmdLayout->addWidget(info1Label);
-    //cmdLayout->addWidget(LineEdit1);
-   // cmdLayout->addWidget(info2Label);
-    //cmdLayout->addWidget(LineEdit2);
-    //startButton->resize(10,50);
-    //concedeButton->resize(10,50);
-    //info1Label->resize(10,50);
-    //info2Label->resize(10,50);
-    //LineEdit1->resize(10,50);
-    //LineEdit2->resize(10,50);
-    //setLayout(cmdLayout);
     ui->setupUi(this);
     //设置窗口大小和标题
     this->init();
@@ -94,8 +76,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     QPoint pt;
     int x=e->pos().x() ;
     int y=e->pos().y();
-    this->baseTime=this->baseTime.currentTime();
-    this->pTimer->start(1);
+
     //如果鼠标不是在棋盘区域按下,则放弃
     if (x<30+PAINT_X || x>470+PAINT_X || y<30+PAINT_Y || y>470+PAINT_Y )
         return;
@@ -111,7 +92,10 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     else
         pt.setY( PAINT_Y+((y-PAINT_Y) / Widget::height+1)*Widget::height-20);
 
+    pTimer->stop();
+    this->baseTime=this->baseTime.currentTime();
 
+    pTimer->start(1);
 //    qDebug()<<pt.rx();
 //    qDebug()<<pt.ry();
 
@@ -186,36 +170,32 @@ void Widget::updatedisplay()
                 QString secstr=QString("%2").arg(sec_str.toInt(), 2, 10, QLatin1Char('0'));
                 this->ui->lcd_min->display(minstr);
                 this->ui->lcd_sec->display(secstr);
-
-
             });
-    }
+         }
     }
 
 }
-/*void Widget::on_Btnstart_clicked()
+void Widget::on_Btnstart_clicked()
 {
     this->baseTime=this->baseTime.currentTime();
+
     this->pTimer->start(1);
+
     ui->Btnstart->setEnabled(false);
 
-}*/
+}
 //初始化静态成员
 int Widget::height=50;
 int Widget::width=50;
 int Widget::n_row=9;
 int Widget::n_column=9;
-
 Widget::~Widget()
 {
     delete ui;
 }
-
-
 void Widget::on_pushButton_clicked()
 {
     pTimer->stop();
-    QMessageBox::information(nullptr, "GIVE UP", "    YOU LOSE!    ");
-
+    QMessageBox::information(nullptr, "Surrender", "YOU LOSE");
 }
 
