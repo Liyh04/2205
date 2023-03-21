@@ -194,6 +194,7 @@ void Widget::on_pushButton_clicked()
 
 }
 void Widget::restart(){
+    pTimer->stop();
     m_Chess.clear();
     m_isBlackTurn=1;
 }
