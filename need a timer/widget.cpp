@@ -94,7 +94,8 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     QPoint pt;
     int x=e->pos().x() ;
     int y=e->pos().y();
-
+    this->baseTime=this->baseTime.currentTime();
+    this->pTimer->start(1);
     //如果鼠标不是在棋盘区域按下,则放弃
     if (x<30+PAINT_X || x>470+PAINT_X || y<30+PAINT_Y || y>470+PAINT_Y )
         return;
@@ -192,13 +193,13 @@ void Widget::updatedisplay()
     }
 
 }
-void Widget::on_Btnstart_clicked()
+/*void Widget::on_Btnstart_clicked()
 {
     this->baseTime=this->baseTime.currentTime();
     this->pTimer->start(1);
     ui->Btnstart->setEnabled(false);
 
-}
+}*/
 //初始化静态成员
 int Widget::height=50;
 int Widget::width=50;
@@ -214,7 +215,7 @@ Widget::~Widget()
 void Widget::on_pushButton_clicked()
 {
     pTimer->stop();
-    QMessageBox::information(nullptr, "Timeout", "YOU ARE LOSE");
+    QMessageBox::information(nullptr, "GIVE UP", "    YOU LOSE!    ");
 
 }
 

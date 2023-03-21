@@ -45,7 +45,7 @@
     <number>0</number>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -54,22 +54,12 @@
      <x>790</x>
      <y>140</y>
      <width>93</width>
-     <height>176</height>
+     <height>245</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QPushButton" name="Btnstart">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="text">
-         <string>start</string>
-        </property>
-       </widget>
-      </item>
       <item>
        <spacer name="horizontalSpacer_2">
         <property name="orientation">
@@ -89,7 +79,7 @@
          <bool>true</bool>
         </property>
         <property name="text">
-         <string>surrender</string>
+         <string>GIVE UP</string>
         </property>
        </widget>
       </item>
