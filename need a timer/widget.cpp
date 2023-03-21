@@ -177,7 +177,10 @@ void Widget::updatedisplay()
 void Widget::on_Btnstart_clicked()
 {
     this->baseTime=this->baseTime.currentTime();
+
+
     this->pTimer->start(1);
+
     ui->Btnstart->setEnabled(false);
 
 }
@@ -196,7 +199,7 @@ Widget::~Widget()
 void Widget::on_pushButton_clicked()
 {
     pTimer->stop();
-    QMessageBox::information(nullptr, "Timeout", "YOU ARE LOSE");
+    QMessageBox::information(nullptr, "Surrender", "YOU LOSE");
 
 }
 
