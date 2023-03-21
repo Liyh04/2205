@@ -91,7 +91,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         pt.setY( PAINT_Y+((y-PAINT_Y) / Widget::height)*Widget::height-20);
     else
         pt.setY( PAINT_Y+((y-PAINT_Y) / Widget::height+1)*Widget::height-20);
-
+    //connect(pt,SIGNAL(timeout()),this,SLOT(updatedisplay()));
 
 //    qDebug()<<pt.rx();
 //    qDebug()<<pt.ry();
