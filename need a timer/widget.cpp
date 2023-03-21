@@ -91,8 +91,11 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         pt.setY( PAINT_Y+((y-PAINT_Y) / Widget::height)*Widget::height-20);
     else
         pt.setY( PAINT_Y+((y-PAINT_Y) / Widget::height+1)*Widget::height-20);
-    //connect(pt,SIGNAL(timeout()),this,SLOT(updatedisplay()));
 
+    pTimer->stop();
+    this->baseTime=this->baseTime.currentTime();
+
+    pTimer->start(1);
 //    qDebug()<<pt.rx();
 //    qDebug()<<pt.ry();
 
@@ -167,17 +170,14 @@ void Widget::updatedisplay()
                 QString secstr=QString("%2").arg(sec_str.toInt(), 2, 10, QLatin1Char('0'));
                 this->ui->lcd_min->display(minstr);
                 this->ui->lcd_sec->display(secstr);
-
-
             });
-    }
+         }
     }
 
 }
 void Widget::on_Btnstart_clicked()
 {
     this->baseTime=this->baseTime.currentTime();
-
 
     this->pTimer->start(1);
 
@@ -189,17 +189,13 @@ int Widget::height=50;
 int Widget::width=50;
 int Widget::n_row=9;
 int Widget::n_column=9;
-
 Widget::~Widget()
 {
     delete ui;
 }
-
-
 void Widget::on_pushButton_clicked()
 {
     pTimer->stop();
     QMessageBox::information(nullptr, "Surrender", "YOU LOSE");
-
 }
 

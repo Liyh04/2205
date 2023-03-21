@@ -27,7 +27,6 @@ public slots:
 protected:
     //paint
     void paintEvent(QPaintEvent *);
-
     //mouse
     void mousePressEvent(QMouseEvent *);
 public:
