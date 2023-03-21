@@ -196,6 +196,6 @@ Widget::~Widget()
 void Widget::on_pushButton_clicked()
 {
     pTimer->stop();
-    QMessageBox::information(nullptr, "Surrender", "YOU LOSE");
+    QMessageBox::information(nullptr, "GIVE UP", "YOU LOSE");
 }
 
