@@ -178,7 +178,8 @@ void Widget::updatedisplay()
                 QString secstr=QString("%2").arg(sec_str.toInt(), 2, 10, QLatin1Char('0'));
                 this->ui->lcd_min->display(minstr);
                 this->ui->lcd_sec->display(secstr);
-
+                pTimer->stop();
+                restart();
             });
          }
     }
@@ -202,6 +203,7 @@ void Widget::on_pushButton_clicked()
 
 }
 void Widget::restart(){
+    pTimer->stop();
     m_Chess.clear();
     m_isBlackTurn=1;
 }
