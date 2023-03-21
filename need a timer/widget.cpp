@@ -170,21 +170,13 @@ void Widget::updatedisplay()
                 QString secstr=QString("%2").arg(sec_str.toInt(), 2, 10, QLatin1Char('0'));
                 this->ui->lcd_min->display(minstr);
                 this->ui->lcd_sec->display(secstr);
-                restart();
+
             });
          }
     }
 
 }
-/*void Widget::on_Btnstart_clicked()
-{
-    this->baseTime=this->baseTime.currentTime();
 
-    this->pTimer->start(1);
-
-    ui->Btnstart->setEnabled(false);
-
-}*/
 //初始化静态成员
 int Widget::height=50;
 int Widget::width=50;
@@ -203,5 +195,5 @@ void Widget::on_pushButton_clicked()
 }
 void Widget::restart(){
     m_Chess.clear();
-    this->baseTime=this->baseTime.currentTime();
+    m_isBlackTurn=1;
 }
