@@ -72,6 +72,7 @@ void Widget::DrawChesses()
 }
 void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
 {
+    static int step=0;
     //求鼠标点击处的棋子点pt
     QPoint pt;
     int x=e->pos().x() ;
@@ -92,10 +93,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     else
         pt.setY( PAINT_Y+((y-PAINT_Y) / Widget::height+1)*Widget::height-20);
 
-    pTimer->stop();
-    this->baseTime=this->baseTime.currentTime();
 
-    pTimer->start(1);
 //    qDebug()<<pt.rx();
 //    qDebug()<<pt.ry();
 
@@ -105,27 +103,31 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         Chess chess;
         chess.m_ChessColor=m_Chess[i].m_ChessColor;
         chess.m_ChessPossition=m_Chess[i].m_ChessPossition;
-
         //不知道为什么不能拷贝构造。。。。。
         //知道了，应该是QObject的原因，我把它注释掉了
         //Chess chess1=m_Chess[i];//err0r;
-
         if (chess.m_ChessPossition == pt) //判定是否已存在棋子
         {
             return;
         }
         //统计4个方向是否有子，不知道围棋是否可以斜着下
-        /*   int nLeft =CountNearChess(chess,QPoint(-1,0));
-           int nUp =CountNearChess(chess,QPoint(0,-1));
-           int nRight =CountNearChess(chess,QPoint(1,0));
-           int nDown =CountNearChess(chess,QPoint(0,1));
-           if ((nLeft + nRight)==0||(nUp + nDown) ==0){
+        //这里有问题没解决
+        // !!!!!!!
+          int nLeft =CountNearChess(chess,QPoint(-1,0));
+          int nUp =CountNearChess(chess,QPoint(0,-1));
+          int nRight =CountNearChess(chess,QPoint(1,0));
+          int nDown =CountNearChess(chess,QPoint(0,1));
+          if ((nLeft + nRight+nUp + nDown)==0&&step>2){
                return;
-           }*/
+           }
     }
+
     //不存在棋子，则构造一个棋子
     Chess chess_to_set(pt,m_isBlackTurn);
-
+    pTimer->stop();
+    this->baseTime=this->baseTime.currentTime();
+    pTimer->start(1);
+    step++;
     if(m_isBlackTurn)//这个设计的是下一次棋子就改变一下颜色
     {
         m_isBlackTurn=0;
@@ -135,6 +137,18 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         m_isBlackTurn=1;
     }
     m_Chess+=chess_to_set;//添加到已下棋子容器中
+}
+int Widget::CountNearChess(Chess chess,QPoint ptDirection)
+{
+    int nCount = 0; //记录相连棋子个数
+    Chess item=chess;
+    item.m_ChessPossition += ptDirection;//产生待判定的座标
+    while (m_Chess.contains(item)) //循环确认待判定的座标,item 和chess 只是座标位置不同,颜色相同
+    {
+        nCount++;
+        item.m_ChessPossition += ptDirection; //产生下一个待判定的座标.
+    }
+    return nCount; //返回相连棋子个数
 }
 void Widget::init()
 {
@@ -183,7 +197,6 @@ void Widget::updatedisplay()
             });
          }
     }
-
 }
 
 //初始化静态成员

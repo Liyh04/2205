@@ -48,6 +48,7 @@ public:
     static int width;
     static int n_row;
     static int n_column;
+    static int step;
 
 private slots:
     void on_pushButton_clicked();
