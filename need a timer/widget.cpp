@@ -72,7 +72,7 @@ void Widget::DrawChesses()
 }
 void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
 {
-    static int step=0;
+
     //求鼠标点击处的棋子点pt
     QPoint pt;
     int x=e->pos().x() ;
@@ -110,16 +110,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         {
             return;
         }
-        //统计4个方向是否有子，不知道围棋是否可以斜着下
-        //这里有问题没解决
-        // !!!!!!!
-          /*int nLeft =CountNearChess(chess,QPoint(-1,0));
-          int nUp =CountNearChess(chess,QPoint(0,-1));
-          int nRight =CountNearChess(chess,QPoint(1,0));
-          int nDown =CountNearChess(chess,QPoint(0,1));
-          if ((nLeft + nRight+nUp + nDown)==0&&step>2){
-               return;
-           }*/
+
     }
 
     //不存在棋子，则构造一个棋子
@@ -127,7 +118,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     pTimer->stop();
     this->baseTime=this->baseTime.currentTime();
     pTimer->start(1);
-    step++;
+
     if(m_isBlackTurn)//这个设计的是下一次棋子就改变一下颜色
     {
         m_isBlackTurn=0;
@@ -138,18 +129,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     }
     m_Chess+=chess_to_set;//添加到已下棋子容器中
 }
-int Widget::CountNearChess(Chess chess,QPoint ptDirection)
-{
-    int nCount = 0; //记录相连棋子个数
-    Chess item=chess;
-    item.m_ChessPossition += ptDirection;//产生待判定的座标
-    while (m_Chess.contains(item)) //循环确认待判定的座标,item 和chess 只是座标位置不同,颜色相同
-    {
-        nCount++;
-        item.m_ChessPossition += ptDirection; //产生下一个待判定的座标.
-    }
-    return nCount; //返回相连棋子个数
-}
+
 void Widget::init()
 {
     this->pTimer=new QTimer;
@@ -180,8 +160,8 @@ void Widget::updatedisplay()
         }
         else
         {
-            pTimer->setSingleShot(true);
-            QObject::connect(pTimer, &QTimer::timeout, [&]() {
+            //pTimer->setSingleShot(true);
+            /*QObject::connect(pTimer, &QTimer::timeout, [&]() {
                 QString content=QString("Time limit exceed");
                 QMessageBox *dialog1=new QMessageBox;
                 dialog1->resize(1000,700);
@@ -193,8 +173,14 @@ void Widget::updatedisplay()
                 this->ui->lcd_min->display(minstr);
                 this->ui->lcd_sec->display(secstr);
                 pTimer->stop();
-                restart();
-            });
+                m_Chess.clear();
+                m_isBlackTurn=1;
+            });*/
+            QString content=QString("Time limit exceed");
+            QMessageBox *dialog1=new QMessageBox;
+            dialog1->resize(1000,700);
+            dialog1->information(nullptr, content, "    YOU LOSE!    ");
+            restart();
          }
     }
 }
@@ -213,7 +199,6 @@ void Widget::on_pushButton_clicked()
     pTimer->stop();
     QMessageBox::information(nullptr, "Surrender", "YOU LOSE");
     restart();
-
 }
 void Widget::restart(){
     pTimer->stop();

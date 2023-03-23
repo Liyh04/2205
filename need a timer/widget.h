@@ -48,7 +48,7 @@ public:
     static int width;
     static int n_row;
     static int n_column;
-    static int step;
+
 
 private slots:
     void on_pushButton_clicked();
@@ -63,6 +63,6 @@ private:
     void DrawChessAtPoint(QPainter& painter,QPoint& pt);//在pt 位置,以Painter 画棋子
     void StopGame();  //停止当前棋局
     void RepentanceGame(); //悔棋
-    int CountNearChess(Chess signalchess,QPoint ptDirection);
+
 };
 #endif // WIDGET_H
