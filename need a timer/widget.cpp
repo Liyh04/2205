@@ -113,13 +113,13 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         //统计4个方向是否有子，不知道围棋是否可以斜着下
         //这里有问题没解决
         // !!!!!!!
-          int nLeft =CountNearChess(chess,QPoint(-1,0));
+          /*int nLeft =CountNearChess(chess,QPoint(-1,0));
           int nUp =CountNearChess(chess,QPoint(0,-1));
           int nRight =CountNearChess(chess,QPoint(1,0));
           int nDown =CountNearChess(chess,QPoint(0,1));
           if ((nLeft + nRight+nUp + nDown)==0&&step>2){
                return;
-           }
+           }*/
     }
 
     //不存在棋子，则构造一个棋子
