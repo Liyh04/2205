@@ -179,7 +179,9 @@ void Widget::updatedisplay()
             QString content=QString("Time limit exceed");
             QMessageBox *dialog1=new QMessageBox;
             dialog1->resize(1000,700);
-            dialog1->information(nullptr, content, "    YOU LOSE!    ");
+            if(Widget::m_isBlackTurn)
+            dialog1->information(nullptr, content, "    BLACK LOSE!    ");
+            else dialog1->information(nullptr, content, "    WHITE LOSE!    ");
             restart();
          }
     }
@@ -197,7 +199,8 @@ Widget::~Widget()
 void Widget::on_pushButton_clicked()
 {
     pTimer->stop();
-    QMessageBox::information(nullptr, "Surrender", "YOU LOSE");
+    if(Widget::m_isBlackTurn)QMessageBox::information(nullptr, "Surrender", "    BLACK LOSE!    ");
+    else QMessageBox::information(nullptr, "Surrender", "    WHITE LOSE!    ");
     restart();
 }
 void Widget::restart(){
