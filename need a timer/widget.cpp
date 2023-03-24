@@ -199,7 +199,7 @@ Widget::~Widget()
 void Widget::on_pushButton_clicked()
 {
     pTimer->stop();
-    if(Widget::m_isBlackTurn)QMessageBox::information(nullptr, "Surrender", "    BLACK LOSE!    ");
+    if(!Widget::m_isBlackTurn)QMessageBox::information(nullptr, "Surrender", "    BLACK LOSE!    ");
     else QMessageBox::information(nullptr, "Surrender", "    WHITE LOSE!    ");
     restart();
 }
