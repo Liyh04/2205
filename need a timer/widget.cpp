@@ -154,7 +154,7 @@ int Widget::CountDifChess(Chess chess,QPoint ptDirection){
     int nCount = 0;
         Chess item=chess;
         item.m_ChessPossition += ptDirection;//产生待判定的座标
-        if (m_Chess.contains(item)) //循环确认待判定的座标,item 和signalchess 只是座标位置不同,颜色不同
+        if (m_Chess.contains(item)) //循环确认待判定的座标,item 和chess 只是座标位置不同,颜色不同
         {
             nCount++;
         }
