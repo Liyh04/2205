@@ -63,6 +63,6 @@ private:
     void DrawChessAtPoint(QPainter& painter,QPoint& pt);//在pt 位置,以Painter 画棋子
     void StopGame();  //停止当前棋局
     void RepentanceGame(); //悔棋
-
+    void Judge(Chess chess,QPoint ptDirection);
 };
 #endif // WIDGET_H
