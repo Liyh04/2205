@@ -116,9 +116,19 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     //不存在棋子，则构造一个棋子
     Chess chess_to_set(pt,m_isBlackTurn);
     pTimer->stop();
+    for (int i = 0; i<m_Chess.size(); i++) //遍历已下棋子的座标
+    {   Chess chess;
+        int sameLeft =CountSameChess(chess,QPoint(-1,0));
+        int sameUp= CountSameChess(chess,QPoint(0,-1));
+        int sameRight=CountSameChess(chess,QPoint(1,0));
+        int sameDown=CountSameChess(chess,QPoint(0,1));
+        int difLeft =CountDifChess(chess,QPoint(-1,0));
+        int difUp= CountDifChess(chess,QPoint(0,-1));
+        int difRight=CountDifChess(chess,QPoint(1,0));
+        int difDown=CountDifChess(chess,QPoint(0,1));
+    }
     this->baseTime=this->baseTime.currentTime();
     pTimer->start(1);
-
     if(m_isBlackTurn)//这个设计的是下一次棋子就改变一下颜色
     {
         m_isBlackTurn=0;
@@ -130,6 +140,26 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     m_Chess+=chess_to_set;//添加到已下棋子容器中
 }
 
+int Widget::CountSameChess(Chess chess,QPoint ptDirection){
+    int nCount = 0;
+        Chess item=chess;
+        item.m_ChessPossition += ptDirection;//产生待判定的座标
+        if (m_Chess.contains(item)) //循环确认待判定的座标,item 和signalchess 只是座标位置不同,颜色相同
+        {
+            nCount++;
+        }
+        return nCount;
+}
+int Widget::CountDifChess(Chess chess,QPoint ptDirection){
+    int nCount = 0;
+        Chess item=chess;
+        item.m_ChessPossition += ptDirection;//产生待判定的座标
+        if (m_Chess.contains(item)) //循环确认待判定的座标,item 和chess 只是座标位置不同,颜色不同
+        {
+            nCount++;
+        }
+        return nCount;
+}
 void Widget::init()
 {
     this->pTimer=new QTimer;
