@@ -131,7 +131,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         m_isBlackTurn=1;
         ExistChess[(pt.y()-PAINT_Y)/Widget::height][(pt.x()-PAINT_X)/Widget::width]=2;
         this->ui->lcd_row->display((pt.y()-PAINT_Y)/Widget::height);
-        this->ui->lcd_coloum->display((pt.x()-PAINT_X)/Widget::width);//测试专用，显示坐标信息
+        this->ui->lcd_coloum->display((pt.x()-PAINT_X)/Widget::width);//测试专用，显示坐标信息        
     }
     m_Chess+=chess_to_set;//添加到已下棋子容器中
 }
@@ -213,4 +213,11 @@ void Widget::restart(){
     pTimer->stop();
     m_Chess.clear();
     m_isBlackTurn=1;
+    for(int i=0;i<8;i++)
+    {
+        for(int j=0;j<8;j++)
+        {
+            Widget::ExistChess[i][j]=0;
+        }
+    }
 }
