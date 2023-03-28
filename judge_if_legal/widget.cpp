@@ -15,7 +15,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)
 {
     #define PAINT_X 114
     #define PAINT_Y 51
-    setFixedSize(1000,700);
+    setFixedSize(1070,700);
     setWindowTitle("NoGo_group5");
     ui->setupUi(this);
     //设置窗口大小和标题
@@ -36,7 +36,7 @@ void Widget::DrawChessboard()
     //图片-棋盘
     QPixmap pix_chessmap;
     pix_chessmap.load(":/images/qipan.jpg");
-    //改变大小，500*500
+    //改变大小，500,500
     pix_chessmap=pix_chessmap.scaled(500,500,Qt::KeepAspectRatio,Qt::SmoothTransformation);
     //画图
     painter_Yujx_board.drawPixmap(PAINT_X,PAINT_Y,pix_chessmap);
@@ -153,6 +153,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         this->ui->lcd_coloum->display((pt.x()-PAINT_X)/Widget::width);//测试专用，显示坐标信息
     }
     m_Chess+=chess_to_set;//添加到已下棋子容器中
+    step++;
 }
 
 
@@ -191,8 +192,8 @@ void Widget::updatedisplay()
             QMessageBox *dialog1=new QMessageBox;
             dialog1->resize(1000,700);
             if(Widget::m_isBlackTurn)
-            dialog1->information(nullptr, content, "    BLACK LOSE!    ");
-            else dialog1->information(nullptr, content, "    WHITE LOSE!    ");
+            dialog1->information(this, "Game Over", QString("BLACK LOSE!\nTotal Steps: %1").arg(step) );
+            else dialog1->information(this, "Game Over", QString("WHITE LOSE!\nTotal Steps: %1").arg(step));
             restart();
          }
     }
@@ -209,9 +210,17 @@ Widget::~Widget()
 }
 void Widget::on_pushButton_clicked()
 {
-    pTimer->stop();
-    if(Widget::m_isBlackTurn)QMessageBox::information(nullptr, "Surrender", "    BLACK LOSE!    ");
-    else QMessageBox::information(nullptr, "Surrender", "    WHITE LOSE!    ");
+     pTimer->stop();
+    if(Widget::m_isBlackTurn){
+        step++;
+        QMessageBox::information(this, "Game Over", QString("BLACK LOSE!\nTotal Steps: %1").arg(step) );
+        step=0;
+    }
+    else {
+        step++;
+        QMessageBox::information(this, "Game Over", QString("WHITE LOSE!\nTotal Steps: %1").arg(step) );
+        step=0;
+    }
     restart();
 }
 void Widget::restart(){
