@@ -14,11 +14,9 @@ SOURCES += \
     widget.cpp
 
 
-
 HEADERS += \
     chess.h \
     widget.h
-
 
 
 FORMS += \
