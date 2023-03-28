@@ -189,9 +189,17 @@ Widget::~Widget()
 }
 void Widget::on_pushButton_clicked()
 {
-    pTimer->stop();
-    if(Widget::m_isBlackTurn)QMessageBox::information(nullptr, "Surrender", "    BLACK LOSE!    ");
-    else QMessageBox::information(nullptr, "Surrender", "    WHITE LOSE!    ");
+     pTimer->stop();
+    if(Widget::m_isBlackTurn){
+        step++;
+        QMessageBox::information(this, "Game Over", QString("BLACK LOSE!\nTotal Steps: %1").arg(step) );
+        step=0;
+    }
+    else {
+        step++;
+        QMessageBox::information(this, "Game Over", QString("WHITE LOSE!\nTotal Steps: %1").arg(step) );
+        step=0;
+    }
     restart();
 }
 void Widget::restart(){
