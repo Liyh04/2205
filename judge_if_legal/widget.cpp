@@ -213,9 +213,9 @@ void Widget::restart(){
     pTimer->stop();
     m_Chess.clear();
     m_isBlackTurn=1;
-    for(int i=0;i<8;i++)
+    for(int i=0;i<9;i++)
     {
-        for(int j=0;j<8;j++)
+        for(int j=0;j<9;j++)
         {
             Widget::ExistChess[i][j]=0;
         }
