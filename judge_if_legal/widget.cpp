@@ -166,22 +166,7 @@ void Widget::updatedisplay()
         }
         else
         {
-            //pTimer->setSingleShot(true);
-            /*QObject::connect(pTimer, &QTimer::timeout, [&]() {
-                QString content=QString("Time limit exceed");
-                QMessageBox *dialog1=new QMessageBox;
-                dialog1->resize(1000,700);
-                dialog1->information(nullptr, content, "    YOU LOSE!    ");
-                QString min_str=QString::number(0);
-                QString minstr=QString("%2").arg(min_str.toInt(), 2, 10, QLatin1Char('0'));
-                QString sec_str=QString::number(0);
-                QString secstr=QString("%2").arg(sec_str.toInt(), 2, 10, QLatin1Char('0'));
-                this->ui->lcd_min->display(minstr);
-                this->ui->lcd_sec->display(secstr);
-                pTimer->stop();
-                m_Chess.clear();
-                m_isBlackTurn=1;
-            });*/
+            
             QString content=QString("Time limit exceed");
             QMessageBox *dialog1=new QMessageBox;
             dialog1->resize(1000,700);
