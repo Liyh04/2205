@@ -134,6 +134,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         this->ui->lcd_coloum->display((pt.x()-PAINT_X)/Widget::width);//测试专用，显示坐标信息        
     }
     m_Chess+=chess_to_set;//添加到已下棋子容器中
+    step++;
 }
 
 void Widget::init()
@@ -171,8 +172,8 @@ void Widget::updatedisplay()
             QMessageBox *dialog1=new QMessageBox;
             dialog1->resize(1000,700);
             if(Widget::m_isBlackTurn)
-            dialog1->information(nullptr, content, "    BLACK LOSE!    ");
-            else dialog1->information(nullptr, content, "    WHITE LOSE!    ");
+            dialog1->information(this, "Game Over", QString("BLACK LOSE!\nTotal Steps: %1").arg(step) );
+            else dialog1->information(this, "Game Over", QString("WHITE LOSE!\nTotal Steps: %1").arg(step));
             restart();
          }
     }
