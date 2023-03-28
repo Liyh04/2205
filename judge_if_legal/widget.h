@@ -49,7 +49,8 @@ public:
     static int n_row;
     static int n_column;
     int ExistChess[9][9]={0};//0代表没有棋子，1代表黑棋，2代表白棋
-
+public:
+        int step;
 
 private slots:
     void on_pushButton_clicked();
