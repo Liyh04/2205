@@ -9,7 +9,7 @@
 #include <QTime>
 #include <QElapsedTimer>
 #include <QMessageBox>
-#define TIMELIMIT 10
+#define TIMELIMIT 90
 
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)
 {
@@ -21,6 +21,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)
     //设置窗口大小和标题
     this->init();
     m_isBlackTurn = true;//黑子先行
+
 }
 void Widget::paintEvent(QPaintEvent *)
 {
@@ -110,8 +111,26 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         {
             return;
         }
-
+        this->ui->lcdNumber->display(if_legal((pt.y()-PAINT_Y)/Widget::height,(pt.x()-PAINT_X)/Widget::width));
+        for(int i1=0;i1<9;i1++)
+        {
+            for(int j1=0;j1<9;j1++)
+            {
+                if_scanned[i1][j1]=0;
+            }
+        }
+        int X=(pt.y()-PAINT_Y)/Widget::height;
+        int Y=(pt.x()-PAINT_X)/Widget::width;
+        if(m_isBlackTurn)ExistChess[X][Y]=1;
+        if(!m_isBlackTurn)ExistChess[X][Y]=2;
+        if(!if_legal(X,Y)){ExistChess[X][Y]=0;return;}
+        if(X>0&&!if_legal(X-1,Y)){ExistChess[X-1][Y]=0;return;}
+        if(X<8&&!if_legal(X+1,Y)){ExistChess[X+1][Y]=0;return;}
+        if(Y>0&&!if_legal(X,Y-1)){ExistChess[X][Y-1]=0;return;}
+        if(Y<8&&!if_legal(X,Y+1)){ExistChess[X][Y+1]=0;return;}
     }
+
+
 
     //不存在棋子，则构造一个棋子
     Chess chess_to_set(pt,m_isBlackTurn);
@@ -131,10 +150,11 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         m_isBlackTurn=1;
         ExistChess[(pt.y()-PAINT_Y)/Widget::height][(pt.x()-PAINT_X)/Widget::width]=2;
         this->ui->lcd_row->display((pt.y()-PAINT_Y)/Widget::height);
-        this->ui->lcd_coloum->display((pt.x()-PAINT_X)/Widget::width);//测试专用，显示坐标信息        
+        this->ui->lcd_coloum->display((pt.x()-PAINT_X)/Widget::width);//测试专用，显示坐标信息
     }
     m_Chess+=chess_to_set;//添加到已下棋子容器中
 }
+
 
 void Widget::init()
 {
@@ -202,7 +222,7 @@ void Widget::restart(){
     {
         for(int j=0;j<9;j++)
         {
-            Widget::ExistChess[i][j]=0;
+            ExistChess[i][j]=0;
         }
     }
 }

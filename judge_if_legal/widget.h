@@ -2,7 +2,7 @@
 #define WIDGET_H
 
 #include <QWidget>
-#include <chess.h>
+#include "chess.h"
 #include<QLabel>
 #include<QLineEdit>
 #include<QPushButton>
@@ -11,6 +11,7 @@
 #include <QElapsedTimer>
 #include <QWidget>
 #include <QTime>
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
@@ -49,6 +50,47 @@ public:
     static int n_row;
     static int n_column;
     int ExistChess[9][9]={0};//0代表没有棋子，1代表黑棋，2代表白棋
+    int if_scanned[9][9]={0};
+    int if_legal(int x,int y)
+    {
+        if_scanned[x][y]=1;
+        for(int i=0;i<=3;i++)
+        {
+            if(i==0)
+            {
+                if(x==0)continue;
+                if(!ExistChess[x-1][y])return 1;
+                if(ExistChess[x-1][y]!=ExistChess[x][y])continue;
+                if(if_scanned[x-1][y])continue;
+                if(ExistChess[x-1][y]==ExistChess[x][y])return if_legal(x-1,y);
+            }
+            if(i==1)
+            {
+                if(x==8)continue;
+                if(!ExistChess[x+1][y])return 1;
+                if(ExistChess[x+1][y]!=ExistChess[x][y])continue;
+                if(if_scanned[x+1][y])continue;
+                if(ExistChess[x+1][y]==ExistChess[x][y])return if_legal(x+1,y);
+            }
+            if(i==2)
+            {
+                if(y==0)continue;
+                if(!ExistChess[x][y-1])return 1;
+                if(ExistChess[x][y-1]!=ExistChess[x][y])continue;
+                if(if_scanned[x][y-1])continue;
+                if(ExistChess[x][y-1]==ExistChess[x][y])return if_legal(x,y-1);
+            }
+            if(i==3)
+            {
+                if(y==8)continue;
+                if(!ExistChess[x][y+1])return 1;
+                if(ExistChess[x][y+1]!=ExistChess[x][y])continue;
+                if(if_scanned[x][y+1])continue;
+                if(ExistChess[x][y+1]==ExistChess[x][y])return if_legal(x,y+1);
+            }
+        }
+        return 0;
+    }
 
 
 private slots:
