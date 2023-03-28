@@ -186,6 +186,19 @@
     <number>5</number>
    </property>
   </widget>
+  <widget class="QLCDNumber" name="exist">
+   <property name="geometry">
+    <rect>
+     <x>890</x>
+     <y>490</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="digitCount">
+    <number>1</number>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

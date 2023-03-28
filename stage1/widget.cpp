@@ -9,7 +9,7 @@
 #include <QTime>
 #include <QElapsedTimer>
 #include <QMessageBox>
-#define TIMELIMIT 90
+#define TIMELIMIT 900
 int step=0;
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)
 {
@@ -98,7 +98,8 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     int Y=(pt.x()-PAINT_X)/Widget::width;
     this->ui->lcd_row->display(X);
     this->ui->lcd_coloum->display(Y);//测试专用，显示坐标信息
-    this->ui->lcdNumber->display(ExistChess[X][Y]);
+    this->ui->exist->display(ExistChess[X][Y]);
+
 
 //    qDebug()<<pt.rx();
 //    qDebug()<<pt.ry();
@@ -126,11 +127,25 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
 
     if(m_isBlackTurn)ExistChess[X][Y]=1;
     if(!m_isBlackTurn)ExistChess[X][Y]=2;
-    if(!if_legal(X,Y)){ExistChess[X][Y]=0;for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;return;}
-    if(X>0&&!if_legal(X-1,Y)){ExistChess[X][Y]=0;for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;return;}
-    if(X<8&&!if_legal(X+1,Y)){ExistChess[X][Y]=0;for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;return;}
-    if(Y>0&&!if_legal(X,Y-1)){ExistChess[X][Y]=0;for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;return;}
-    if(Y<8&&!if_legal(X,Y+1)){ExistChess[X][Y]=0;for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;return;}
+    tempx=X;tempy=Y;
+    if(!if_legal(X,Y))
+    {ExistChess[X][Y]=0;for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;
+        this->ui->lcdNumber->display(3);return;}
+    if(X>0&&!if_legal(X-1,Y))
+    {ExistChess[X][Y]=0;for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;
+        this->ui->lcdNumber->display(4);return;}
+    if(X<8&&!if_legal(X+1,Y))
+    {ExistChess[X][Y]=0;for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;
+        this->ui->lcdNumber->display(5);return;}
+    if(Y>0&&!if_legal(X,Y-1))
+    {ExistChess[X][Y]=0;for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;
+        this->ui->lcdNumber->display(6);return;}
+    if(Y<8&&!if_legal(X,Y+1))
+    {ExistChess[X][Y]=0;for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;
+        this->ui->lcdNumber->display(7);return;}
+    ExistChess[X][Y]=0;
+    this->ui->lcdNumber->display(0);
+    for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;
     Chess chess_to_set(pt,m_isBlackTurn);
     pTimer->stop();
     this->baseTime=this->baseTime.currentTime();
