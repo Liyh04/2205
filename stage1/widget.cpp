@@ -215,7 +215,7 @@ void Widget::init()
     QString dlgTitle="Timelimit Setting";
     QString txtLabel="Please enter the timelimit of each step(an integer).";
     int timelimit=QInputDialog::getInt(this,dlgTitle,txtLabel,30,10,3600,1,&ok);
-    if(1)
+    if(ok)
     {
         TIMELIMIT=timelimit;
     }
