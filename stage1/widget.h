@@ -52,7 +52,7 @@ public:
     static int n_column;
     int ExistChess[9][9]={0};//0代表没有棋子，1代表黑棋，2代表白棋
     int if_scanned[9][9]={0};
-    int tempx=0,tempy=0;
+    //int tempx=0,tempy=0;
     int if_legal(int x,int y)
     {
         if(!ExistChess[x][y])return 1;

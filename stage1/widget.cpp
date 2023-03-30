@@ -127,27 +127,27 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     Widget::if_scanned_init();
     if(m_isBlackTurn)ExistChess[X][Y]=1;
     if(!m_isBlackTurn)ExistChess[X][Y]=2;
-    tempx=X;tempy=Y;
+    //tempx=X;tempy=Y;
     if(!if_legal(X,Y))
     {ExistChess[X][Y]=0;
         this->ui->lcdNumber->display(3);return;}
     Widget::if_scanned_init();
-    tempx=X-1;tempy=Y;
+    //tempx=X-1;tempy=Y;
     if(X>0&&!if_legal(X-1,Y))
     {ExistChess[X][Y]=0;
         this->ui->lcdNumber->display(4);return;}
     Widget::if_scanned_init();
-    tempx=X+1;tempy=Y;
+    //tempx=X+1;tempy=Y;
     if(X<8&&!if_legal(X+1,Y))
     {ExistChess[X][Y]=0;
         this->ui->lcdNumber->display(5);return;}
     Widget::if_scanned_init();
-    tempx=X;tempy=Y-1;
+    //tempx=X;tempy=Y-1;
     if(Y>0&&!if_legal(X,Y-1))
     {ExistChess[X][Y]=0;
         this->ui->lcdNumber->display(6);return;}
     Widget::if_scanned_init();
-    tempx=X;tempy=Y+1;
+    //tempx=X;tempy=Y+1;
     if(Y<8&&!if_legal(X,Y+1))
     {ExistChess[X][Y]=0;
         this->ui->lcdNumber->display(7);return;}
