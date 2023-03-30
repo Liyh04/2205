@@ -123,29 +123,38 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
 
 
     //不存在棋子，则构造一个棋子
-    for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;
 
+    Widget::if_scanned_init();
     if(m_isBlackTurn)ExistChess[X][Y]=1;
     if(!m_isBlackTurn)ExistChess[X][Y]=2;
     tempx=X;tempy=Y;
     if(!if_legal(X,Y))
-    {ExistChess[X][Y]=0;for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;
+    {ExistChess[X][Y]=0;
         this->ui->lcdNumber->display(3);return;}
+    Widget::if_scanned_init();
+    tempx=X-1;tempy=Y;
     if(X>0&&!if_legal(X-1,Y))
-    {ExistChess[X][Y]=0;for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;
+    {ExistChess[X][Y]=0;
         this->ui->lcdNumber->display(4);return;}
+    Widget::if_scanned_init();
+    tempx=X+1;tempy=Y;
     if(X<8&&!if_legal(X+1,Y))
-    {ExistChess[X][Y]=0;for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;
+    {ExistChess[X][Y]=0;
         this->ui->lcdNumber->display(5);return;}
+    Widget::if_scanned_init();
+    tempx=X;tempy=Y-1;
     if(Y>0&&!if_legal(X,Y-1))
-    {ExistChess[X][Y]=0;for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;
+    {ExistChess[X][Y]=0;
         this->ui->lcdNumber->display(6);return;}
+    Widget::if_scanned_init();
+    tempx=X;tempy=Y+1;
     if(Y<8&&!if_legal(X,Y+1))
-    {ExistChess[X][Y]=0;for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;
+    {ExistChess[X][Y]=0;
         this->ui->lcdNumber->display(7);return;}
+    Widget::if_scanned_init();
     ExistChess[X][Y]=0;
     this->ui->lcdNumber->display(0);
-    for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;
+    Widget::if_scanned_init();
     Chess chess_to_set(pt,m_isBlackTurn);
     pTimer->stop();
     this->baseTime=this->baseTime.currentTime();
@@ -169,7 +178,10 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     step++;
 }
 
-
+void Widget::if_scanned_init()
+{
+    for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;
+}
 void Widget::init()
 {
     this->pTimer=new QTimer;

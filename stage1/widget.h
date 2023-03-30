@@ -34,6 +34,7 @@ public:
 
     Widget(QWidget *parent = nullptr);
     void init();
+    void if_scanned_init();
     QTimer *mytimer;
     QTimer *onesec;
     QTime baseTime;
@@ -55,7 +56,8 @@ public:
     int if_legal(int x,int y)
     {
         if(!ExistChess[x][y])return 1;
-        if(x>0&&!ExistChess[x-1][y]||x<8&&!ExistChess[x+1][y]||y>0&&!ExistChess[x][y-1]||y<8&&!ExistChess[x][y+1])return 1;
+        if((x>0&&!ExistChess[x-1][y])||(x<8&&!ExistChess[x+1][y])||(y>0&&!ExistChess[x][y-1])||(y<8&&!ExistChess[x][y+1]))return 1;
+        int flag=0;
         for(int i=0;i<=3;i++)
         {
             if(i==0)
@@ -64,7 +66,7 @@ public:
                 if(ExistChess[x-1][y]!=ExistChess[x][y])continue;
                 if(if_scanned[x-1][y])continue;
                 if(ExistChess[x-1][y]==ExistChess[x][y])
-                {if_scanned[x][y]=1;return if_legal(x-1,y);}
+                {if(x!=tempx&&y!=tempy)if_scanned[x][y]=1;flag+=if_legal(x-1,y);}
             }
             if(i==1)
             {
@@ -72,7 +74,7 @@ public:
                 if(ExistChess[x+1][y]!=ExistChess[x][y])continue;
                 if(if_scanned[x+1][y])continue;
                 if(ExistChess[x+1][y]==ExistChess[x][y])
-                {if_scanned[x][y]=1;return if_legal(x+1,y);}
+                {if(x!=tempx&&y!=tempy)if_scanned[x][y]=1;flag+=if_legal(x+1,y);}
             }
             if(i==2)
             {
@@ -80,7 +82,7 @@ public:
                 if(ExistChess[x][y-1]!=ExistChess[x][y])continue;
                 if(if_scanned[x][y-1])continue;
                 if(ExistChess[x][y-1]==ExistChess[x][y])
-                {if_scanned[x][y]=1;return if_legal(x,y-1);}
+                {if(x!=tempx&&y!=tempy)if_scanned[x][y]=1;flag+=if_legal(x,y-1);}
             }
             if(i==3)
             {
@@ -88,10 +90,11 @@ public:
                 if(ExistChess[x][y+1]!=ExistChess[x][y])continue;
                 if(if_scanned[x][y+1])continue;
                 if(ExistChess[x][y+1]==ExistChess[x][y])
-                {if_scanned[x][y]=1;return if_legal(x,y+1);}
+                {if(x!=tempx&&y!=tempy)if_scanned[x][y]=1;flag+=if_legal(x,y+1);}
             }
         }
-        {return 0;}
+        if(x==tempx&&y==tempy)return flag;
+        else return 0;
     }
 
 
