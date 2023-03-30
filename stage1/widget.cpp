@@ -9,7 +9,8 @@
 #include <QTime>
 #include <QElapsedTimer>
 #include <QMessageBox>
-#define TIMELIMIT 900
+#include <QLabel>
+#define TIMELIMIT 10
 int step=0;
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)
 {
@@ -96,9 +97,9 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
 
     int X=(pt.y()-PAINT_Y)/Widget::height;
     int Y=(pt.x()-PAINT_X)/Widget::width;
-    this->ui->lcd_row->display(X);
-    this->ui->lcd_coloum->display(Y);//测试专用，显示坐标信息
-    this->ui->exist->display(ExistChess[X][Y]);
+    //this->ui->lcd_row->display(X);
+    //this->ui->lcd_coloum->display(Y);//测试专用，显示坐标信息
+    //this->ui->exist->display(ExistChess[X][Y]);
 
 
 //    qDebug()<<pt.rx();
@@ -129,31 +130,56 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     if(!m_isBlackTurn)ExistChess[X][Y]=2;
     //tempx=X;tempy=Y;
     if(!if_legal(X,Y))
-    {ExistChess[X][Y]=0;
-        this->ui->lcdNumber->display(3);return;}
+    {
+        ExistChess[X][Y]=0;
+        //this->ui->lcdNumber->display(3);
+        QMessageBox *warning1=new QMessageBox;
+        warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
+        return;
+    }
     Widget::if_scanned_init();
     //tempx=X-1;tempy=Y;
     if(X>0&&!if_legal(X-1,Y))
-    {ExistChess[X][Y]=0;
-        this->ui->lcdNumber->display(4);return;}
+    {
+        ExistChess[X][Y]=0;
+        //this->ui->lcdNumber->display(4);
+        QMessageBox *warning1=new QMessageBox;
+        warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
+        return;
+    }
     Widget::if_scanned_init();
     //tempx=X+1;tempy=Y;
     if(X<8&&!if_legal(X+1,Y))
-    {ExistChess[X][Y]=0;
-        this->ui->lcdNumber->display(5);return;}
+    {
+        ExistChess[X][Y]=0;
+        //this->ui->lcdNumber->display(5);
+        QMessageBox *warning1=new QMessageBox;
+        warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
+        return;
+    }
     Widget::if_scanned_init();
     //tempx=X;tempy=Y-1;
     if(Y>0&&!if_legal(X,Y-1))
-    {ExistChess[X][Y]=0;
-        this->ui->lcdNumber->display(6);return;}
+    {
+        ExistChess[X][Y]=0;
+        //this->ui->lcdNumber->display(6);
+        QMessageBox *warning1=new QMessageBox;
+        warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
+        return;
+    }
     Widget::if_scanned_init();
     //tempx=X;tempy=Y+1;
     if(Y<8&&!if_legal(X,Y+1))
-    {ExistChess[X][Y]=0;
-        this->ui->lcdNumber->display(7);return;}
+    {
+        ExistChess[X][Y]=0;
+        //this->ui->lcdNumber->display(7);
+        QMessageBox *warning1=new QMessageBox;
+        warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
+        return;
+    }
     Widget::if_scanned_init();
     ExistChess[X][Y]=0;
-    this->ui->lcdNumber->display(0);
+    //this->ui->lcdNumber->display(0);
     Widget::if_scanned_init();
     Chess chess_to_set(pt,m_isBlackTurn);
     pTimer->stop();
@@ -164,15 +190,15 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     {
         m_isBlackTurn=0;
         ExistChess[(pt.y()-PAINT_Y)/Widget::height][(pt.x()-PAINT_X)/Widget::width]=1;
-        this->ui->lcd_row->display((pt.y()-PAINT_Y)/Widget::height);
-        this->ui->lcd_coloum->display((pt.x()-PAINT_X)/Widget::width);//测试专用，显示坐标信息
+        //this->ui->lcd_row->display((pt.y()-PAINT_Y)/Widget::height);
+        //this->ui->lcd_coloum->display((pt.x()-PAINT_X)/Widget::width);//测试专用，显示坐标信息
     }
     else
     {
         m_isBlackTurn=1;
         ExistChess[(pt.y()-PAINT_Y)/Widget::height][(pt.x()-PAINT_X)/Widget::width]=2;
-        this->ui->lcd_row->display((pt.y()-PAINT_Y)/Widget::height);
-        this->ui->lcd_coloum->display((pt.x()-PAINT_X)/Widget::width);//测试专用，显示坐标信息
+        //this->ui->lcd_row->display((pt.y()-PAINT_Y)/Widget::height);
+        //this->ui->lcd_coloum->display((pt.x()-PAINT_X)/Widget::width);//测试专用，显示坐标信息
     }
     m_Chess+=chess_to_set;//添加到已下棋子容器中
     step++;
@@ -192,6 +218,7 @@ void Widget::init()
     QString secstr=QString("%2").arg(sec_str.toInt(), 2, 10, QLatin1Char('0'));
     this->ui->lcd_min->display(minstr);
     this->ui->lcd_sec->display(secstr);
+    ui->label_3->setText("BLACK");
 }
 void Widget::updatedisplay()
 {
@@ -209,8 +236,19 @@ void Widget::updatedisplay()
             QString secstr=QString("%2").arg(sec_str.toInt(), 2, 10, QLatin1Char('0'));
             this->ui->lcd_min->display(minstr);
             this->ui->lcd_sec->display(secstr);
-            if(m_isBlackTurn)ui->player->display("BLACK");
-            if(!m_isBlackTurn)ui->player->display("WHITE");
+
+            if(m_isBlackTurn)
+            {
+                //ui->player->display("BLACK");
+
+                ui->label_3->setText("BLACK");
+            }
+            if(!m_isBlackTurn)
+            {
+                //ui->player->display("WHITE");
+
+                ui->label_3->setText("WHITE");
+            }
         }
         else
         {
@@ -219,8 +257,8 @@ void Widget::updatedisplay()
             QMessageBox *dialog1=new QMessageBox;
             dialog1->resize(1000,700);
             if(Widget::m_isBlackTurn)
-            dialog1->information(this, "Game Over", QString("BLACK LOSE!\nTotal Steps: %1").arg(step) );
-            else dialog1->information(this, "Game Over", QString("WHITE LOSE!\nTotal Steps: %1").arg(step));
+            dialog1->information(this, content, QString("    BLACK LOSE!    \n    Total Steps: %1    ").arg(step) );
+            else dialog1->information(this, content, QString("    WHITE LOSE!    \n    Total Steps: %1    ").arg(step));
             restart();
          }
     }
@@ -254,6 +292,8 @@ void Widget::restart(){
     pTimer->stop();
     m_Chess.clear();
     m_isBlackTurn=1;
+    ui->label_3->setText("BLACK");
+    Widget::init();
     for(int i=0;i<9;i++)
     {
         for(int j=0;j<9;j++)
