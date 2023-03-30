@@ -93,8 +93,8 @@ public:
                 {if_scanned[x][y]=1;flag+=if_legal(x,y+1);}
             }
         }
-        if(x==tempx&&y==tempy)return flag;
-        else return 0;
+        return flag;
+
     }
 
 
