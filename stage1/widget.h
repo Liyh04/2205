@@ -66,7 +66,7 @@ public:
                 if(ExistChess[x-1][y]!=ExistChess[x][y])continue;
                 if(if_scanned[x-1][y])continue;
                 if(ExistChess[x-1][y]==ExistChess[x][y])
-                {if(x!=tempx&&y!=tempy)if_scanned[x][y]=1;flag+=if_legal(x-1,y);}
+                {if_scanned[x][y]=1;flag+=if_legal(x-1,y);}
             }
             if(i==1)
             {
@@ -74,7 +74,7 @@ public:
                 if(ExistChess[x+1][y]!=ExistChess[x][y])continue;
                 if(if_scanned[x+1][y])continue;
                 if(ExistChess[x+1][y]==ExistChess[x][y])
-                {if(x!=tempx&&y!=tempy)if_scanned[x][y]=1;flag+=if_legal(x+1,y);}
+                {if_scanned[x][y]=1;flag+=if_legal(x+1,y);}
             }
             if(i==2)
             {
@@ -82,7 +82,7 @@ public:
                 if(ExistChess[x][y-1]!=ExistChess[x][y])continue;
                 if(if_scanned[x][y-1])continue;
                 if(ExistChess[x][y-1]==ExistChess[x][y])
-                {if(x!=tempx&&y!=tempy)if_scanned[x][y]=1;flag+=if_legal(x,y-1);}
+                {if_scanned[x][y]=1;flag+=if_legal(x,y-1);}
             }
             if(i==3)
             {
@@ -90,7 +90,7 @@ public:
                 if(ExistChess[x][y+1]!=ExistChess[x][y])continue;
                 if(if_scanned[x][y+1])continue;
                 if(ExistChess[x][y+1]==ExistChess[x][y])
-                {if(x!=tempx&&y!=tempy)if_scanned[x][y]=1;flag+=if_legal(x,y+1);}
+                {if_scanned[x][y]=1;flag+=if_legal(x,y+1);}
             }
         }
         if(x==tempx&&y==tempy)return flag;
