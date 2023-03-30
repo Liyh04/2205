@@ -10,7 +10,8 @@
 #include <QElapsedTimer>
 #include <QMessageBox>
 #include <QLabel>
-#define TIMELIMIT 10
+#include <QInputDialog>
+int TIMELIMIT=10;
 int step=0;
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)
 {
@@ -210,6 +211,14 @@ void Widget::if_scanned_init()
 }
 void Widget::init()
 {
+    bool ok=false;
+    QString dlgTitle="Timelimit Setting";
+    QString txtLabel="Please enter the timelimit of each step(an integer).";
+    int timelimit=QInputDialog::getInt(this,dlgTitle,txtLabel,30,10,3600,1,&ok);
+    if(1)
+    {
+        TIMELIMIT=timelimit;
+    }
     this->pTimer=new QTimer;
     connect(this->pTimer,SIGNAL(timeout()),this,SLOT(updatedisplay()));
     QString min_str=QString::number(TIMELIMIT/60);
@@ -220,6 +229,7 @@ void Widget::init()
     this->ui->lcd_sec->display(secstr);
     ui->label_3->setText("BLACK");
 }
+
 void Widget::updatedisplay()
 {
     {
@@ -293,6 +303,7 @@ void Widget::restart(){
     m_Chess.clear();
     m_isBlackTurn=1;
     ui->label_3->setText("BLACK");
+    step=0;
     Widget::init();
     for(int i=0;i<9;i++)
     {
