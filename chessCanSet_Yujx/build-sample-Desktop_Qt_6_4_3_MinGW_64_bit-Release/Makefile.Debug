@@ -110,7 +110,6 @@ debug/qrc_res.cpp: ../../stage1/res.qrc \
 		../../../../Qt2/6.4.3/mingw_64/bin/rcc.exe \
 		../../stage1/images/open_win.mp3 \
 		../../stage1/images/IMG.qrc \
-		../../stage1/images/yuanshen.wav \
 		../../stage1/images/white.png \
 		../../stage1/images/button1.png \
 		../../stage1/images/1 \
@@ -118,7 +117,6 @@ debug/qrc_res.cpp: ../../stage1/res.qrc \
 		../../stage1/images/button2.png \
 		../../stage1/images/button1.jpg \
 		../../stage1/images/open_win.wav \
-		../../stage1/images/yuanshen.mp3 \
 		../../stage1/images/black.png
 	E:\Qt2\6.4.3\mingw_64\bin\rcc.exe -name res --no-zstd ..\..\stage1\res.qrc -o debug\qrc_res.cpp
 

@@ -21,11 +21,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)
     setFixedSize(1070,700);
     setWindowTitle("NoGo_group5");
     ui->setupUi(this);
-    QSoundEffect effect;
-    effect.setSource(QUrl::fromLocalFile(":/images/yuanshen.wav"));
-    effect.setLoopCount(1);
-    effect.setVolume(1.0);
-    effect.play();
+
     //设置窗口大小和标题
     this->init();
     m_isBlackTurn = true;//黑子先行
