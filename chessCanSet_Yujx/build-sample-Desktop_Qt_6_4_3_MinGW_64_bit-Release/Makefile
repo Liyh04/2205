@@ -116,6 +116,11 @@ Makefile: ../../stage1/sample.pro ../../../../Qt2/6.4.3/mingw_64/mkspecs/win32-g
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_labswavefrontmesh_private.pri \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_linguist.pri \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_linguist_private.pri \
+		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_multimedia.pri \
+		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_multimedia_private.pri \
+		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_multimediaquick_private.pri \
+		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_multimediawidgets.pri \
+		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_multimediawidgets_private.pri \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_network.pri \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_network_private.pri \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_opengl.pri \
@@ -146,6 +151,7 @@ Makefile: ../../stage1/sample.pro ../../../../Qt2/6.4.3/mingw_64/mkspecs/win32-g
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlxmllistmodel.pri \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlxmllistmodel_private.pri \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick.pri \
+		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dspatialaudio_private.pri \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick_private.pri \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickcontrols2.pri \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickcontrols2_private.pri \
@@ -167,6 +173,8 @@ Makefile: ../../stage1/sample.pro ../../../../Qt2/6.4.3/mingw_64/mkspecs/win32-g
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_quicktestutilsprivate_private.pri \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickwidgets.pri \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickwidgets_private.pri \
+		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_spatialaudio.pri \
+		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_spatialaudio_private.pri \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_sql.pri \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_sql_private.pri \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_svg.pri \
@@ -188,6 +196,7 @@ Makefile: ../../stage1/sample.pro ../../../../Qt2/6.4.3/mingw_64/mkspecs/win32-g
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/features/qt_config.prf \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/win32-g++/qmake.conf \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/features/exclusive_builds.prf \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/features/toolchain.prf \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/features/default_pre.prf \
@@ -213,11 +222,13 @@ Makefile: ../../stage1/sample.pro ../../../../Qt2/6.4.3/mingw_64/mkspecs/win32-g
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/features/yacc.prf \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/features/lex.prf \
 		../../stage1/sample.pro \
+		../../../../Qt2/6.4.3/mingw_64/lib/Qt6MultimediaWidgets.prl \
+		../../../../Qt2/6.4.3/mingw_64/lib/Qt6Multimedia.prl \
 		../../../../Qt2/6.4.3/mingw_64/lib/Qt6Widgets.prl \
 		../../../../Qt2/6.4.3/mingw_64/lib/Qt6Gui.prl \
+		../../../../Qt2/6.4.3/mingw_64/lib/Qt6Network.prl \
 		../../../../Qt2/6.4.3/mingw_64/lib/Qt6Core.prl \
 		../../../../Qt2/6.4.3/mingw_64/lib/Qt6EntryPoint.prl \
-		.qmake.stash \
 		../../../../Qt2/6.4.3/mingw_64/mkspecs/features/build_pass.prf \
 		../../stage1/res.qrc
 	$(QMAKE) -o Makefile ..\..\stage1\sample.pro -spec win32-g++ "CONFIG+=qtquickcompiler"
@@ -267,6 +278,11 @@ Makefile: ../../stage1/sample.pro ../../../../Qt2/6.4.3/mingw_64/mkspecs/win32-g
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_labswavefrontmesh_private.pri:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_linguist.pri:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_linguist_private.pri:
+../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_multimedia.pri:
+../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_multimedia_private.pri:
+../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_multimediaquick_private.pri:
+../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_multimediawidgets.pri:
+../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_multimediawidgets_private.pri:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_network.pri:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_network_private.pri:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_opengl.pri:
@@ -297,6 +313,7 @@ Makefile: ../../stage1/sample.pro ../../../../Qt2/6.4.3/mingw_64/mkspecs/win32-g
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlxmllistmodel.pri:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlxmllistmodel_private.pri:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick.pri:
+../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dspatialaudio_private.pri:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick_private.pri:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickcontrols2.pri:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickcontrols2_private.pri:
@@ -318,6 +335,8 @@ Makefile: ../../stage1/sample.pro ../../../../Qt2/6.4.3/mingw_64/mkspecs/win32-g
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_quicktestutilsprivate_private.pri:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickwidgets.pri:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickwidgets_private.pri:
+../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_spatialaudio.pri:
+../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_spatialaudio_private.pri:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_sql.pri:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_sql_private.pri:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/modules/qt_lib_svg.pri:
@@ -339,6 +358,7 @@ Makefile: ../../stage1/sample.pro ../../../../Qt2/6.4.3/mingw_64/mkspecs/win32-g
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/features/qt_config.prf:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/win32-g++/qmake.conf:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/features/exclusive_builds.prf:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/features/toolchain.prf:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/features/default_pre.prf:
@@ -364,11 +384,13 @@ Makefile: ../../stage1/sample.pro ../../../../Qt2/6.4.3/mingw_64/mkspecs/win32-g
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/features/yacc.prf:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/features/lex.prf:
 ../../stage1/sample.pro:
+../../../../Qt2/6.4.3/mingw_64/lib/Qt6MultimediaWidgets.prl:
+../../../../Qt2/6.4.3/mingw_64/lib/Qt6Multimedia.prl:
 ../../../../Qt2/6.4.3/mingw_64/lib/Qt6Widgets.prl:
 ../../../../Qt2/6.4.3/mingw_64/lib/Qt6Gui.prl:
+../../../../Qt2/6.4.3/mingw_64/lib/Qt6Network.prl:
 ../../../../Qt2/6.4.3/mingw_64/lib/Qt6Core.prl:
 ../../../../Qt2/6.4.3/mingw_64/lib/Qt6EntryPoint.prl:
-.qmake.stash:
 ../../../../Qt2/6.4.3/mingw_64/mkspecs/features/build_pass.prf:
 ../../stage1/res.qrc:
 qmake: FORCE

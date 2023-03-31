@@ -11,6 +11,7 @@
 #include <QMessageBox>
 #include <QLabel>
 #include <QInputDialog>
+#include <QSoundEffect>
 int TIMELIMIT=10;
 int step=0;
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)
@@ -20,11 +21,17 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)
     setFixedSize(1070,700);
     setWindowTitle("NoGo_group5");
     ui->setupUi(this);
+    QSoundEffect effect;
+    effect.setSource(QUrl::fromLocalFile(":/images/yuanshen.wav"));
+    effect.setLoopCount(1);
+    effect.setVolume(1.0);
+    effect.play();
     //设置窗口大小和标题
     this->init();
     m_isBlackTurn = true;//黑子先行
 
 }
+
 void Widget::paintEvent(QPaintEvent *)
 {
     DrawChessboard();        //画棋盘
@@ -75,7 +82,11 @@ void Widget::DrawChesses()
 }
 void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
 {
-
+    QSoundEffect effect;
+    effect.setSource(QUrl::fromLocalFile(":/images/open_win.wav"));
+    effect.setLoopCount(1);
+    effect.setVolume(1.0);
+    effect.play();
     //求鼠标点击处的棋子点pt
     QPoint pt;
     int x=e->pos().x() ;
@@ -178,6 +189,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
         return;
     }
+
     Widget::if_scanned_init();
     ExistChess[X][Y]=0;
     //this->ui->lcdNumber->display(0);
@@ -211,6 +223,7 @@ void Widget::if_scanned_init()
 }
 void Widget::init()
 {
+
     bool ok=false;
     QString dlgTitle="Timelimit Setting";
     QString txtLabel="Please enter the timelimit of each step(an integer).";

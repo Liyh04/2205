@@ -8,5 +8,9 @@
         <file>images/button2.png</file>
         <file>images/white.png</file>
         <file>images/black.png</file>
+        <file>images/open_win.mp3</file>
+        <file>images/open_win.wav</file>
+        <file>images/yuanshen.mp3</file>
+        <file>images/yuanshen.wav</file>
     </qresource>
 </RCC>
