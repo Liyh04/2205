@@ -11,7 +11,7 @@
 #include <QMessageBox>
 #include <QLabel>
 #include <QInputDialog>
-#include <QSoundEffect>
+//#include <QSoundEffect>
 int TIMELIMIT=10;
 int step=0;
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)
@@ -78,11 +78,11 @@ void Widget::DrawChesses()
 }
 void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
 {
-    QSoundEffect effect;
+    /*QSoundEffect effect;
     effect.setSource(QUrl::fromLocalFile(":/images/open_win.wav"));
     effect.setLoopCount(1);
     effect.setVolume(1.0);
-    effect.play();
+    effect.play();*/
     //求鼠标点击处的棋子点pt
     QPoint pt;
     int x=e->pos().x() ;
