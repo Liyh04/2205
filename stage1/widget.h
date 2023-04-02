@@ -35,11 +35,11 @@ public:
     Widget(QWidget *parent = nullptr);
     void init();
     void if_scanned_init();
-    QTimer *mytimer;
-    QTimer *onesec;
+    //QTimer *mytimer;
+    //QTimer *onesec;
     QTime baseTime;
     QTimer *pTimer;
-    QElapsedTimer *mycounter;
+    //QElapsedTimer *mycounter;
     ~Widget();
 
 //    void StopGame();  //停止当前棋局
@@ -51,9 +51,9 @@ public:
     static int n_row;
     static int n_column;
     int ExistChess[9][9]={0};//0代表没有棋子，1代表黑棋，2代表白棋
-    int if_scanned[9][9]={0};
+    int if_scanned[9][9]={0};//在递归回溯时记录已经判断过的棋子，避免造成死循环
     //int tempx=0,tempy=0;
-    int if_legal(int x,int y)
+    int if_legal(int x,int y)//判断x行y列的棋子是否存活
     {
         if(!ExistChess[x][y])return 1;
         if((x>0&&!ExistChess[x-1][y])||(x<8&&!ExistChess[x+1][y])||(y>0&&!ExistChess[x][y-1])||(y<8&&!ExistChess[x][y+1]))return 1;
@@ -99,7 +99,7 @@ public:
 
 
 private slots:
-    void on_pushButton_clicked();
+    void on_pushButton_clicked();//当按下认输按钮
 
 private:
     Ui::Widget *ui;
@@ -109,8 +109,8 @@ private:
     void DrawChessboard();  //画棋盘
     void DrawChesses();     //画已下的棋子
     void DrawChessAtPoint(QPainter& painter,QPoint& pt);//在pt 位置,以Painter 画棋子
-    void StopGame();  //停止当前棋局
-    void RepentanceGame(); //悔棋
+    void StopGame();  //停止当前棋局（暂未实现）
+    void RepentanceGame(); //悔棋（暂未实现）
 
 };
 #endif // WIDGET_H

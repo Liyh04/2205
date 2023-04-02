@@ -4,7 +4,7 @@
 #include <QMouseEvent>
 #include <chess.h>
 #include <QDebug>
-#include<QHBoxLayout>//垂直布局
+#include <QHBoxLayout>//垂直布局
 #include <QTimer>
 #include <QTime>
 #include <QElapsedTimer>
@@ -14,7 +14,7 @@
 //#include <QSoundEffect>
 int TIMELIMIT=10;
 int step=0;
-Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)
+Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始化ui界面
 {
     #define PAINT_X 114
     #define PAINT_Y 51
@@ -27,14 +27,13 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)
     m_isBlackTurn = true;//黑子先行
 
 }
-
-void Widget::paintEvent(QPaintEvent *)
+void Widget::paintEvent(QPaintEvent *)//画棋盘和棋子
 {
     DrawChessboard();        //画棋盘
     DrawChesses();            //画棋子
     update();//实时更新
 }
-void Widget::DrawChessboard()
+void Widget::DrawChessboard()//初始化棋盘
 {
     //设置画家
     QPainter painter_Yujx_board(this);
@@ -46,7 +45,7 @@ void Widget::DrawChessboard()
     //画图
     painter_Yujx_board.drawPixmap(PAINT_X,PAINT_Y,pix_chessmap);
 }
-void Widget::DrawChesses()
+void Widget::DrawChesses()//画棋子
 {
     //设置画家
     QPainter painter_Yu_chess(this);
@@ -83,16 +82,18 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     effect.setLoopCount(1);
     effect.setVolume(1.0);
     effect.play();*/
-    //求鼠标点击处的棋子点pt
+    //暂时删除的游戏音效↑
+    //求鼠标点击处的棋子点pt↓
     QPoint pt;
     int x=e->pos().x() ;
     int y=e->pos().y();
-
     //如果鼠标不是在棋盘区域按下,则放弃
+    {
     if (x<30+PAINT_X || x>470+PAINT_X || y<30+PAINT_Y || y>470+PAINT_Y )
         return;
-
+    }
     //判定鼠标的位置更接近哪一个座标点, 将该座标点作为要下棋子的点
+    {
     if ((x-PAINT_X)%Widget::width<=Widget::width/2)
         pt.setX( PAINT_X+((x-PAINT_X) / Widget::width)*Widget::width-20);
     else
@@ -102,19 +103,11 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         pt.setY( PAINT_Y+((y-PAINT_Y) / Widget::height)*Widget::height-20);
     else
         pt.setY( PAINT_Y+((y-PAINT_Y) / Widget::height+1)*Widget::height-20);
-
+}
     int X=(pt.y()-PAINT_Y)/Widget::height;
     int Y=(pt.x()-PAINT_X)/Widget::width;
-    //this->ui->lcd_row->display(X);
-    //this->ui->lcd_coloum->display(Y);//测试专用，显示坐标信息
-    //this->ui->exist->display(ExistChess[X][Y]);
-
-
-//    qDebug()<<pt.rx();
-//    qDebug()<<pt.ry();
-
     //如果已存在棋子，就什么也不做
-    for (int i = 0; i<m_Chess.size(); i++) //遍历已下棋子的座标
+    for (int i = 0; i<m_Chess.size(); i++) //遍历已下棋子的座标，判定是否已存在棋子
     {
         Chess chess;
         chess.m_ChessColor=m_Chess[i].m_ChessColor;
@@ -126,17 +119,13 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         {
             return;
         }
-
-    }
-
-
-
-    //不存在棋子，则构造一个棋子
-
+}
+    //如果不存在棋子，则先判断这一步是否合法，如果合法，则构造一个棋子
     Widget::if_scanned_init();
     if(m_isBlackTurn)ExistChess[X][Y]=1;
     if(!m_isBlackTurn)ExistChess[X][Y]=2;
-    //tempx=X;tempy=Y;
+    //判断合法前，先假设点击的位置已经下了棋子，如果不合法，则将数组中对应元素重置为0
+    //以下5个if函数分别判断点击处以及上下左右五个棋子是否存活
     if(!if_legal(X,Y))
     {
         ExistChess[X][Y]=0;
@@ -146,7 +135,6 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         return;
     }
     Widget::if_scanned_init();
-    //tempx=X-1;tempy=Y;
     if(X>0&&!if_legal(X-1,Y))
     {
         ExistChess[X][Y]=0;
@@ -156,7 +144,6 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         return;
     }
     Widget::if_scanned_init();
-    //tempx=X+1;tempy=Y;
     if(X<8&&!if_legal(X+1,Y))
     {
         ExistChess[X][Y]=0;
@@ -166,7 +153,6 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         return;
     }
     Widget::if_scanned_init();
-    //tempx=X;tempy=Y-1;
     if(Y>0&&!if_legal(X,Y-1))
     {
         ExistChess[X][Y]=0;
@@ -176,7 +162,6 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         return;
     }
     Widget::if_scanned_init();
-    //tempx=X;tempy=Y+1;
     if(Y<8&&!if_legal(X,Y+1))
     {
         ExistChess[X][Y]=0;
@@ -185,16 +170,13 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
         return;
     }
-
     Widget::if_scanned_init();
     ExistChess[X][Y]=0;
-    //this->ui->lcdNumber->display(0);
     Widget::if_scanned_init();
     Chess chess_to_set(pt,m_isBlackTurn);
     pTimer->stop();
     this->baseTime=this->baseTime.currentTime();
     pTimer->start(1);
-
     if(m_isBlackTurn)//这个设计的是下一次棋子就改变一下颜色
     {
         m_isBlackTurn=0;
@@ -212,12 +194,11 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     m_Chess+=chess_to_set;//添加到已下棋子容器中
     step++;
 }
-
-void Widget::if_scanned_init()
+void Widget::if_scanned_init()//在递归回溯时记录已经判断过的棋子，避免造成死循环
 {
     for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;
 }
-void Widget::init()
+void Widget::init()//游戏开局时初始化：设置每步限时，初始化计时器
 {
 
     bool ok=false;
@@ -238,8 +219,7 @@ void Widget::init()
     this->ui->lcd_sec->display(secstr);
     ui->label_3->setText("BLACK");
 }
-
-void Widget::updatedisplay()
+void Widget::updatedisplay()//实时更新计时器
 {
     {
         QTime curTime=QTime::currentTime();
@@ -282,17 +262,16 @@ void Widget::updatedisplay()
          }
     }
 }
-
 //初始化静态成员
 int Widget::height=50;
 int Widget::width=50;
 int Widget::n_row=9;
 int Widget::n_column=9;
-Widget::~Widget()
+Widget::~Widget()//析构函数
 {
     delete ui;
 }
-void Widget::on_pushButton_clicked()
+void Widget::on_pushButton_clicked()//当按下认输按钮
 {
      pTimer->stop();
     if(Widget::m_isBlackTurn){
@@ -307,7 +286,8 @@ void Widget::on_pushButton_clicked()
     }
     restart();
 }
-void Widget::restart(){
+void Widget::restart()//游戏重开
+{
     pTimer->stop();
     m_Chess.clear();
     m_isBlackTurn=1;
