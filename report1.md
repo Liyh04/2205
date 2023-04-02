@@ -13,7 +13,7 @@
 ### 具体实现
 #### 代码框架
 
-![image](image_in_md/屏幕截图 2023-04-02 154924.png)
+![image](https://github.com/Liyh04/2205/blob/main/image_in_md/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-04-02%20154924.png)
 
 > 简洁美丽o(*￣▽￣*)ブ
 
