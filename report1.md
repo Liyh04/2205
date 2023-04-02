@@ -13,7 +13,7 @@
 ### 具体实现
 #### 代码框架
 
-![image-20230402155138507](C:\Users\86130\AppData\Roaming\Typora\typora-user-images\image-20230402155138507.png)
+![image](image_in_md/屏幕截图 2023-04-02 154924.png)
 
 > 简洁美丽o(*￣▽￣*)ブ
 
