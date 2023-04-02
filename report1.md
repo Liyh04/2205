@@ -4,11 +4,11 @@
 
 ### 小组分工
 
-* 于佳鑫同学实现了棋盘设置, 页面初步美化以及下棋逻辑的实现
+* 于佳鑫同学实现了棋盘设置, 页面初步美化以及下棋逻辑的实现等
 
-* 李屹桦同学实现了判断落子合法判断，计时器的实现和棋盘页面美化
+* 李屹桦同学实现了判断落子合法判断，计时器的实现和参数化和棋盘页面美化等
 
-* 杨东录同学实现了计时器的实现，页面美化
+* 杨东录同学实现了计时器的实现，页面初步美化，以及giveup的实现等
 
 ### 具体实现
 #### 代码框架
@@ -25,7 +25,7 @@
 
   * 棋盘和棋子均采用了image图片，这样比较美观
 
-   ![image-20230402163659098](C:\Users\86130\AppData\Roaming\Typora\typora-user-images\image-20230402163659098.png)
+   ![image-20230402163659098](https://github.com/Liyh04/2205/blob/main/image_in_md/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-04-02%20163626.png)
 
   * 在chess.h中，我们定义了棋子的成员，其中位置采用了Qpoint；在widget中，我们采用vector容器来记录已下的棋子
 
@@ -39,11 +39,11 @@
 
 * ##### 计时器
 
-  ![image-20230402162742409](C:\Users\86130\AppData\Roaming\Typora\typora-user-images\image-20230402162742409.png)
+  ![image-20230402162742409](https://github.com/Liyh04/2205/blob/main/image_in_md/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-04-02%20164019.png)
 
   > 将时间限制设置为一个可以调节的参数：）
 
-  ![image-20230402164039806](C:\Users\86130\AppData\Roaming\Typora\typora-user-images\image-20230402164039806.png)
+  ![image](https://github.com/Liyh04/2205/blob/main/image_in_md/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-04-02%20162732.png)
 
   * 采用艺术化的字体，让玩家体会到数字之美
 
@@ -51,11 +51,11 @@
 
   * 如果下了不合法的位置
 
-    ![image-20230402163824757](C:\Users\86130\AppData\Roaming\Typora\typora-user-images\image-20230402163824757.png)
+    ![image-20230402163824757](https://github.com/Liyh04/2205/blob/main/image_in_md/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-04-02%20163615.png)
 
   * 计算了下棋步数
 
-    ![image-20230402163932617](C:\Users\86130\AppData\Roaming\Typora\typora-user-images\image-20230402163932617.png)
+    ![image-20230402163932617](https://github.com/Liyh04/2205/blob/main/image_in_md/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-04-02%20163642.png)
 
 
 ### 感谢
