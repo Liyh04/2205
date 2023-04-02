@@ -174,7 +174,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     ExistChess[X][Y]=0;
     Widget::if_scanned_init();
     Chess chess_to_set(pt,m_isBlackTurn);
-    pTimer->stop();
+    pTimer->stop();//计时器重新开始计时
     this->baseTime=this->baseTime.currentTime();
     pTimer->start(1);
     if(m_isBlackTurn)//这个设计的是下一次棋子就改变一下颜色

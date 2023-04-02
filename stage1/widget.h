@@ -21,10 +21,9 @@ class Widget : public QWidget
     Q_OBJECT
 
 public:
-    void restart();
+    void restart();//重新开局
 public slots:
-    void updatedisplay();
-    //void on_Btnstart_clicked();
+    void updatedisplay();//更新计时器显示
 protected:
     //paint
     void paintEvent(QPaintEvent *);
@@ -33,18 +32,14 @@ protected:
 public:
 
     Widget(QWidget *parent = nullptr);
-    void init();
-    void if_scanned_init();
+    void init();//游戏开局时初始化
+    void if_scanned_init();//将if_scanned数组所有元素重置为0
     //QTimer *mytimer;
     //QTimer *onesec;
     QTime baseTime;
     QTimer *pTimer;
     //QElapsedTimer *mycounter;
     ~Widget();
-
-//    void StopGame();  //停止当前棋局
-//    void RepentanceGame(); //悔棋
-
     //静态成员
     static int height;
     static int width;
@@ -96,7 +91,6 @@ public:
         return flag;
 
     }
-
 
 private slots:
     void on_pushButton_clicked();//当按下认输按钮
