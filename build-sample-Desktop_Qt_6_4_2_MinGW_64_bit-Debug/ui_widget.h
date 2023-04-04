@@ -36,6 +36,7 @@ public:
     QLineEdit *lineEdit;
     QLabel *label_2;
     QLineEdit *lineEdit_2;
+    QLabel *label_3;
 
     void setupUi(QWidget *Widget)
     {
@@ -55,7 +56,7 @@ public:
         layoutWidget = new QWidget(Widget);
         layoutWidget->setObjectName("layoutWidget");
         layoutWidget->setEnabled(true);
-        layoutWidget->setGeometry(QRect(790, 140, 93, 245));
+        layoutWidget->setGeometry(QRect(790, 140, 112, 245));
         verticalLayout_2 = new QVBoxLayout(layoutWidget);
         verticalLayout_2->setObjectName("verticalLayout_2");
         verticalLayout_2->setContentsMargins(0, 0, 0, 0);
@@ -102,6 +103,10 @@ public:
 
         verticalLayout_2->addWidget(lineEdit_2);
 
+        label_3 = new QLabel(Widget);
+        label_3->setObjectName("label_3");
+        label_3->setGeometry(QRect(795, 110, 111, 23));
+        label_3->setStyleSheet(QString::fromUtf8("font: 600 italic 22pt \"Cascadia Mono SemiBold\";"));
 
         retranslateUi(Widget);
 
@@ -112,8 +117,9 @@ public:
     {
         Widget->setWindowTitle(QCoreApplication::translate("Widget", "Widget", nullptr));
         pushButton->setText(QCoreApplication::translate("Widget", "GIVE UP", nullptr));
-        label->setText(QCoreApplication::translate("Widget", "\347\216\251\345\256\266\344\270\200", nullptr));
-        label_2->setText(QCoreApplication::translate("Widget", "\347\216\251\345\256\266\344\272\214", nullptr));
+        label->setText(QCoreApplication::translate("Widget", "Player 1(Black)", nullptr));
+        label_2->setText(QCoreApplication::translate("Widget", "Player 2(White)", nullptr));
+        label_3->setText(QCoreApplication::translate("Widget", "BLACK", nullptr));
     } // retranslateUi
 
 };
