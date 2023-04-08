@@ -12,6 +12,8 @@
 #include <QLabel>
 #include <QInputDialog>
 //#include <QSoundEffect>
+#include <QBrush>
+#include <qcolor.h>
 int TIMELIMIT=10;
 int step=0;
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始化ui界面
@@ -73,6 +75,19 @@ void Widget::DrawChesses()//画棋子
             //画白子
             painter_Yu_chess.drawPixmap(chess_seted.m_ChessPossition,pix_chessmap_White);
         }
+        
+        //高亮棋子
+        if(i==m_Chess.size()-1||i==m_Chess.size()-2)
+        {
+            QColor PaleVioletRed(0xDB7093);//设置颜色--苍白的紫罗兰红色~
+            QPen pen(PaleVioletRed);//定义画笔
+            pen.setWidth(2);//
+            // pen.setStyle(Qt::DashDotDotLine);
+            painter_Yu_chess.setPen(pen);
+            painter_Yu_chess.drawEllipse(chess_seted.m_ChessPossition.rx(),chess_seted.m_ChessPossition.ry(),40,40);
+           // painter_Yu_chess.setBrush();
+        }
+        
     }
 }
 void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
