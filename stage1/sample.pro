@@ -1,5 +1,5 @@
 QT       += core gui
-
+QT       +=network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
@@ -9,13 +9,26 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    ../../../../yang.ML‘s拯救者/Desktop/QtNetworkDemo-master/networkdata.cpp \
+    ../../../../yang.ML‘s拯救者/Desktop/QtNetworkDemo-master/networkserver.cpp \
+    ../../../../yang.ML‘s拯救者/Desktop/QtNetworkDemo-master/networksocket.cpp \
     chess.cpp \
     main.cpp \
+    networkdata.cpp \
+    networkserver.cpp \
+    networksocket.cpp \
     widget.cpp
 
 
 HEADERS += \
+    ../../../../yang.ML‘s拯救者/Desktop/QtNetworkDemo-master/networkdata.h \
+    ../../../../yang.ML‘s拯救者/Desktop/QtNetworkDemo-master/networkdata.h \
+    ../../../../yang.ML‘s拯救者/Desktop/QtNetworkDemo-master/networkserver.h \
+    ../../../../yang.ML‘s拯救者/Desktop/QtNetworkDemo-master/networksocket.h \
     chess.h \
+    networkdata.h \
+    networkserver.h \
+    networksocket.h \
     widget.h
 
 

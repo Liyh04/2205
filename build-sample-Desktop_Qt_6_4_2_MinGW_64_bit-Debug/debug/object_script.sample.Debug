@@ -1,0 +1,11 @@
+debug/networkdata.o
+debug/networkserver.o
+debug/networksocket.o
+debug/chess.o
+debug/main.o
+debug/networkdata.o
+debug/networkserver.o
+debug/widget.o
+debug/qrc_res.o
+debug/moc_networkserver.o
+debug/moc_widget.o
