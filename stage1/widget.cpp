@@ -21,12 +21,24 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始�
     #define PAINT_X 114
     #define PAINT_Y 51
     setFixedSize(1070,700);
-    setWindowTitle("NoGo_group5");
+    
     ui->setupUi(this);
-
-    //设置窗口大小和标题
+    //设置窗口
     this->init();
+    
+    getC_y[1]='A';
+    getC_y[2]='B';
+    getC_y[3]='C';
+    getC_y[4]='D';
+    getC_y[5]='E';
+    getC_y[6]='F';
+    getC_y[7]='G';
+    getC_y[8]='H';
+    getC_y[9]='I';
+    
+    setWindowTitle("NoGo_group5");//设置标题
     m_isBlackTurn = true;//黑子先行
+    fail_state=0;
 
 }
 void Widget::paintEvent(QPaintEvent *)//画棋盘和棋子
@@ -88,6 +100,16 @@ void Widget::DrawChesses()//画棋子
            // painter_Yu_chess.setBrush();
         }
         
+    }
+}
+void Widget::getCY()
+{
+    for (int i = 0; i<m_Chess.size(); i++)
+    {
+        chesspo[i].x=(m_Chess[i].m_ChessPossition.rx()-PAINT_X)/Widget::width+1;
+        chesspo[i].y=(m_Chess[i].m_ChessPossition.ry()-PAINT_Y)/Widget::height+1;
+        chesspo[i].c_y=getC_y[chesspo[i].y];
+        //qDebug()<<chesspo[i].x<<","<<chesspo[i].y<<"."<<chesspo[i].c_y;
     }
 }
 void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
@@ -266,13 +288,30 @@ void Widget::updatedisplay()//实时更新计时器
         }
         else
         {
-
+            fail_state=1;
             QString content=QString("Time limit exceed");
-            QMessageBox *dialog1=new QMessageBox;
-            dialog1->resize(1000,700);
+            
+            //按顺序获取已下棋子的坐标
+            getCY();
+
             if(Widget::m_isBlackTurn)
-            dialog1->information(this, content, QString("    BLACK LOSE!    \n    Total Steps: %1    ").arg(step) );
-            else dialog1->information(this, content, QString("    WHITE LOSE!    \n    Total Steps: %1    ").arg(step));
+            {
+                QMessageBox TLEbox(QMessageBox::Information,content,
+                                   QString("    BLACK LOSE!    \n    Total Steps: %1    ").arg(step),
+                                   QMessageBox::Close,this);
+                QAbstractButton* save_button=TLEbox.addButton("Save",QMessageBox::YesRole);
+                connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+                TLEbox.exec();
+            }
+            else
+            {
+                QMessageBox TLEbox(QMessageBox::Information,content,
+                                   QString("    WHITE LOSE!    \n    Total Steps: %1    ").arg(step),
+                                   QMessageBox::Close,this);
+                QAbstractButton* save_button=TLEbox.addButton("Save",QMessageBox::YesRole);
+                connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+                TLEbox.exec();
+            }
             restart();
          }
     }
@@ -286,17 +325,87 @@ Widget::~Widget()//析构函数
 {
     delete ui;
 }
+
+void Widget::on_saveButton_clicked()
+{
+        // 弹出一个对话框，让用户选择文件保存的目录
+        QString dir = QFileDialog::getExistingDirectory(this, tr("选择文件保存目录"), QDir::homePath());
+
+        // 如果用户取消选择，返回
+        if (dir.isEmpty())
+            return;
+
+        // 生成一个当前时间的字符串
+        QString timestamp = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss");
+
+        // 将当前时间的字符串添加到文件名中
+        QString fileName = QString("save_%1.txt").arg(timestamp);
+
+        // 将选定的目录与文件名结合起来形成完整的文件路径
+        QString filePath = dir + "/" + fileName;
+
+        // 创建一个新文件
+        QFile file(filePath);
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+            return;
+
+        // 创建一个QTextEdit对象textEdit
+        QTextEdit *textEdit = new QTextEdit(this);
+
+        //获得save内容
+        for (int i = 0; i < m_Chess.size(); ++i)
+        {
+            textEdit->insertPlainText(chesspo[i].c_y+QString::number(chesspo[i].x)+" ");
+        }
+        //结尾标识结束状态
+        if(fail_state==1)
+            textEdit->insertPlainText("T");
+        else if(fail_state==2)
+            textEdit->insertPlainText("G");
+
+        // 使用QTextStream类将textEdit写入新文件
+        QTextStream out(&file);
+        out << textEdit->toPlainText().trimmed().toUtf8();
+
+//        //测试用
+//        // 获取QTextEdit对象的文本
+//        QString text01 = textEdit->toPlainText();
+
+//        // 输出文本到控制台,测试用
+//        qDebug() << text01;
+
+//        //delete textEdit;
+//        qDebug()<<"关闭文件";
+        file.close();
+}
+
 void Widget::on_pushButton_clicked()//当按下认输按钮
 {
      pTimer->stop();
-    if(Widget::m_isBlackTurn){
+     fail_state=2;
+    //按顺序获取已下棋子的坐标
+    getCY();
+    if(Widget::m_isBlackTurn)
+    {
         step++;
-        QMessageBox::information(this, "Game Over", QString("BLACK LOSE!\nTotal Steps: %1").arg(step) );
+        QMessageBox GIVEUPbox(QMessageBox::Information,"Game Over",
+                           QString("BLACK LOSE!\nTotal Steps: %1").arg(step),
+                           QMessageBox::Close,this);
+        QAbstractButton* save_button=GIVEUPbox.addButton("Save",QMessageBox::YesRole);
+        connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+        GIVEUPbox.exec();
         step=0;
     }
-    else {
+    else 
+    {
         step++;
-        QMessageBox::information(this, "Game Over", QString("WHITE LOSE!\nTotal Steps: %1").arg(step) );
+        QMessageBox GIVEUPbox(QMessageBox::Information,"Game Over",
+                           QString("WHITE LOSE!\nTotal Steps: %1").arg(step),
+                           QMessageBox::Close,this);
+        QAbstractButton* save_button=GIVEUPbox.addButton("Save",QMessageBox::YesRole);
+        connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+
+        GIVEUPbox.exec();
         step=0;
     }
     restart();
