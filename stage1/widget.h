@@ -24,6 +24,7 @@ class Widget : public QWidget
 
 public:
     void restart();//重新开局
+    void on_saveButton_clicked();//save功能
 public slots:
     void updatedisplay();//更新计时器显示
 protected:
@@ -32,7 +33,18 @@ protected:
     //mouse
     void mousePressEvent(QMouseEvent *);
 public:
-
+    //结构体用来按顺序存储棋子的落点；
+    struct Chesspo
+    {
+        int x;
+        int y;
+        char c_y;
+    }chesspo[81];
+    //数组用来确定y坐标的字母表示
+    char getC_y[10];
+    void getCY();//获取坐标的函数
+    int fail_state;//代表输了的状态，1-tle，2-giveup，0-初始值；
+    
     Widget(QWidget *parent = nullptr);
     void init();//游戏开局时初始化
     void if_scanned_init();//将if_scanned数组所有元素重置为0
