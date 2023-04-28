@@ -1,7 +1,7 @@
 #ifndef NETWORKSOCKET_H
 #define NETWORKSOCKET_H
 
-#include "networkdata.h"
+#include "networkdata_.h"
 #include <QtNetwork/QTcpSocket>
 
 class NetworkSocket : public QObject {

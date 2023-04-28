@@ -1,7 +1,7 @@
 #ifndef NETWORKSERVER_H
 #define NETWORKSERVER_H
 
-#include "networkdata.h"
+#include "networkdata_.h"
 #include <QtNetwork>
 
 class NetworkServer : public QTcpServer {

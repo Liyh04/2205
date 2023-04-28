@@ -12,8 +12,8 @@
 #include <QWidget>
 #include <QTime>
 #include <QSet>
-#include "networkserver.h"
-#include "networksocket.h"
+//#include "networkserver.h"
+//#include "networksocket.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
@@ -108,24 +108,24 @@ private:
     void StopGame();  //停止当前棋局（暂未实现）
     void RepentanceGame(); //悔棋（暂未实现）
     // 服务端
-    NetworkServer* server;
+    //NetworkServer* server;
     // 客户端
-    NetworkSocket* socket;
+    //NetworkSocket* socket;
     // 最后一个客户端
-    QTcpSocket* lastOne;
-    QString IP;
-    int PORT;
+    //QTcpSocket* lastOne;
+    //QString IP;
+    //int PORT;
     // 客户端池，NetworkServer 有一个 QList 的，但这里我想用 set，所以又弄了一个
-    QSet<QTcpSocket*> clients;
+    //QSet<QTcpSocket*> clients;
 
 
-private slots:
-    void receieveData(QTcpSocket* client, NetworkData data);
-    void receieveDataFromServer(NetworkData data);
-    void onClientSendButtonClicked();
-    void onServerSendButtonClicked();
-    void reStart();
-    void reConnect();
-    void reSet();
+//private slots:
+    //void receieveData(QTcpSocket* client, NetworkData data);
+    //void receieveDataFromServer(NetworkData data);
+    //void onClientSendButtonClicked();
+    //void onServerSendButtonClicked();
+    //void reStart();
+    //void reConnect();
+    //void reSet();
 };
 #endif // WIDGET_H

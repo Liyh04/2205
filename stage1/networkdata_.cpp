@@ -1,4 +1,4 @@
-#include "networkdata.h"
+#include "networkdata_.h"
 
 NetworkData::NetworkData(OPCODE op, QString data1, QString data2)
     : op(op)
