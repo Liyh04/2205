@@ -1,6 +1,10 @@
 
 #include "chess.h"
+#include "widget.h"
 
+#include"paint.h"
+#include"rules.h"
+#include"timer.h"
 Chess::Chess()
 {
 

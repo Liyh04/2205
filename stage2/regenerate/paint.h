@@ -12,8 +12,7 @@ class paint:public Widget
 {
 public:
     paint();
-    void paintEvent(QPaintEvent *);
-    void DrawChessboard();  //画棋盘
+
 };
 
 #endif // PAINT_H

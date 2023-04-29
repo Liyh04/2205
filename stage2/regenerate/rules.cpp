@@ -1,6 +1,10 @@
 #include<QMessageBox>
 #include "rules.h"
+#include "widget.h"
+#include "chess.h"
+#include"paint.h"
 
+#include"timer.h"
 rules::rules()
 {
 
@@ -54,43 +58,39 @@ bool rules::illegal_warning(int X,int Y)
     if(!m_isBlackTurn)ExistChess[X][Y]=2;
     //判断合法前，先假设点击的位置已经下了棋子，如果不合法，则将数组中对应元素重置为0
     //以下5个if函数分别判断点击处以及上下左右五个棋子是否存活
+    Widget *w=new Widget();
     if(!if_legal(X,Y))
     {
         ExistChess[X][Y]=0;
-        QMessageBox *warning1=new QMessageBox;
-        warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
+        emit w->illegal_warnings();
         return 1;
     }
     rules::if_scanned_init();
     if(X>0&&!if_legal(X-1,Y))
     {
         ExistChess[X][Y]=0;
-        QMessageBox *warning1=new QMessageBox;
-        warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
+        emit w->illegal_warnings();
         return 1;
     }
     rules::if_scanned_init();
     if(X<8&&!if_legal(X+1,Y))
     {
         ExistChess[X][Y]=0;
-        QMessageBox *warning1=new QMessageBox;
-        warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
+        emit w->illegal_warnings();
         return 1;
     }
     rules::if_scanned_init();
     if(Y>0&&!if_legal(X,Y-1))
     {
         ExistChess[X][Y]=0;
-        QMessageBox *warning1=new QMessageBox;
-        warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
+        emit w->illegal_warnings();
         return 1;
     }
     rules::if_scanned_init();
     if(Y<8&&!if_legal(X,Y+1))
     {
         ExistChess[X][Y]=0;
-        QMessageBox *warning1=new QMessageBox;
-        warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
+        emit w->illegal_warnings();
         return 1;
     }
     return 0;

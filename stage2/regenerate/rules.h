@@ -13,7 +13,7 @@ public:
 
 
     static int if_legal(int x,int y);//判断x行y列的棋子是否存活
-    bool illegal_warning(int x,int y);
+    static bool illegal_warning(int x,int y);
     static void if_scanned_init();
 private:
 };

@@ -15,8 +15,7 @@ public:
     timer();
 
 
-public slots:
-    void updatedisplay();//更新计时器显示
+
 };
 
 #endif // TIMER_H

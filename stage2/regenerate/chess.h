@@ -1,7 +1,6 @@
 
 #ifndef CHESS_H
 #define CHESS_H
-#include "rules.h"
 #include<QMouseEvent>
 #include <QPainter>
 #include <QObject>
