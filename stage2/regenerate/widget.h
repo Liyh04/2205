@@ -15,11 +15,9 @@
 #include<QObject>
 #include<QDebug>
 #include<QPainter>
+#include<QVector>
+#include<vector>
 
-#define PAINT_X 114
-#define PAINT_Y 51
-int TIMELIMIT=10;
-int step=0;
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
@@ -32,11 +30,15 @@ class Chess;
 class rules;
 class timer;
 class paint;
-QWidget* originalWidget = new QWidget;
-// 对 originalWidget 进行初始化操作...
+#define height 50
+#define width 50
+#define PAINT_X 114
+#define PAINT_Y 51
+static int TIMELIMIT;
+static int step;
+#define n_row 9
+#define n_column 9
 
-// 通过复制构造函数创建一个新的 QWidget 对象
-QWidget* copiedWidget = new QWidget(originalWidget);
 class Widget : public QWidget
 
 {
@@ -47,24 +49,22 @@ public:
     Widget(QWidget *parent = nullptr);
     //Widget(const Widget&){};
     ~Widget();
-    Chess *chess;
-    rules *rules;
-    timer *timer;
-    paint *paint;
-    void init();
+    Chess *chess=NULL;
+    rules *rules=NULL;
+    timer *timer=NULL;
+    paint *paint=NULL;
     void restart();
     void on_pushButton_clicked();//当按下认输按钮
-    static int height;
-    static int width;
-    static int n_row;
-    static int n_column;
-    Ui::Widget *ui;
 
+    QVector<Chess> m_Chess;//已下的棋子座标容器
+    Ui::Widget *ui;
+    void mousePressEvent(QMouseEvent * e);
+    void DrawChesses();     //画已下的棋子
+    void init();//游戏开局时初始化
+    friend class paint;
 };
-int Widget::height=50;
-int Widget::width=50;
-int Widget::n_row=9;
-int Widget::n_column=9;
+
+
 
 
 #endif // WIDGET_H

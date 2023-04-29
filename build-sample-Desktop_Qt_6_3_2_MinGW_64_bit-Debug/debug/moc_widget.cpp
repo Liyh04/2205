@@ -7,7 +7,7 @@
 *****************************************************************************/
 
 #include <memory>
-#include "../../judge_if_legal/widget.h"
+#include "../../stage1/widget.h"
 #include <QtGui/qtextcursor.h>
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>

@@ -1,32 +1,12 @@
 
 #include "timer.h"
 #include "ui_widget.h"
-
+#include"widget.h"
 timer::timer()
 {
 
 }
-void timer::init()//游戏开局时初始化：设置每步限时，初始化计时器
-{
 
-    bool ok=false;
-    QString dlgTitle="Timelimit Setting";
-    QString txtLabel="Please enter the timelimit of each step(an integer).";
-    int timelimit=QInputDialog::getInt(this,dlgTitle,txtLabel,30,10,3600,1,&ok);
-    if(ok)
-    {
-        TIMELIMIT=timelimit;
-    }
-    pTimer=new QTimer;
-    connect(pTimer,SIGNAL(timeout()),this,SLOT(updatedisplay()));
-    QString min_str=QString::number(TIMELIMIT/60);
-    QString minstr=QString("%2").arg(min_str.toInt(), 2, 10, QLatin1Char('0'));
-    QString sec_str=QString::number(TIMELIMIT%60);
-    QString secstr=QString("%2").arg(sec_str.toInt(), 2, 10, QLatin1Char('0'));
-    this->ui->lcd_min->display(minstr);
-    this->ui->lcd_sec->display(secstr);
-    ui->label_3->setText("BLACK");
-}
 void timer::updatedisplay()//实时更新计时器
 {
     {

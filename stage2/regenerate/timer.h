@@ -5,16 +5,16 @@
 #include <QTimer>
 #include <QTime>
 #include <QElapsedTimer>
+#include<QWidget>
 
-
-
+class QWidget;
 class Widget;
 class timer:public Widget
 {
 public:
     timer();
 
-    void init();//游戏开局时初始化
+
 public slots:
     void updatedisplay();//更新计时器显示
 };
