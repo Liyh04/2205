@@ -67,18 +67,18 @@ void MainWindow::receieveDataFromServer(NetworkData data)
 
 void MainWindow::onClientSendButtonClicked()
 {
-    this->socket->send(NetworkData(OPCODE::CHAT_OP,this->ui->clientSendEdit->text(),"send by client"));//有点问题
+    this->socket->send(NetworkData(OPCODE::CHAT_OP,this->ui->clientSendEdit->text(),this->ui->clientSend->text()));//有点问题
 
-    this->socket->send(NetworkData(OPCODE::CHAT_OP,this->ui->clientSend->text(),"send by client"));//有点问题
+    //this->socket->send(NetworkData(OPCODE::CHAT_OP,this->ui->clientSend->text(),"send by client"));//有点问题
 }
 
 
 void MainWindow::onServerSendButtonClicked()
 {
     if(lastOne)
-        this->server->send(lastOne,NetworkData(OPCODE::CHAT_OP,this->ui->serverSendEdit->text(),"send by server"));
-    if(lastOne)
-        this->server->send(lastOne,NetworkData(OPCODE::CHAT_OP,this->ui->ServerSend->text(),"send by server"));
+        this->server->send(lastOne,NetworkData(OPCODE::CHAT_OP,this->ui->serverSendEdit->text(),this->ui->ServerSend->text()));
+    //if(lastOne)
+       // this->server->send(lastOne,NetworkData(OPCODE::CHAT_OP,this->ui->ServerSend->text(),"send by server"));
 }
 
 void MainWindow::reStart()
