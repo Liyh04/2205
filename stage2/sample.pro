@@ -1,4 +1,5 @@
-QT       += core gui
+QT       += core gui network
+QT      +=network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
@@ -10,11 +11,19 @@ CONFIG += c++17
 SOURCES += \
     chess.cpp \
     main.cpp \
+    mainwindow.cpp \
+    networkdata.cpp \
+    networkserver.cpp \
+    networksocket.cpp \
     widget.cpp
 
 
 HEADERS += \
     chess.h \
+    mainwindow.h \
+    networkdata.h \
+    networkserver.h \
+    networksocket.h \
     widget.h
 
 

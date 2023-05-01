@@ -174,6 +174,6 @@ void MainWindow::on_CLEAVE_OP_clicked()
 void MainWindow::on_SLEAVE_OP_clicked()
 {
     this->socket->send(NetworkData(OPCODE::LEAVE_OP,"LEAVEOP",""));
-    socket->bye();
+
 }
 

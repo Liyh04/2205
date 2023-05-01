@@ -41,21 +41,13 @@ private slots:
     void reStart();
     void reConnect();
     void reSet();
-
     void on_CREADY_OP_clicked();
-
     void on_CREJECT_OP_clicked();
-
     void on_SREADY_OP_clicked();
-
     void on_SREJECT_OP_clicked();
-
     void on_CilentGiveup_clicked();
-
     void on_ServerGiveup_2_clicked();
-
     void on_CLEAVE_OP_clicked();
-
     void on_SLEAVE_OP_clicked();
 
 private:

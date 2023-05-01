@@ -216,6 +216,7 @@ Makefile: ../stage2/sample.pro ../../../../QT-qt/6.4.2/mingw_64/mkspecs/win32-g+
 		../stage2/sample.pro \
 		../../../../QT-qt/6.4.2/mingw_64/lib/Qt6Widgets.prl \
 		../../../../QT-qt/6.4.2/mingw_64/lib/Qt6Gui.prl \
+		../../../../QT-qt/6.4.2/mingw_64/lib/Qt6Network.prl \
 		../../../../QT-qt/6.4.2/mingw_64/lib/Qt6Core.prl \
 		../../../../QT-qt/6.4.2/mingw_64/lib/Qt6EntryPoint.prl \
 		../../../../QT-qt/6.4.2/mingw_64/mkspecs/features/build_pass.prf \
@@ -367,6 +368,7 @@ Makefile: ../stage2/sample.pro ../../../../QT-qt/6.4.2/mingw_64/mkspecs/win32-g+
 ../stage2/sample.pro:
 ../../../../QT-qt/6.4.2/mingw_64/lib/Qt6Widgets.prl:
 ../../../../QT-qt/6.4.2/mingw_64/lib/Qt6Gui.prl:
+../../../../QT-qt/6.4.2/mingw_64/lib/Qt6Network.prl:
 ../../../../QT-qt/6.4.2/mingw_64/lib/Qt6Core.prl:
 ../../../../QT-qt/6.4.2/mingw_64/lib/Qt6EntryPoint.prl:
 ../../../../QT-qt/6.4.2/mingw_64/mkspecs/features/build_pass.prf:
