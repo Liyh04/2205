@@ -3,7 +3,7 @@
 #include "networkdata.h"
 #include <QPushButton>
 #include <QDebug>
-
+#include"networksocket.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -56,6 +56,12 @@ void MainWindow::receieveData(QTcpSocket* client, NetworkData data)
     this->clients.insert(client);
     this->ui->serverGetEdit->setText(data.data1);
     this->ui->serverGet->setText(data.data2);
+    if(data.data2=='w'){
+        flag_color=1;
+    }//如果客户端请求白棋
+    if(data.data2=='b'){
+        flag_color=2;
+    }//如果客户端请求黑棋
 }
 
 void MainWindow::receieveDataFromServer(NetworkData data)
@@ -116,3 +122,58 @@ void MainWindow::reSet()
     this->reStart();
     this->reConnect();
 }
+
+void MainWindow::on_CREADY_OP_clicked()//客户端申请
+{
+    this->socket->send(NetworkData(OPCODE::READY_OP,this->ui->clientSendEdit->text(),this->ui->clientSend->text()));
+    //receive处的data2对应客户端棋子的颜色另一个则为服务端棋子的颜色
+}
+
+void MainWindow::on_SREADY_OP_clicked()//服务端同意
+{
+    this->socket->send(NetworkData(OPCODE::READY_OP,this->ui->clientSendEdit->text(),this->ui->clientSend->text()));
+    flag_start=1;//游戏可以开始
+}
+void MainWindow::on_SREJECT_OP_clicked()//客户端拒绝
+{
+    this->socket->send(NetworkData(OPCODE::READY_OP,this->ui->clientSendEdit->text(),this->ui->clientSend->text()));
+    flag_start=-1;//游戏不能开始
+}
+void MainWindow::on_CREJECT_OP_clicked(){}//多余的但是不能删除
+
+void MainWindow::on_CilentGiveup_clicked()//客户端投降
+{
+    if(flag_color==1){//客户端白棋
+
+    }
+    if(flag_color==2){//客户端黑棋
+
+    }
+}
+
+
+void MainWindow::on_ServerGiveup_2_clicked()//服务端投降
+{
+    if(flag_color==1){//服务端黑棋
+
+    }
+    if(flag_color==2){//服务端白棋
+
+    }
+}
+
+
+
+void MainWindow::on_CLEAVE_OP_clicked()
+{
+    this->socket->send(NetworkData(OPCODE::LEAVE_OP,"LEAVEOP",""));
+    socket->bye();
+}
+
+
+void MainWindow::on_SLEAVE_OP_clicked()
+{
+    this->socket->send(NetworkData(OPCODE::LEAVE_OP,"LEAVEOP",""));
+    socket->bye();
+}
+
