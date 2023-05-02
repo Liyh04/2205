@@ -2,11 +2,6 @@
 #define WIDGET_H
 
 #include <QWidget>
-#include <QSet>
-#include<Qtnetwork>
-//#include "networkserver.h"
-//#include "networksocket.h"
-#include <QWidget>
 #include "chess.h"
 #include<QLabel>
 #include<QLineEdit>
@@ -16,6 +11,9 @@
 #include <QElapsedTimer>
 #include <QWidget>
 #include <QTime>
+#include <QSet>
+#include "networkserver.h"
+#include "networksocket.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
@@ -24,9 +22,7 @@ QT_END_NAMESPACE
 class Widget : public QWidget
 {
     Q_OBJECT
-
-
-/*public:
+public:
     // 服务端
     NetworkServer* server;
     // 客户端
@@ -50,15 +46,22 @@ private slots:
     void reStart();
     void reConnect();
     void reSet();
+
     void on_CREADY_OP_clicked();
+
     void on_CREJECT_OP_clicked();
+
     void on_SREADY_OP_clicked();
+
     void on_SREJECT_OP_clicked();
+
     void on_CilentGiveup_clicked();
+
     void on_ServerGiveup_2_clicked();
+
     void on_CLEAVE_OP_clicked();
+
     void on_SLEAVE_OP_clicked();
-*/
 
 public:
     void restart();//重新开局
@@ -141,5 +144,6 @@ private:
     void DrawChessAtPoint(QPainter& painter,QPoint& pt);//在pt 位置,以Painter 画棋子
     void StopGame();  //停止当前棋局（暂未实现）
     void RepentanceGame(); //悔棋（暂未实现）
+
 };
 #endif // WIDGET_H

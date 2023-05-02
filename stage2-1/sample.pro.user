@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 10.0.0, 2023-05-02T22:45:11. -->
+<!-- Written by QtCreator 10.0.0, 2023-05-02T22:51:43. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -236,8 +236,9 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:E:/git/2205/stage2/sample.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">E:/git/2205/stage2/sample.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">sample2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:E:/git/2205/stage2-1/sample.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">E:/git/2205/stage2-1/sample.pro</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
@@ -565,13 +566,15 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:E:/git/2205/stage2/sample.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">E:/git/2205/stage2/sample.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">sample2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:E:/git/2205/stage2-1/sample.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">E:/git/2205/stage2-1/sample.pro</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">E:/git/2205/build-sample-Qt_6_4_3_mingw_64-Debug</value>
    </valuemap>
    <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>

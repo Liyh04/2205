@@ -1,10 +1,5 @@
 #include "widget.h"
 #include "ui_widget.h"
-
-//#include "networkdata.h"
-#include <QPushButton>
-#include <QDebug>
-//#include"networksocket.h"
 #include <QPainter>
 #include <QMouseEvent>
 #include <chess.h>
@@ -16,22 +11,24 @@
 #include <QMessageBox>
 #include <QLabel>
 #include <QInputDialog>
+//#include <QSoundEffect>
 #include <QBrush>
 #include <qcolor.h>
 int TIMELIMIT=10;
 int step=0;
-Widget::Widget(QWidget *parent)
-    : QWidget(parent)
-    , ui(new Ui::Widget)
+Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始化ui界面
 {
+
     #define PAINT_X 114
     #define PAINT_Y 51
-    setFixedSize(1500,700);
+    setFixedSize(1400,700);
     setWindowTitle("NoGo_group5");
     m_isBlackTurn = true;//黑子先行
     ui->setupUi(this);
-    // 本地 IP，所有电脑都可以用这个 IP 指向自己
-    /*IP = "127.0.0.1";
+
+    //设置窗口大小和标题
+    this->init();
+    IP = "127.0.0.1";
     // 端口，不要太简单，要避免和别的软件冲突
     PORT = 16667;
 
@@ -58,21 +55,21 @@ Widget::Widget(QWidget *parent)
     // 客户端向 IP:PORT 连接，不会连到自己
     this->socket->hello(IP,PORT);
     // 阻塞等待，2000ms超时
-    this->socket->base()->waitForConnected(2000);*/
-}
+    this->socket->base()->waitForConnected(2000);
 
-Widget::~Widget()
+
+}
+Widget::~Widget()//析构函数
 {
     delete ui;
 }
-
-/*void Widget::receieveData(QTcpSocket* client, NetworkData data)
+void Widget::receieveData(QTcpSocket* client, NetworkData data)
 {
     qDebug()<<"Server get a data: "<<client<<" "<<data.encode();
     lastOne=client;
     // 获得地址的字符串表示，调试用
     QString ptrStr = QString("0x%1").arg((quintptr)client,
-                        QT_POINTER_SIZE, 16, QChar('0'));
+                                         QT_POINTER_SIZE, 16, QChar('0'));
     this->ui->lastOneLabel->setText("LastOne: "+ptrStr);
     this->clients.insert(client);
     this->ui->serverGetEdit->setText(data.data1);
@@ -105,7 +102,7 @@ void Widget::onServerSendButtonClicked()
     if(lastOne)
         this->server->send(lastOne,NetworkData(OPCODE::CHAT_OP,this->ui->serverSendEdit->text(),this->ui->serverSend->text()));
     //if(lastOne)
-       // this->server->send(lastOne,NetworkData(OPCODE::CHAT_OP,this->ui->ServerSend->text(),"send by server"));
+    // this->server->send(lastOne,NetworkData(OPCODE::CHAT_OP,this->ui->ServerSend->text(),"send by server"));
 }
 
 void Widget::reStart()
@@ -152,12 +149,12 @@ void Widget::on_CREADY_OP_clicked()//客户端申请
 
 void Widget::on_SREADY_OP_clicked()//服务端同意
 {
-    this->server->send(lastOne,NetworkData(OPCODE::READY_OP,this->ui->serverSendEdit->text(),this->ui->serverSend->text()));
+    this->socket->send(NetworkData(OPCODE::READY_OP,this->ui->clientSendEdit->text(),this->ui->clientSend->text()));
     flag_start=1;//游戏可以开始
 }
 void Widget::on_SREJECT_OP_clicked()//客户端拒绝
 {
-    this->server->send(lastOne,NetworkData(OPCODE::READY_OP,this->ui->clientSendEdit->text(),this->ui->clientSend->text()));
+    this->socket->send(NetworkData(OPCODE::READY_OP,this->ui->clientSendEdit->text(),this->ui->clientSend->text()));
     flag_start=-1;//游戏不能开始
 }
 void Widget::on_CREJECT_OP_clicked(){}//多余的但是不能删除
@@ -194,9 +191,9 @@ void Widget::on_CLEAVE_OP_clicked()
 
 void Widget::on_SLEAVE_OP_clicked()
 {
-    this->server->send(lastOne,NetworkData(OPCODE::LEAVE_OP,"LEAVEOP",""));
+    this->socket->send(NetworkData(OPCODE::LEAVE_OP,"LEAVEOP",""));
 
-}*/
+}
 void Widget::paintEvent(QPaintEvent *)//画棋盘和棋子
 {
     DrawChessboard();        //画棋盘
@@ -266,21 +263,21 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     int y=e->pos().y();
     //如果鼠标不是在棋盘区域按下,则放弃
     {
-        if (x<30+PAINT_X || x>470+PAINT_X || y<30+PAINT_Y || y>470+PAINT_Y )
-            return;
+    if (x<30+PAINT_X || x>470+PAINT_X || y<30+PAINT_Y || y>470+PAINT_Y )
+        return;
     }
     //判定鼠标的位置更接近哪一个座标点, 将该座标点作为要下棋子的点
     {
-        if ((x-PAINT_X)%Widget::width<=Widget::width/2)
-            pt.setX( PAINT_X+((x-PAINT_X) / Widget::width)*Widget::width-20);
-        else
-            pt.setX( PAINT_X+((x-PAINT_X) / Widget::width+1)*Widget::width-20);
+    if ((x-PAINT_X)%Widget::width<=Widget::width/2)
+        pt.setX( PAINT_X+((x-PAINT_X) / Widget::width)*Widget::width-20);
+    else
+        pt.setX( PAINT_X+((x-PAINT_X) / Widget::width+1)*Widget::width-20);
 
-        if ((y-PAINT_Y)%Widget::height<=Widget::height/2)
-            pt.setY( PAINT_Y+((y-PAINT_Y) / Widget::height)*Widget::height-20);
-        else
-            pt.setY( PAINT_Y+((y-PAINT_Y) / Widget::height+1)*Widget::height-20);
-    }
+    if ((y-PAINT_Y)%Widget::height<=Widget::height/2)
+        pt.setY( PAINT_Y+((y-PAINT_Y) / Widget::height)*Widget::height-20);
+    else
+        pt.setY( PAINT_Y+((y-PAINT_Y) / Widget::height+1)*Widget::height-20);
+}
     int X=(pt.y()-PAINT_Y)/Widget::height;
     int Y=(pt.x()-PAINT_X)/Widget::width;
     //如果已存在棋子，就什么也不做
@@ -296,7 +293,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         {
             return;
         }
-    }
+}
     //如果不存在棋子，则先判断这一步是否合法，如果合法，则构造一个棋子
     Widget::if_scanned_init();
     if(m_isBlackTurn)ExistChess[X][Y]=1;
@@ -433,10 +430,10 @@ void Widget::updatedisplay()//实时更新计时器
             QMessageBox *dialog1=new QMessageBox;
             dialog1->resize(1000,700);
             if(Widget::m_isBlackTurn)
-                dialog1->information(this, content, QString("    BLACK LOSE!    \n    Total Steps: %1    ").arg(step) );
+            dialog1->information(this, content, QString("    BLACK LOSE!    \n    Total Steps: %1    ").arg(step) );
             else dialog1->information(this, content, QString("    WHITE LOSE!    \n    Total Steps: %1    ").arg(step));
             restart();
-        }
+         }
     }
 }
 //初始化静态成员
@@ -447,7 +444,7 @@ int Widget::n_column=9;
 
 void Widget::on_pushButton_clicked()//当按下认输按钮
 {
-    pTimer->stop();
+     pTimer->stop();
     if(Widget::m_isBlackTurn){
         step++;
         QMessageBox::information(this, "Game Over", QString("BLACK LOSE!\nTotal Steps: %1").arg(step) );
