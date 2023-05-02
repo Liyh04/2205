@@ -257,6 +257,7 @@ void Widget::DrawChesses()//画棋子
 }
 void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
 {
+    if(flag_start!=1)return;
     //求鼠标点击处的棋子点pt↓
     QPoint pt;
     int x=e->pos().x() ;
