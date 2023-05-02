@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>998</width>
+    <width>1295</width>
     <height>600</height>
    </rect>
   </property>
@@ -53,7 +53,7 @@
     <rect>
      <x>790</x>
      <y>140</y>
-     <width>112</width>
+     <width>114</width>
      <height>245</height>
     </rect>
    </property>
@@ -126,7 +126,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="lineEdit_2">
+     <widget class="QLineEdit" name="lineEdit">
       <property name="enabled">
        <bool>true</bool>
       </property>
@@ -149,6 +149,254 @@
    <property name="text">
     <string>BLACK</string>
    </property>
+  </widget>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>930</x>
+     <y>10</y>
+     <width>451</width>
+     <height>423</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="3" column="2" colspan="2">
+     <widget class="QLineEdit" name="serverGet">
+      <property name="text">
+       <string>data2:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLineEdit" name="clientGetEdit">
+      <property name="text">
+       <string>data1:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2" colspan="2">
+     <widget class="QLabel" name="lastOneLabel">
+      <property name="text">
+       <string>LastOne: </string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLineEdit" name="clientSendEdit">
+      <property name="text">
+       <string>data1:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="4">
+     <widget class="QPushButton" name="serverSendButton">
+      <property name="text">
+       <string>ServerSend</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="4">
+     <widget class="QPushButton" name="SGG_OP">
+      <property name="text">
+       <string>GG_OP</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="2" colspan="2">
+     <widget class="QLineEdit" name="serverSendEdit">
+      <property name="text">
+       <string>data1:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="3">
+     <widget class="QPushButton" name="reSetButton">
+      <property name="text">
+       <string>ReSet</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="4">
+     <widget class="QPushButton" name="SREJECT_OP">
+      <property name="text">
+       <string>REJECT_OP</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="2" colspan="2">
+     <widget class="QLineEdit" name="serverSend">
+      <property name="text">
+       <string>data2:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="2" colspan="2">
+     <widget class="QLineEdit" name="serverGetEdit">
+      <property name="text">
+       <string>data1:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLineEdit" name="clientGet">
+      <property name="text">
+       <string>data2:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1" colspan="2">
+     <widget class="QLineEdit" name="PORTEdit">
+      <property name="text">
+       <string>16667</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <widget class="QPushButton" name="CREADY_OP">
+      <property name="text">
+       <string>READY_OP</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="4">
+     <widget class="QPushButton" name="SMOVE_OP">
+      <property name="text">
+       <string>MOVE_OP</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="QPushButton" name="CREJECT_OP">
+      <property name="text">
+       <string>REJECT_OP</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="4">
+     <widget class="QPushButton" name="pushButton_2">
+      <property name="text">
+       <string>ShowClients</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QPushButton" name="clientSendButton">
+      <property name="text">
+       <string>ClientSend</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QPushButton" name="reConnectButton">
+      <property name="text">
+       <string>Reconnect</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QPushButton" name="getButton_1">
+      <property name="text">
+       <string>CilentGet</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="1">
+     <widget class="QPushButton" name="CGG_OP">
+      <property name="text">
+       <string>GG_OP</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="4">
+     <widget class="QPushButton" name="SREADY_OP">
+      <property name="text">
+       <string>READY_OP</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="1">
+     <widget class="QPushButton" name="CLEAVE_OP">
+      <property name="text">
+       <string>LEAVE_OP</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="4">
+     <widget class="QPushButton" name="reStartButton">
+      <property name="text">
+       <string>RestartServer</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLineEdit" name="clientSend">
+      <property name="text">
+       <string>data2:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="4">
+     <widget class="QPushButton" name="getButton_2">
+      <property name="text">
+       <string>ServerGet</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="4">
+     <widget class="QPushButton" name="SLEAVE_OP">
+      <property name="text">
+       <string>LEAVE_OP</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="1">
+     <widget class="QPushButton" name="CMOVE_OP">
+      <property name="text">
+       <string>MOVE_OP</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLineEdit" name="IPEdit">
+      <property name="text">
+       <string>10.47.145.75</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="connectLabel">
+      <property name="text">
+       <string>Connection fail</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="1">
+     <widget class="QPushButton" name="CilentGiveup">
+      <property name="text">
+       <string>GiveUp</string>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="4">
+     <widget class="QPushButton" name="ServerGiveup_2">
+      <property name="text">
+       <string>GiveUp</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>

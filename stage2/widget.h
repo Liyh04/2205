@@ -12,8 +12,10 @@
 #include <QWidget>
 #include <QTime>
 #include <QSet>
-//#include "networkserver.h"
-//#include "networksocket.h"
+#include<Qtnetwork>
+#include "networkserver.h"
+#include "networksocket.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
@@ -103,5 +105,6 @@ private:
     void DrawChessAtPoint(QPainter& painter,QPoint& pt);//在pt 位置,以Painter 画棋子
     void StopGame();  //停止当前棋局（暂未实现）
     void RepentanceGame(); //悔棋（暂未实现）
+
 };
 #endif // WIDGET_H

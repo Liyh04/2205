@@ -20,75 +20,19 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始�
 {
     #define PAINT_X 114
     #define PAINT_Y 51
-    setFixedSize(1070,700);
+    setFixedSize(1400,700);
     setWindowTitle("NoGo_group5");
+    m_isBlackTurn = true;//黑子先行
     ui->setupUi(this);
 
     //设置窗口大小和标题
     this->init();
-    m_isBlackTurn = true;//黑子先行
+
 
 }
-void Widget::paintEvent(QPaintEvent *)//画棋盘和棋子
+Widget::~Widget()//析构函数
 {
-    DrawChessboard();        //画棋盘
-    DrawChesses();            //画棋子
-    update();//实时更新
-}
-void Widget::DrawChessboard()//初始化棋盘
-{
-    //设置画家
-    QPainter painter_Yujx_board(this);
-    //图片-棋盘
-    QPixmap pix_chessmap;
-    pix_chessmap.load(":/images/qipan.jpg");
-    //改变大小，500,500
-    pix_chessmap=pix_chessmap.scaled(500,500,Qt::KeepAspectRatio,Qt::SmoothTransformation);
-    //画图
-    painter_Yujx_board.drawPixmap(PAINT_X,PAINT_Y,pix_chessmap);
-}
-void Widget::DrawChesses()//画棋子
-{
-    //设置画家
-    QPainter painter_Yu_chess(this);
-
-    //图片-白子和黑子
-    QPixmap pix_chessmap_White;
-    pix_chessmap_White.load(":/images/white.png");
-
-    QPixmap pix_chessmap_Black;
-    pix_chessmap_Black.load(":/images/black.png");
-    //改变大小，40*40
-    pix_chessmap_Black=pix_chessmap_Black.scaled(40,40,Qt::KeepAspectRatio,Qt::SmoothTransformation);
-    pix_chessmap_White=pix_chessmap_White.scaled(40,40,Qt::KeepAspectRatio,Qt::SmoothTransformation);
-    for (int i = 0; i<m_Chess.size(); i++) //重新绘制每一个已下的棋子
-    {
-        Chess chess_seted ( m_Chess[i]);//拷贝构造
-
-        if (chess_seted.m_ChessColor)//如果是该下黑子了
-        {
-            //画黑子
-            painter_Yu_chess.drawPixmap(chess_seted.m_ChessPossition,pix_chessmap_Black);
-        }
-        else
-        {
-            //画白子
-            painter_Yu_chess.drawPixmap(chess_seted.m_ChessPossition,pix_chessmap_White);
-        }
-        
-        //高亮棋子
-        if(i==m_Chess.size()-1||i==m_Chess.size()-2)
-        {
-            QColor PaleVioletRed(0xDB7093);//设置颜色--苍白的紫罗兰红色~
-            QPen pen(PaleVioletRed);//定义画笔
-            pen.setWidth(2);//
-            // pen.setStyle(Qt::DashDotDotLine);
-            painter_Yu_chess.setPen(pen);
-            painter_Yu_chess.drawEllipse(chess_seted.m_ChessPossition.rx(),chess_seted.m_ChessPossition.ry(),40,40);
-           // painter_Yu_chess.setBrush();
-        }
-        
-    }
+    delete ui;
 }
 void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
 {
@@ -276,10 +220,7 @@ int Widget::height=50;
 int Widget::width=50;
 int Widget::n_row=9;
 int Widget::n_column=9;
-Widget::~Widget()//析构函数
-{
-    delete ui;
-}
+
 void Widget::on_pushButton_clicked()//当按下认输按钮
 {
      pTimer->stop();
@@ -311,3 +252,4 @@ void Widget::restart()//游戏重开
         }
     }
 }
+

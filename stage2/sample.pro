@@ -11,7 +11,7 @@ CONFIG += c++17
 SOURCES += \
     chess.cpp \
     main.cpp \
-    mainwindow.cpp \
+    #mainwindow.cpp \
     networkdata.cpp \
     networkserver.cpp \
     networksocket.cpp \
@@ -20,7 +20,7 @@ SOURCES += \
 
 HEADERS += \
     chess.h \
-    mainwindow.h \
+    #mainwindow.h \
     networkdata.h \
     networkserver.h \
     networksocket.h \

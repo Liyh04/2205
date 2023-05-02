@@ -1,12 +1,12 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "Widget.h"
+#include "ui_Widget.h"
 #include "networkdata.h"
 #include <QPushButton>
 #include <QDebug>
 #include"networksocket.h"
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+Widget::Widget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::Widget)
 {
     ui->setupUi(this);
     // 本地 IP，所有电脑都可以用这个 IP 指向自己
@@ -26,26 +26,26 @@ MainWindow::MainWindow(QWidget *parent)
     this->socket = new NetworkSocket(new QTcpSocket(),this);
 
     connect(this->socket->base(),&QTcpSocket::connected,this,[&](){this->ui->connectLabel->setText("connection succeed");});
-    connect(this->socket,&NetworkSocket::receive,this,&MainWindow::receieveDataFromServer);
-    connect(this->server,&NetworkServer::receive,this,&MainWindow::receieveData);
-    connect(this->ui->clientSendButton,&QPushButton::clicked,this,&MainWindow::onClientSendButtonClicked);
-    connect(this->ui->serverSendButton,&QPushButton::clicked,this,&MainWindow::onServerSendButtonClicked);
+    connect(this->socket,&NetworkSocket::receive,this,&Widget::receieveDataFromServer);
+    connect(this->server,&NetworkServer::receive,this,&Widget::receieveData);
+    connect(this->ui->clientSendButton,&QPushButton::clicked,this,&Widget::onClientSendButtonClicked);
+    connect(this->ui->serverSendButton,&QPushButton::clicked,this,&Widget::onServerSendButtonClicked);
     connect(this->ui->showClientButton,&QPushButton::clicked,this,[&](){qDebug()<<clients;});
-    connect(this->ui->reSetButton,&QPushButton::clicked,this,&MainWindow::reSet);
-    connect(this->ui->reConnectButton,&QPushButton::clicked,this,&MainWindow::reConnect);
-    connect(this->ui->reStartButton,&QPushButton::clicked,this,&MainWindow::reStart);
+    connect(this->ui->reSetButton,&QPushButton::clicked,this,&Widget::reSet);
+    connect(this->ui->reConnectButton,&QPushButton::clicked,this,&Widget::reConnect);
+    connect(this->ui->reStartButton,&QPushButton::clicked,this,&Widget::reStart);
     // 客户端向 IP:PORT 连接，不会连到自己
     this->socket->hello(IP,PORT);
     // 阻塞等待，2000ms超时
     this->socket->base()->waitForConnected(2000);
 }
 
-MainWindow::~MainWindow()
+Widget::~Widget()
 {
     delete ui;
 }
 
-void MainWindow::receieveData(QTcpSocket* client, NetworkData data)
+void Widget::receieveData(QTcpSocket* client, NetworkData data)
 {
     qDebug()<<"Server get a data: "<<client<<" "<<data.encode();
     lastOne=client;
@@ -64,14 +64,14 @@ void MainWindow::receieveData(QTcpSocket* client, NetworkData data)
     }//如果客户端请求黑棋
 }
 
-void MainWindow::receieveDataFromServer(NetworkData data)
+void Widget::receieveDataFromServer(NetworkData data)
 {
     qDebug()<<"Client get a data: "<<data.encode();
     this->ui->clientGetEdit->setText(data.data1);
     this->ui->clientGet->setText(data.data2);
 }
 
-void MainWindow::onClientSendButtonClicked()
+void Widget::onClientSendButtonClicked()
 {
     this->socket->send(NetworkData(OPCODE::CHAT_OP,this->ui->clientSendEdit->text(),this->ui->clientSend->text()));//有点问题
 
@@ -79,7 +79,7 @@ void MainWindow::onClientSendButtonClicked()
 }
 
 
-void MainWindow::onServerSendButtonClicked()
+void Widget::onServerSendButtonClicked()
 {
     if(lastOne)
         this->server->send(lastOne,NetworkData(OPCODE::CHAT_OP,this->ui->serverSendEdit->text(),this->ui->ServerSend->text()));
@@ -87,22 +87,22 @@ void MainWindow::onServerSendButtonClicked()
        // this->server->send(lastOne,NetworkData(OPCODE::CHAT_OP,this->ui->ServerSend->text(),"send by server"));
 }
 
-void MainWindow::reStart()
+void Widget::reStart()
 {
     qDebug()<<"restart the server.";
     this->ui->lastOneLabel->setText("LastOne: ");
     this->ui->connectLabel->setText("disconnect");
-    disconnect(this->server,&NetworkServer::receive,this,&MainWindow::receieveData);
+    disconnect(this->server,&NetworkServer::receive,this,&Widget::receieveData);
     clients.clear();
     delete this->server;
     this->server = new NetworkServer(this);
     // 端口相当于传信息的窗户，收的人要在这守着
     this->server->listen(QHostAddress::Any,PORT);
     lastOne = nullptr;
-    connect(this->server,&NetworkServer::receive,this,&MainWindow::receieveData);
+    connect(this->server,&NetworkServer::receive,this,&Widget::receieveData);
 }
 
-void MainWindow::reConnect()
+void Widget::reConnect()
 {
     qDebug()<<"client reconnect to the server.";
     this->ui->connectLabel->setText("connection fail");
@@ -114,7 +114,7 @@ void MainWindow::reConnect()
     }
 }
 
-void MainWindow::reSet()
+void Widget::reSet()
 {
     this->ui->connectLabel->setText("connection fail");
     IP=this->ui->IPEdit->text();
@@ -123,25 +123,25 @@ void MainWindow::reSet()
     this->reConnect();
 }
 
-void MainWindow::on_CREADY_OP_clicked()//客户端申请
+void Widget::on_CREADY_OP_clicked()//客户端申请
 {
     this->socket->send(NetworkData(OPCODE::READY_OP,this->ui->clientSendEdit->text(),this->ui->clientSend->text()));
     //receive处的data2对应客户端棋子的颜色另一个则为服务端棋子的颜色
 }
 
-void MainWindow::on_SREADY_OP_clicked()//服务端同意
+void Widget::on_SREADY_OP_clicked()//服务端同意
 {
     this->socket->send(NetworkData(OPCODE::READY_OP,this->ui->clientSendEdit->text(),this->ui->clientSend->text()));
     flag_start=1;//游戏可以开始
 }
-void MainWindow::on_SREJECT_OP_clicked()//客户端拒绝
+void Widget::on_SREJECT_OP_clicked()//客户端拒绝
 {
     this->socket->send(NetworkData(OPCODE::READY_OP,this->ui->clientSendEdit->text(),this->ui->clientSend->text()));
     flag_start=-1;//游戏不能开始
 }
-void MainWindow::on_CREJECT_OP_clicked(){}//多余的但是不能删除
+void Widget::on_CREJECT_OP_clicked(){}//多余的但是不能删除
 
-void MainWindow::on_CilentGiveup_clicked()//客户端投降
+void Widget::on_CilentGiveup_clicked()//客户端投降
 {
     if(flag_color==1){//客户端白棋
 
@@ -152,7 +152,7 @@ void MainWindow::on_CilentGiveup_clicked()//客户端投降
 }
 
 
-void MainWindow::on_ServerGiveup_2_clicked()//服务端投降
+void Widget::on_ServerGiveup_2_clicked()//服务端投降
 {
     if(flag_color==1){//服务端黑棋
 
@@ -164,14 +164,14 @@ void MainWindow::on_ServerGiveup_2_clicked()//服务端投降
 
 
 
-void MainWindow::on_CLEAVE_OP_clicked()
+void Widget::on_CLEAVE_OP_clicked()
 {
     this->socket->send(NetworkData(OPCODE::LEAVE_OP,"LEAVEOP",""));
     socket->bye();
 }
 
 
-void MainWindow::on_SLEAVE_OP_clicked()
+void Widget::on_SLEAVE_OP_clicked()
 {
     this->socket->send(NetworkData(OPCODE::LEAVE_OP,"LEAVEOP",""));
 

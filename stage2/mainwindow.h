@@ -1,23 +1,24 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef Widget_H
+#define Widget_H
 
-#include <QMainWindow>
+#include <QWidget>
 #include <QSet>
 #include<Qtnetwork>
 #include "networkserver.h"
 #include "networksocket.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui { class Widget; }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
+class Widget : public QWidget
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    Widget(QWidget *parent = nullptr);
+    ~Widget();
+public:
     // 服务端
     NetworkServer* server;
     // 客户端
@@ -59,6 +60,6 @@ private slots:
     void on_SLEAVE_OP_clicked();
 
 private:
-    Ui::MainWindow *ui;
+    Ui::Widget *ui;
 };
-#endif // MAINWINDOW_H
+#endif // Widget_H

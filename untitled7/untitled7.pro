@@ -10,12 +10,14 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
+    chess.cpp \
     networkdata.cpp \
     networkserver.cpp \
     networksocket.cpp \
     widget.cpp
 
 HEADERS += \
+    chess.h \
     networkdata.h \
     networkserver.h \
     networksocket.h \
@@ -28,3 +30,5 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+RESOURCES += \
+    res.qrc
