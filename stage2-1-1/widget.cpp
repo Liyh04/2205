@@ -14,7 +14,7 @@
 //#include <QSoundEffect>
 #include <QBrush>
 #include <qcolor.h>
-int TIMELIMIT=10;
+int TIMELIMIT=30;
 int step=0;
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始化ui界面
 {
@@ -106,7 +106,7 @@ void Widget::receieveData(QTcpSocket* client, NetworkData data)//这是服务端
         QString  qstr = data.data1;
         std::string str = qstr.toStdString();
         X_Other=str[0]-'A';
-        Y_Other=str[1]-'0';
+        Y_Other=str[1]-'1';
         DrawChess(X_Other,Y_Other);
        // m_isBlackTurn=!m_isBlackTurn;
     }
@@ -117,6 +117,10 @@ void Widget::receieveData(QTcpSocket* client, NetworkData data)//这是服务端
             m_isBlackTurn=1;
         on_pushButton_clicked();
     }
+    if(data.op==OPCODE::LEAVE_OP){
+        pTimer->stop();
+        flag_start=0;
+    }
 }
 
 void Widget::receieveDataFromServer(NetworkData data)
@@ -124,12 +128,15 @@ void Widget::receieveDataFromServer(NetworkData data)
     qDebug()<<"Client get a data: "<<data.encode();
     this->ui->clientGetEdit->setText(data.data1);
     this->ui->clientGet->setText(data.data2);
+    if(data.op==OPCODE::LEAVE_OP){
+        socket->bye();
+    }
     if(data.op==OPCODE::MOVE_OP){
         //int tmp = str.toInt();字符串转化为int
         QString  qstr = data.data1;
         std::string str = qstr.toStdString();
         X_Other=str[0]-'A';
-        Y_Other=str[1]-'0';
+        Y_Other=str[1]-'1';
         DrawChess(X_Other,Y_Other);
     }
     if(data.op==OPCODE::READY_OP){
@@ -244,7 +251,9 @@ void Widget::on_SREJECT_OP_clicked()//服务端拒绝
     this->server->send(lastOne,NetworkData(OPCODE::REJECT_OP,this->ui->serverSendEdit->text(),this->ui->serverSend->text()));
     flag_start=-1;//游戏不能开始
 }
-void Widget::on_CREJECT_OP_clicked(){}//多余的但是不能删除
+void Widget::on_CREJECT_OP_clicked(){
+    this->server->send(lastOne,NetworkData(OPCODE::LEAVE_OP,"LEAVE_OP",""));
+}//多余的但是不能删除
 
 void Widget::on_CilentGiveup_clicked()//客户端投降
 {
@@ -275,6 +284,7 @@ void Widget::on_ServerGiveup_2_clicked()//服务端投降
 void Widget::on_CLEAVE_OP_clicked()
 {
     this->socket->send(NetworkData(OPCODE::LEAVE_OP,"LEAVEOP",""));
+    pTimer->stop();
     socket->bye();
 }
 void Widget::on_SLEAVE_OP_clicked()
@@ -446,7 +456,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
                 std::string s;
                 s=X+'A';
                 st=QString::fromStdString(s);
-                this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y),""));//客户端传下的棋子过去
+                this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y+1),""));//客户端传下的棋子过去
             }
         }
         else{
@@ -455,7 +465,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
                 std::string s;
                 s=X+'A';
                 st=QString::fromStdString(s);
-                this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y),""));
+                this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y+1),""));
             }
         }
     }
@@ -467,7 +477,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
                 s=X+'A';
                 st=QString::fromStdString(s);
                 if(lastOne)
-                this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y),""));
+                this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y+1),""));
             }
         }
         if(!m_isBlackTurn){
@@ -477,7 +487,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
                 s=X+'A';
                 st=QString::fromStdString(s);
                 if(lastOne)
-                this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y),""));
+                this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y+1),""));
             }
         }
 
@@ -542,14 +552,14 @@ void Widget::init()//游戏开局时初始化：设置每步限时，初始化�
 {
 
     flag_start=0;
-    bool ok=false;
+    /*bool ok=false;
     QString dlgTitle="Timelimit Setting";
     QString txtLabel="Please enter the timelimit of each step(an integer).";
     int timelimit=QInputDialog::getInt(this,dlgTitle,txtLabel,30,10,3600,1,&ok);
     if(ok)
     {
         TIMELIMIT=timelimit;
-    }
+    }*/
     this->pTimer=new QTimer;
     connect(this->pTimer,SIGNAL(timeout()),this,SLOT(updatedisplay()));
     QString min_str=QString::number(TIMELIMIT/60);
