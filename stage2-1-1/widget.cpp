@@ -18,31 +18,24 @@ int TIMELIMIT=10;
 int step=0;
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始化ui界面
 {
-
     #define PAINT_X 112
     #define PAINT_Y 75
     setFixedSize(1400,700);
     setWindowTitle("NoGo_group5");
     m_isBlackTurn = true;//黑子先行
     ui->setupUi(this);
-
     //设置窗口大小和标题
     this->init();
     IP = "127.0.0.1";
     // 端口，不要太简单，要避免和别的软件冲突
     PORT = 16667;
-
     this->ui->IPEdit->setText(IP);
     this->ui->PORTEdit->setText(QString::number(PORT));
-
     // 创建一个服务端
     this->server = new NetworkServer(this);
-
     lastOne = nullptr;
-
     // 创建一个客户端
     this->socket = new NetworkSocket(new QTcpSocket(),this);
-
     connect(this->socket->base(),&QTcpSocket::connected,this,[&]()
             {this->ui->connectLabel->setText("connection succeed");
             if_client=1;
@@ -105,14 +98,25 @@ void Widget::receieveData(QTcpSocket* client, NetworkData data)//这是服务端
     if(data.data2=='w'&&data.op==OPCODE::READY_OP){
         client_color_white=true;
         server_color_black=true;
+        clientName=this->ui->serverGetEdit->text();
     }//如果客户端请求白棋
+    if(data.op==OPCODE::READY_OP)
+        clientName=this->ui->serverGetEdit->text();
     if(data.op==OPCODE::MOVE_OP){
-        X_Other=data.data1.toInt();
-        Y_Other=data.data2.toInt();
+        QString  qstr = data.data1;
+        std::string str = qstr.toStdString();
+        X_Other=str[0]-'A';
+        Y_Other=str[1]-'0';
         DrawChess(X_Other,Y_Other);
        // m_isBlackTurn=!m_isBlackTurn;
     }
-
+    if(data.op==OPCODE::GIVEUP_OP){
+        if(client_color_white)
+            m_isBlackTurn=0;
+        else
+            m_isBlackTurn=1;
+        on_pushButton_clicked();
+    }
 }
 
 void Widget::receieveDataFromServer(NetworkData data)
@@ -122,12 +126,22 @@ void Widget::receieveDataFromServer(NetworkData data)
     this->ui->clientGet->setText(data.data2);
     if(data.op==OPCODE::MOVE_OP){
         //int tmp = str.toInt();字符串转化为int
-        X_Other=data.data1.toInt();
-        Y_Other=data.data2.toInt();
+        QString  qstr = data.data1;
+        std::string str = qstr.toStdString();
+        X_Other=str[0]-'A';
+        Y_Other=str[1]-'0';
         DrawChess(X_Other,Y_Other);
     }
     if(data.op==OPCODE::READY_OP){
         flag_start=1;
+        serverName=this->ui->clientGetEdit->text();
+    }
+    if(data.op==OPCODE::GIVEUP_OP){
+        if(!client_color_white)
+            m_isBlackTurn=0;
+        else
+            m_isBlackTurn=1;
+        on_pushButton_clicked();
     }
 }
 
@@ -227,32 +241,35 @@ void Widget::on_SREADY_OP_clicked()//服务端同意
 }
 void Widget::on_SREJECT_OP_clicked()//服务端拒绝
 {
-    this->server->send(lastOne,NetworkData(OPCODE::READY_OP,this->ui->serverSendEdit->text(),this->ui->serverSend->text()));
-
+    this->server->send(lastOne,NetworkData(OPCODE::REJECT_OP,this->ui->serverSendEdit->text(),this->ui->serverSend->text()));
     flag_start=-1;//游戏不能开始
 }
 void Widget::on_CREJECT_OP_clicked(){}//多余的但是不能删除
 
 void Widget::on_CilentGiveup_clicked()//客户端投降
 {
-    if(client_color_white){//客户端白棋
-    m_isBlackTurn=false;
+    this->socket->send(NetworkData(OPCODE::GIVEUP_OP,"",""));
+    if(client_color_white){
+        m_isBlackTurn=0;
+        on_pushButton_clicked();
+    }
+    else{
+        m_isBlackTurn=1;
+        on_pushButton_clicked();
+    }
 
-    on_pushButton_clicked();
-    }
-    else {//客户端黑棋
-        m_isBlackTurn=true;
-    }
 }
 void Widget::on_ServerGiveup_2_clicked()//服务端投降
 {
-    if(client_color_white){//服务端黑棋
-    m_isBlackTurn=true;
-    on_pushButton_clicked();
+    if(lastOne)
+    this->server->send(lastOne,NetworkData(OPCODE::GIVEUP_OP,"",""));
+    if(!client_color_white){
+        m_isBlackTurn=0;
+        on_pushButton_clicked();
     }
-    else{//服务端白棋
-    m_isBlackTurn=false;
-    on_pushButton_clicked();
+    else{
+        m_isBlackTurn=1;
+        on_pushButton_clicked();
     }
 }
 void Widget::on_CLEAVE_OP_clicked()
@@ -425,35 +442,42 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     if(is_client){
         if(m_isBlackTurn){
             if(!client_color_white){//客户端是黑
-                this->ui->clientSend->setText(QString("%1").arg(Y));
-                this->ui->clientSendEdit->setText(QString("%1").arg(X));
-                this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1").arg(X),QString("%1").arg(Y)));//客户端传下的棋子过去
+                QString st;
+                std::string s;
+                s=X+'A';
+                st=QString::fromStdString(s);
+                this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y),""));//客户端传下的棋子过去
             }
         }
         else{
             if(client_color_white){//客户端是白
-                this->ui->clientSend->setText(QString("%1").arg(Y));
-                this->ui->clientSendEdit->setText(QString("%1").arg(X));
-                this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1").arg(X),QString("%1").arg(Y)));
-
+                QString st;
+                std::string s;
+                s=X+'A';
+                st=QString::fromStdString(s);
+                this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y),""));
             }
         }
     }
     if(is_server){
         if(m_isBlackTurn){
             if(server_color_black){
-                this->ui->serverSend->setText(QString("%1").arg(Y));
-                this->ui->serverSendEdit->setText(QString("%1").arg(X));
+                QString st;
+                std::string s;
+                s=X+'A';
+                st=QString::fromStdString(s);
                 if(lastOne)
-                this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1").arg(X),QString("%1").arg(Y)));
+                this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y),""));
             }
         }
         if(!m_isBlackTurn){
             if(!server_color_black){
-                this->ui->serverSend->setText(QString("%1").arg(Y));
-                this->ui->serverSendEdit->setText(QString("%1").arg(X));
+                QString st;
+                std::string s;
+                s=X+'A';
+                st=QString::fromStdString(s);
                 if(lastOne)
-                this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1").arg(X),QString("%1").arg(Y)));
+                this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y),""));
             }
         }
 
@@ -474,42 +498,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     }
     m_Chess+=chess_to_set;//添加到已下棋子容器中
     step++;
-   /* if(is_client){
-        if(m_isBlackTurn){
-            if(!client_color_white){//客户端是黑
-                this->ui->clientSend->setText(QString("%1").arg(Y));
-                this->ui->clientSendEdit->setText(QString("%1").arg(X));
-                this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1").arg(X),QString("%1").arg(Y)));//客户端传下的棋子过去
-            }
-        }
-        else{
-            if(client_color_white){//客户端是白
-                this->ui->clientSend->setText(QString("%1").arg(Y));
-                this->ui->clientSendEdit->setText(QString("%1").arg(X));
-                this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1").arg(X),QString("%1").arg(Y)));
 
-            }
-        }
-    }
-    if(is_server){
-        if(m_isBlackTurn){
-            if(server_color_black){
-                this->ui->serverSend->setText(QString("%1").arg(Y));
-                this->ui->serverSendEdit->setText(QString("%1").arg(X));
-                if(lastOne)
-                this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1").arg(X),QString("%1").arg(Y)));
-            }
-        }
-        if(!m_isBlackTurn){
-            if(!server_color_black){
-                this->ui->serverSend->setText(QString("%1").arg(Y));
-                this->ui->serverSendEdit->setText(QString("%1").arg(X));
-                if(lastOne)
-                this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1").arg(X),QString("%1").arg(Y)));
-            }
-        }
-
-    }*/
 }
 
 
@@ -652,7 +641,6 @@ void Widget::on_pushButton_clicked()//当按下认输按钮
      pTimer->stop();
     if(Widget::m_isBlackTurn){
         step++;
-        //QMessageBox::information(this, "Game Over", QString("BLACK LOSE!\nTotal Steps: %1").arg(step) );
         if(!client_color_white){
             QString strr=" (BLACK) LOSE!\nTotal Steps: ";
             QString message=QString("%1 %2 %3").arg(clientName).arg(strr).arg(step);
