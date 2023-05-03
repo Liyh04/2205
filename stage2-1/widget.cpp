@@ -46,19 +46,32 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始�
     connect(this->socket->base(),&QTcpSocket::connected,this,[&]()
             {this->ui->connectLabel->setText("connection succeed");
             if_client=1;
-            ui->serverGet->setEnabled(false);
-            ui->serverGetEdit->setEnabled(false);
-            ui->serverSend->setEnabled(false);
-            ui->serverSendEdit->setEnabled(false);
-            ui->getButton_2->setEnabled(false);
-            ui->serverSendButton->setEnabled(false);
-            ui->SGG_OP->setEnabled(false);
-            ui->SLEAVE_OP->setEnabled(false);
-            ui->SMOVE_OP->setEnabled(false);
-            ui->SREADY_OP->setEnabled(false);
-            ui->SREJECT_OP->setEnabled(false);
-            ui->ServerGiveup_2->setEnabled(false);
-            ui->reStartButton->setEnabled(false);});
+        ui->serverGet->setEnabled(false);
+        ui->serverGetEdit->setEnabled(false);
+        ui->serverSend->setEnabled(false);
+        ui->serverSendEdit->setEnabled(false);
+        ui->getButton_2->setEnabled(false);
+        ui->serverSendButton->setEnabled(false);
+        ui->SGG_OP->setEnabled(false);
+        ui->SLEAVE_OP->setEnabled(false);
+        ui->SMOVE_OP->setEnabled(false);
+        ui->SREADY_OP->setEnabled(false);
+        ui->SREJECT_OP->setEnabled(false);
+        ui->ServerGiveup_2->setEnabled(false);
+        ui->reStartButton->setEnabled(false);//
+        ui->clientGet->setEnabled(true);
+        ui->clientGetEdit->setEnabled(true);
+        ui->clientSend->setEnabled(true);
+        ui->clientSendEdit->setEnabled(true);
+        ui->getButton_1->setEnabled(true);
+        ui->clientSendButton->setEnabled(true);
+        ui->CGG_OP->setEnabled(true);
+        ui->CLEAVE_OP->setEnabled(true);
+        ui->CMOVE_OP->setEnabled(true);
+        ui->CREADY_OP->setEnabled(true);
+        ui->CREJECT_OP->setEnabled(true);
+        ui->CilentGiveup->setEnabled(true);
+        ui->reConnectButton->setEnabled(true);});
     connect(this->socket,&NetworkSocket::receive,this,&Widget::receieveDataFromServer);
     connect(this->server,&NetworkServer::receive,this,&Widget::receieveData);
     connect(this->ui->clientSendButton,&QPushButton::clicked,this,&Widget::onClientSendButtonClicked);
@@ -134,6 +147,19 @@ void Widget::reStart()
     lastOne = nullptr;
     connect(this->server,&NetworkServer::receive,this,&Widget::receieveData);
     if_client=0;
+    ui->serverGet->setEnabled(true);
+    ui->serverGetEdit->setEnabled(true);
+    ui->serverSend->setEnabled(true);
+    ui->serverSendEdit->setEnabled(true);
+    ui->getButton_2->setEnabled(true);
+    ui->serverSendButton->setEnabled(true);
+    ui->SGG_OP->setEnabled(true);
+    ui->SLEAVE_OP->setEnabled(true);
+    ui->SMOVE_OP->setEnabled(true);
+    ui->SREADY_OP->setEnabled(true);
+    ui->SREJECT_OP->setEnabled(true);
+    ui->ServerGiveup_2->setEnabled(true);
+    ui->reStartButton->setEnabled(true);//
     ui->clientGet->setEnabled(false);
     ui->clientGetEdit->setEnabled(false);
     ui->clientSend->setEnabled(false);
@@ -146,7 +172,7 @@ void Widget::reStart()
     ui->CREADY_OP->setEnabled(false);
     ui->CREJECT_OP->setEnabled(false);
     ui->CilentGiveup->setEnabled(false);
-    ui->reConnectButton->setEnabled(false);
+    ui->reConnectButton->setEnabled(false);//
 }
 
 void Widget::reConnect()
@@ -423,32 +449,32 @@ void Widget::init()//游戏开局时初始化：设置每步限时，初始化�
     this->ui->lcd_min->display(minstr);
     this->ui->lcd_sec->display(secstr);
     ui->label_3->setText("BLACK");
-    ui->serverGet->setEnabled(true);
-    ui->serverGetEdit->setEnabled(true);
-    ui->serverSend->setEnabled(true);
-    ui->serverSendEdit->setEnabled(true);
-    ui->getButton_2->setEnabled(true);
-    ui->serverSendButton->setEnabled(true);
-    ui->SGG_OP->setEnabled(true);
-    ui->SLEAVE_OP->setEnabled(true);
-    ui->SMOVE_OP->setEnabled(true);
-    ui->SREADY_OP->setEnabled(true);
-    ui->SREJECT_OP->setEnabled(true);
-    ui->ServerGiveup_2->setEnabled(true);
-    ui->reStartButton->setEnabled(true);
-    ui->clientGet->setEnabled(true);
-    ui->clientGetEdit->setEnabled(true);
-    ui->clientSend->setEnabled(true);
-    ui->clientSendEdit->setEnabled(true);
-    ui->getButton_1->setEnabled(true);
-    ui->clientSendButton->setEnabled(true);
-    ui->CGG_OP->setEnabled(true);
-    ui->CLEAVE_OP->setEnabled(true);
-    ui->CMOVE_OP->setEnabled(true);
-    ui->CREADY_OP->setEnabled(true);
-    ui->CREJECT_OP->setEnabled(true);
-    ui->CilentGiveup->setEnabled(true);
-    ui->reConnectButton->setEnabled(true);
+    ui->serverGet->setEnabled(false);
+    ui->serverGetEdit->setEnabled(false);
+    ui->serverSend->setEnabled(false);
+    ui->serverSendEdit->setEnabled(false);
+    ui->getButton_2->setEnabled(false);
+    ui->serverSendButton->setEnabled(false);
+    ui->SGG_OP->setEnabled(false);
+    ui->SLEAVE_OP->setEnabled(false);
+    ui->SMOVE_OP->setEnabled(false);
+    ui->SREADY_OP->setEnabled(false);
+    ui->SREJECT_OP->setEnabled(false);
+    ui->ServerGiveup_2->setEnabled(false);
+    ui->reStartButton->setEnabled(true);//
+    ui->clientGet->setEnabled(false);
+    ui->clientGetEdit->setEnabled(false);
+    ui->clientSend->setEnabled(false);
+    ui->clientSendEdit->setEnabled(false);
+    ui->getButton_1->setEnabled(false);
+    ui->clientSendButton->setEnabled(false);
+    ui->CGG_OP->setEnabled(false);
+    ui->CLEAVE_OP->setEnabled(false);
+    ui->CMOVE_OP->setEnabled(false);
+    ui->CREADY_OP->setEnabled(false);
+    ui->CREJECT_OP->setEnabled(false);
+    ui->CilentGiveup->setEnabled(false);
+    ui->reConnectButton->setEnabled(true);//
 
 }
 void Widget::updatedisplay()//实时更新计时器
