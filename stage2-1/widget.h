@@ -37,6 +37,7 @@ public:
     QSet<QTcpSocket*> clients;
     int flag_start;
     int flag_color;
+    int if_client;
 
 private slots:
     void receieveData(QTcpSocket* client, NetworkData data);
