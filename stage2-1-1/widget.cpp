@@ -100,8 +100,38 @@ void Widget::receieveData(QTcpSocket* client, NetworkData data)//这是服务端
         server_color_black=true;
         clientName=this->ui->serverGetEdit->text();
     }//如果客户端请求白棋
-    if(data.op==OPCODE::READY_OP)
+
+    //READY_OP部分
+    if(data.op==OPCODE::READY_OP){
         clientName=this->ui->serverGetEdit->text();
+        QString color;
+        QString color2;
+        if(data.data2=='w'){
+            color="(white)";
+            color2="(black)";
+        }
+        else{
+            color="(black)";
+            color2="(white)";
+        }
+        QString strr="  Wanana play with you ";
+        QString message=QString("%1%2%3%4").arg(clientName).arg(color).arg(strr).arg(color2);
+        QMessageBox::StandardButton r = QMessageBox::question(this, "Ask For Play", message ,QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        if (r == QMessageBox::Yes){
+            if(lastOne)
+                this->server->send(lastOne,NetworkData(OPCODE::READY_OP,this->ui->serverSendEdit->text(),this->ui->serverSend->text()));
+            serverName=this->ui->serverSendEdit->text();
+            is_server=true;
+            flag_start=1;//游戏可以开始
+        }
+        if(r==QMessageBox::No){
+            this->server->send(lastOne,NetworkData(OPCODE::REJECT_OP,this->ui->serverSendEdit->text(),this->ui->serverSend->text()));
+            flag_start=-1;//游戏不能开始
+        }
+        //注意这里需要准备操作就是在确定服务端之后服务端在收到弹窗前要把name设置好
+    }
+
+
     if(data.op==OPCODE::MOVE_OP){
         QString  qstr = data.data1;
         std::string str = qstr.toStdString();
