@@ -140,16 +140,33 @@ void Widget::receieveData(QTcpSocket* client, NetworkData data)//这是服务端
         DrawChess(X_Other,Y_Other);
        // m_isBlackTurn=!m_isBlackTurn;
     }
+
+
     if(data.op==OPCODE::GIVEUP_OP){
         if(client_color_white)
             m_isBlackTurn=0;
         else
             m_isBlackTurn=1;
+        this->server->send(lastOne,NetworkData(OPCODE::GIVEUP_END_OP,serverName,"wenhouyu"));//客户端先发送GG_OP
+        twice=1;
         on_pushButton_clicked();
+        //this->server->send(lastOne,NetworkData(OPCODE::GIVEUP_END_OP,serverName,"wenhouyu"));//客户端先发送GG_OP
+        //twice=1;
     }
+
+
     if(data.op==OPCODE::LEAVE_OP){
         pTimer->stop();
         flag_start=0;
+    }
+
+    if(data.op==OPCODE::GIVEUP_END_OP){
+
+        if(twice==1){
+            twice=2;
+
+                this->server->send(lastOne,NetworkData(OPCODE::GIVEUP_END_OP,serverName,"wenhouyu"));
+        }
     }
 }
 
@@ -158,9 +175,13 @@ void Widget::receieveDataFromServer(NetworkData data)
     qDebug()<<"Client get a data: "<<data.encode();
     this->ui->clientGetEdit->setText(data.data1);
     this->ui->clientGet->setText(data.data2);
+
+
     if(data.op==OPCODE::LEAVE_OP){
         socket->bye();
     }
+
+
     if(data.op==OPCODE::MOVE_OP){
         //int tmp = str.toInt();字符串转化为int
         QString  qstr = data.data1;
@@ -169,16 +190,35 @@ void Widget::receieveDataFromServer(NetworkData data)
         Y_Other=str[1]-'1';
         DrawChess(X_Other,Y_Other);
     }
+
+
     if(data.op==OPCODE::READY_OP){
         flag_start=1;
         serverName=this->ui->clientGetEdit->text();
     }
+
+
     if(data.op==OPCODE::GIVEUP_OP){
         if(!client_color_white)
             m_isBlackTurn=0;
         else
             m_isBlackTurn=1;
+        twice=1;
+        this->socket->send(NetworkData(OPCODE::GIVEUP_END_OP,clientName,"wenhouyu"));
         on_pushButton_clicked();
+
+        //twice=1;
+        //this->socket->send(NetworkData(OPCODE::GIVEUP_END_OP,clientName,"wenhouyu"));
+    }
+
+    if(data.op==OPCODE::GIVEUP_END_OP){
+
+        if(twice==1){
+            twice=2;
+            this->socket->send(NetworkData(OPCODE::GIVEUP_END_OP,clientName,"wenhouyu"));
+        }
+
+        //this->socket->send(NetworkData(OPCODE::GIVEUP_END_OP,this->ui->clientSendEdit->text(),this->ui->clientSend->text()));
     }
 }
 
@@ -268,6 +308,7 @@ void Widget::on_CREADY_OP_clicked()//客户端申请
     //receive处的data2对应客户端棋子的颜色另一个则为服务端棋子的颜色
 }
 
+
 void Widget::on_SREADY_OP_clicked()//服务端同意
 {
     if(lastOne)
@@ -276,6 +317,8 @@ void Widget::on_SREADY_OP_clicked()//服务端同意
     is_server=true;
     flag_start=1;//游戏可以开始
 }
+
+
 void Widget::on_SREJECT_OP_clicked()//服务端拒绝
 {
     this->server->send(lastOne,NetworkData(OPCODE::REJECT_OP,this->ui->serverSendEdit->text(),this->ui->serverSend->text()));
@@ -288,6 +331,7 @@ void Widget::on_CREJECT_OP_clicked(){
 void Widget::on_CilentGiveup_clicked()//客户端投降
 {
     this->socket->send(NetworkData(OPCODE::GIVEUP_OP,"",""));
+
     if(client_color_white){
         m_isBlackTurn=0;
         on_pushButton_clicked();

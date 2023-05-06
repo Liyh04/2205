@@ -25,6 +25,7 @@ class Widget : public QWidget
 public:
     QString clientName;
     QString serverName;
+    int twice;
     int X_Other;
     int Y_Other;
     bool is_server=false;
