@@ -54,7 +54,7 @@ private slots:
     void receieveDataFromServer(NetworkData data);
     void onClientSendButtonClicked();
     void onServerSendButtonClicked();
-    void reStart();
+    void reStartServer();
     void reConnect();
     void reSet();
 
@@ -143,7 +143,7 @@ public:
     }
 
 private slots:
-    void on_pushButton_clicked();//当按下认输按钮
+    void give_up_clicked();//当按下认输按钮
 
 private:
     Ui::Widget *ui;

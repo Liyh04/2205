@@ -18,9 +18,9 @@ int TIMELIMIT=30;
 int step=0;
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始化ui界面
 {
-    #define PAINT_X 112
-    #define PAINT_Y 75
-    setFixedSize(1400,700);
+    #define PAINT_X 80
+    #define PAINT_Y 40
+    setFixedSize(1100,600);
     setWindowTitle("NoGo_group5");
     m_isBlackTurn = true;//黑子先行
     ui->setupUi(this);
@@ -72,8 +72,9 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始�
     connect(this->ui->showClientButton,&QPushButton::clicked,this,[&](){qDebug()<<clients;});
     connect(this->ui->reSetButton,&QPushButton::clicked,this,&Widget::reSet);
     connect(this->ui->reConnectButton,&QPushButton::clicked,this,&Widget::reConnect);
-    connect(this->ui->reStartButton,&QPushButton::clicked,this,&Widget::reStart);
+    connect(this->ui->reStartButton,&QPushButton::clicked,this,&Widget::reStartServer);
     // 客户端向 IP:PORT 连接，不会连到自己
+    IP=this->ui->IPEdit->text();
     this->socket->hello(IP,PORT);
     // 阻塞等待，2000ms超时
     this->socket->base()->waitForConnected(2000);
@@ -149,7 +150,7 @@ void Widget::receieveData(QTcpSocket* client, NetworkData data)//这是服务端
             m_isBlackTurn=1;
         this->server->send(lastOne,NetworkData(OPCODE::GIVEUP_END_OP,serverName,"wenhouyu"));//客户端先发送GG_OP
         twice=1;
-        on_pushButton_clicked();
+        give_up_clicked();
         //this->server->send(lastOne,NetworkData(OPCODE::GIVEUP_END_OP,serverName,"wenhouyu"));//客户端先发送GG_OP
         //twice=1;
     }
@@ -205,7 +206,7 @@ void Widget::receieveDataFromServer(NetworkData data)
             m_isBlackTurn=1;
         twice=1;
         this->socket->send(NetworkData(OPCODE::GIVEUP_END_OP,clientName,"wenhouyu"));
-        on_pushButton_clicked();
+        give_up_clicked();
 
         //twice=1;
         //this->socket->send(NetworkData(OPCODE::GIVEUP_END_OP,clientName,"wenhouyu"));
@@ -234,7 +235,7 @@ void Widget::onServerSendButtonClicked()
         this->server->send(lastOne,NetworkData(OPCODE::CHAT_OP,this->ui->serverSendEdit->text(),this->ui->serverSend->text()));
 }
 
-void Widget::reStart()
+void Widget::reStartServer()
 {
     qDebug()<<"restart the server.";
     this->ui->lastOneLabel->setText("LastOne: ");
@@ -288,12 +289,12 @@ void Widget::reConnect()
     }
 }
 
-void Widget::reSet()
+void Widget::reSet()//供客户端点击
 {
     this->ui->connectLabel->setText("connection fail");
     IP=this->ui->IPEdit->text();
     PORT=this->ui->PORTEdit->text().toInt();
-    this->reStart();
+    this->reStartServer();
     this->reConnect();
 }
 
@@ -334,11 +335,11 @@ void Widget::on_CilentGiveup_clicked()//客户端投降
 
     if(client_color_white){
         m_isBlackTurn=0;
-        on_pushButton_clicked();
+        give_up_clicked();
     }
     else{
         m_isBlackTurn=1;
-        on_pushButton_clicked();
+        give_up_clicked();
     }
 
 }
@@ -348,11 +349,11 @@ void Widget::on_ServerGiveup_2_clicked()//服务端投降
     this->server->send(lastOne,NetworkData(OPCODE::GIVEUP_OP,"",""));
     if(!client_color_white){
         m_isBlackTurn=0;
-        on_pushButton_clicked();
+        give_up_clicked();
     }
     else{
         m_isBlackTurn=1;
-        on_pushButton_clicked();
+        give_up_clicked();
     }
 }
 void Widget::on_CLEAVE_OP_clicked()
@@ -643,7 +644,7 @@ void Widget::init()//游戏开局时初始化：设置每步限时，初始化�
     this->ui->lcd_min->display(minstr);
     this->ui->lcd_sec->display(secstr);
     ui->label_3->setText("BLACK");
-    ui->serverGet->setEnabled(false);
+    /*ui->serverGet->setEnabled(false);
     ui->serverGetEdit->setEnabled(false);
     ui->serverSend->setEnabled(false);
     ui->serverSendEdit->setEnabled(false);
@@ -668,7 +669,7 @@ void Widget::init()//游戏开局时初始化：设置每步限时，初始化�
     ui->CREADY_OP->setEnabled(false);
     ui->CREJECT_OP->setEnabled(false);
     ui->CilentGiveup->setEnabled(false);
-    ui->reConnectButton->setEnabled(true);//
+    ui->reConnectButton->setEnabled(true);*///
 
 }
 void Widget::updatedisplay()//实时更新计时器
@@ -720,7 +721,7 @@ int Widget::width=50;
 int Widget::n_row=9;
 int Widget::n_column=9;
 
-void Widget::on_pushButton_clicked()//当按下认输按钮
+void Widget::give_up_clicked()//当按下认输按钮
 {
      pTimer->stop();
     if(Widget::m_isBlackTurn){
