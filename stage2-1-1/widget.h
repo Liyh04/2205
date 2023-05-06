@@ -74,6 +74,8 @@ private slots:
 
     void on_SLEAVE_OP_clicked();
 
+    void TIMEOUT_END_OP_send();
+
 public:
     void restart();//重新开局
 public slots:

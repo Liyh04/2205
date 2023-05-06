@@ -14,7 +14,7 @@
 //#include <QSoundEffect>
 #include <QBrush>
 #include <qcolor.h>
-int TIMELIMIT=30;
+int TIMELIMIT=10;
 int step=0;
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始化ui界面
 {
@@ -126,7 +126,7 @@ void Widget::receieveData(QTcpSocket* client, NetworkData data)//这是服务端
             flag_start=1;//游戏可以开始
         }
         if(r==QMessageBox::No){
-            this->server->send(lastOne,NetworkData(OPCODE::REJECT_OP,this->ui->serverSendEdit->text(),this->ui->serverSend->text()));
+            if(lastOne)this->server->send(lastOne,NetworkData(OPCODE::REJECT_OP,this->ui->serverSendEdit->text(),this->ui->serverSend->text()));
             flag_start=-1;//游戏不能开始
         }
         //注意这里需要准备操作就是在确定服务端之后服务端在收到弹窗前要把name设置好
@@ -148,7 +148,7 @@ void Widget::receieveData(QTcpSocket* client, NetworkData data)//这是服务端
             m_isBlackTurn=0;
         else
             m_isBlackTurn=1;
-        this->server->send(lastOne,NetworkData(OPCODE::GIVEUP_END_OP,serverName,"wenhouyu"));//客户端先发送GG_OP
+        if(lastOne)this->server->send(lastOne,NetworkData(OPCODE::GIVEUP_END_OP,serverName,"wenhouyu"));//客户端先发送GG_OP
         twice=1;
         give_up_clicked();
         //this->server->send(lastOne,NetworkData(OPCODE::GIVEUP_END_OP,serverName,"wenhouyu"));//客户端先发送GG_OP
@@ -166,7 +166,16 @@ void Widget::receieveData(QTcpSocket* client, NetworkData data)//这是服务端
         if(twice==1){
             twice=2;
 
-                this->server->send(lastOne,NetworkData(OPCODE::GIVEUP_END_OP,serverName,"wenhouyu"));
+                if(lastOne)this->server->send(lastOne,NetworkData(OPCODE::GIVEUP_END_OP,serverName,"wenhouyu"));
+        }
+    }
+
+    if(data.op==OPCODE::TIMEOUT_END_OP){
+
+        if(twice==1){
+                twice=2;
+
+                if(lastOne)this->server->send(lastOne,NetworkData(OPCODE::TIMEOUT_END_OP,serverName,"wenhouyu"));
         }
     }
 }
@@ -207,19 +216,20 @@ void Widget::receieveDataFromServer(NetworkData data)
         twice=1;
         this->socket->send(NetworkData(OPCODE::GIVEUP_END_OP,clientName,"wenhouyu"));
         give_up_clicked();
-
-        //twice=1;
-        //this->socket->send(NetworkData(OPCODE::GIVEUP_END_OP,clientName,"wenhouyu"));
     }
 
     if(data.op==OPCODE::GIVEUP_END_OP){
-
         if(twice==1){
             twice=2;
             this->socket->send(NetworkData(OPCODE::GIVEUP_END_OP,clientName,"wenhouyu"));
-        }
+        }       
+    }
 
-        //this->socket->send(NetworkData(OPCODE::GIVEUP_END_OP,this->ui->clientSendEdit->text(),this->ui->clientSend->text()));
+    if(data.op==OPCODE::TIMEOUT_END_OP){
+        if(twice==1){
+            twice=2;
+            this->socket->send(NetworkData(OPCODE::TIMEOUT_END_OP,clientName,"wenhouyu"));
+        }
     }
 }
 
@@ -367,6 +377,10 @@ void Widget::on_SLEAVE_OP_clicked()
     this->server->send(lastOne,NetworkData(OPCODE::LEAVE_OP,"LEAVEOP",""));
 
 }
+void Widget::TIMEOUT_END_OP_send()
+{
+
+}
 void Widget::paintEvent(QPaintEvent *)//画棋盘和棋子
 {
     DrawChessboard();        //画棋盘
@@ -476,7 +490,6 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     if(!if_legal(X,Y))
     {
         ExistChess[X][Y]=0;
-        //this->ui->lcdNumber->display(3);
         QMessageBox *warning1=new QMessageBox;
         warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
         return;
@@ -485,7 +498,6 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     if(X>0&&!if_legal(X-1,Y))
     {
         ExistChess[X][Y]=0;
-        //this->ui->lcdNumber->display(4);
         QMessageBox *warning1=new QMessageBox;
         warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
         return;
@@ -494,7 +506,6 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     if(X<8&&!if_legal(X+1,Y))
     {
         ExistChess[X][Y]=0;
-        //this->ui->lcdNumber->display(5);
         QMessageBox *warning1=new QMessageBox;
         warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
         return;
@@ -503,7 +514,6 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     if(Y>0&&!if_legal(X,Y-1))
     {
         ExistChess[X][Y]=0;
-        //this->ui->lcdNumber->display(6);
         QMessageBox *warning1=new QMessageBox;
         warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
         return;
@@ -512,7 +522,6 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     if(Y<8&&!if_legal(X,Y+1))
     {
         ExistChess[X][Y]=0;
-        //this->ui->lcdNumber->display(7);
         QMessageBox *warning1=new QMessageBox;
         warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
         return;
@@ -571,15 +580,11 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     {
         m_isBlackTurn=0;
         ExistChess[(pt.y()-PAINT_Y)/Widget::height][(pt.x()-PAINT_X)/Widget::width]=1;
-        //this->ui->lcd_row->display((pt.y()-PAINT_Y)/Widget::height);
-        //this->ui->lcd_coloum->display((pt.x()-PAINT_X)/Widget::width);//测试专用，显示坐标信息
     }
     else
     {
         m_isBlackTurn=1;
         ExistChess[(pt.y()-PAINT_Y)/Widget::height][(pt.x()-PAINT_X)/Widget::width]=2;
-        //this->ui->lcd_row->display((pt.y()-PAINT_Y)/Widget::height);
-        //this->ui->lcd_coloum->display((pt.x()-PAINT_X)/Widget::width);//测试专用，显示坐标信息
     }
     m_Chess+=chess_to_set;//添加到已下棋子容器中
     step++;
@@ -602,22 +607,15 @@ void Widget::DrawChess(int X,int Y)
     {
         m_isBlackTurn=0;
         ExistChess[X][Y]=1;
-        //this->ui->lcd_row->display((pt.y()-PAINT_Y)/Widget::height);
-        //this->ui->lcd_coloum->display((pt.x()-PAINT_X)/Widget::width);//测试专用，显示坐标信息
     }
     else
     {
         m_isBlackTurn=1;
         ExistChess[X][Y]=2;
-        //this->ui->lcd_row->display((pt.y()-PAINT_Y)/Widget::height);
-        //this->ui->lcd_coloum->display((pt.x()-PAINT_X)/Widget::width);//测试专用，显示坐标信息
     }
     m_Chess+=chess_to_set;//添加到已下棋子容器中
     step++;
-
-
 }
-
 
 void Widget::if_scanned_init()//在递归回溯时记录已经判断过的棋子，避免造成死循环
 {
@@ -627,6 +625,7 @@ void Widget::init()//游戏开局时初始化：设置每步限时，初始化�
 {
 
     flag_start=0;
+    twice=0;
     /*bool ok=false;
     QString dlgTitle="Timelimit Setting";
     QString txtLabel="Please enter the timelimit of each step(an integer).";
@@ -644,32 +643,6 @@ void Widget::init()//游戏开局时初始化：设置每步限时，初始化�
     this->ui->lcd_min->display(minstr);
     this->ui->lcd_sec->display(secstr);
     ui->label_3->setText("BLACK");
-    /*ui->serverGet->setEnabled(false);
-    ui->serverGetEdit->setEnabled(false);
-    ui->serverSend->setEnabled(false);
-    ui->serverSendEdit->setEnabled(false);
-    ui->getButton_2->setEnabled(false);
-    ui->serverSendButton->setEnabled(false);
-    ui->SGG_OP->setEnabled(false);
-    ui->SLEAVE_OP->setEnabled(false);
-    ui->SMOVE_OP->setEnabled(false);
-    ui->SREADY_OP->setEnabled(false);
-    ui->SREJECT_OP->setEnabled(false);
-    ui->ServerGiveup_2->setEnabled(false);
-    ui->reStartButton->setEnabled(true);//
-    ui->clientGet->setEnabled(false);
-    ui->clientGetEdit->setEnabled(false);
-    ui->clientSend->setEnabled(false);
-    ui->clientSendEdit->setEnabled(false);
-    ui->getButton_1->setEnabled(false);
-    ui->clientSendButton->setEnabled(false);
-    ui->CGG_OP->setEnabled(false);
-    ui->CLEAVE_OP->setEnabled(false);
-    ui->CMOVE_OP->setEnabled(false);
-    ui->CREADY_OP->setEnabled(false);
-    ui->CREJECT_OP->setEnabled(false);
-    ui->CilentGiveup->setEnabled(false);
-    ui->reConnectButton->setEnabled(true);*///
 
 }
 void Widget::updatedisplay()//实时更新计时器
@@ -691,27 +664,69 @@ void Widget::updatedisplay()//实时更新计时器
 
             if(m_isBlackTurn)
             {
-                //ui->player->display("BLACK");
-
                 ui->label_3->setText("BLACK");
             }
             if(!m_isBlackTurn)
             {
-                //ui->player->display("WHITE");
-
                 ui->label_3->setText("WHITE");
             }
         }
         else
         {
 
-            QString content=QString("Time limit exceed");
+            /*QString content=QString("Time limit exceed");
             QMessageBox *dialog1=new QMessageBox;
             dialog1->resize(1000,700);
             if(Widget::m_isBlackTurn)
             dialog1->information(this, content, QString("    BLACK LOSE!    \n    Total Steps: %1   ").arg(step) );
-            else dialog1->information(this, content, QString("    WHITE LOSE!    \n    Total Steps: %1    ").arg(step));
+            else dialog1->information(this, content, QString("    WHITE LOSE!    \n    Total Steps: %1    ").arg(step));*/
+            pTimer->stop();
+            if(Widget::m_isBlackTurn){
+                step++;
+                if(!client_color_white){
+                if(is_server){
+                    twice=1;
+                    if(lastOne)this->server->send(lastOne,NetworkData(OPCODE::TIMEOUT_END_OP,"TIMEOUT_END_OP",""));
+                }
+                QString strr=" (BLACK) LOSE!\nTotal Steps: ";
+                QString message=QString("%1 %2 %3").arg(clientName).arg(strr).arg(step);
+                QMessageBox::information(this, "Game Over", message );
+                }
+                else{
+                if(is_client){
+                    twice=1;
+                    this->socket->send(NetworkData(OPCODE::TIMEOUT_END_OP,"TIMEOUT_END_OP",""));
+                }
+                QString strr=" (BLACK) LOSE!\nTotal Steps: ";
+                QString message=QString("%1 %2 %3").arg(serverName).arg(strr).arg(step);
+                QMessageBox::information(this, "Game Over", message );
+                }
+                step=0;
+            }
+            else {
+                step++;
+                if(!client_color_white){
+                if(is_client){
+                    twice=1;
+                    this->socket->send(NetworkData(OPCODE::TIMEOUT_END_OP,"TIMEOUT_END_OP",""));
+                }
+                QString strr=" (White) LOSE!\nTotal Steps: ";
+                QString message=QString("%1 %2 %3").arg(serverName).arg(strr).arg(step);
+                QMessageBox::information(this, "Game Over", message );
+                }
+                else{
+                if(is_server){
+                    twice=1;
+                    if(lastOne)this->server->send(lastOne,NetworkData(OPCODE::TIMEOUT_END_OP,"TIMEOUT_END_OP",""));
+                }
+                QString strr=" (White) LOSE!\nTotal Steps: ";
+                QString message=QString("%1 %2 %3").arg(clientName).arg(strr).arg(step);
+                QMessageBox::information(this, "Game Over", message );
+                }
+                step=0;
+            }
             restart();
+
          }
     }
 }
@@ -723,7 +738,7 @@ int Widget::n_column=9;
 
 void Widget::give_up_clicked()//当按下认输按钮
 {
-     pTimer->stop();
+    pTimer->stop();
     if(Widget::m_isBlackTurn){
         step++;
         if(!client_color_white){
