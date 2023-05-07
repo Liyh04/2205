@@ -19,6 +19,11 @@
 #include <QFileDialog>
 #include <inputdialog.h>
 #include <rules.h>
+//初始化静态成员
+int Widget::height=50;
+int Widget::width=50;
+int Widget::n_row=9;
+int Widget::n_column=9;
 
 int TIMELIMIT=10;
 int step=0;
@@ -796,11 +801,6 @@ void Widget::on_saveButton_clicked()
 {
 
 }
-//初始化静态成员
-int Widget::height=50;
-int Widget::width=50;
-int Widget::n_row=9;
-int Widget::n_column=9;
 
 void Widget::give_up_clicked()//当按下认输按钮
 {
