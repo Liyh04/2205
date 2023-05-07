@@ -14,6 +14,10 @@
 #include <QSet>
 #include "networkserver.h"
 #include "networksocket.h"
+#include <QFile>
+#include <QTextStream>
+#include <QTextEdit>
+#include <QMap>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
@@ -78,6 +82,11 @@ private slots:
 
 public:
     void restart();//重新开局
+    void on_saveButton_clicked();//save
+    //复现
+    void on_fxbtn_clicked();
+    void onInputFinished(const QString& text);
+    
 public slots:
     void updatedisplay();//更新计时器显示
 protected:
@@ -86,6 +95,21 @@ protected:
     //mouse
     void mousePressEvent(QMouseEvent *);
 public:
+     //save功能，结构体用来按顺序存储棋子的落点；
+    struct Chesspo
+    {
+        int x;
+        int y;
+        char c_y;
+    }chesspo[81];
+    //复现&save
+    QMap<char,int> char2num = {{'A',1},{'B',2},{'C',3},{'D',4},{'E',5},{'F',6},{'G',7},{'H',8},{'I',9}};
+    QMap <int,char> num2char = {{1,'A'},{2,'B'},{3,'C'},{4,'D'},{5,'E'},{6,'F'},{7,'G'},{8,'H'},{9,'I'}};
+    bool legalInput(QChar c1,QChar c2);
+
+    void getCY();//获取坐标的函数
+
+    int fail_state;//代表输了的状态，1-tle，2-giveup，0-初始值；
 
     Widget(QWidget *parent = nullptr);
     void init();//游戏开局时初始化
@@ -98,51 +122,10 @@ public:
     static int width;
     static int n_row;
     static int n_column;
-    int ExistChess[9][9]={0};//0代表没有棋子，1代表黑棋，2代表白棋
-    int if_scanned[9][9]={0};//在递归回溯时记录已经判断过的棋子，避免造成死循环
-    int if_legal(int x,int y)//判断x行y列的棋子是否存活
-    {
-        if(!ExistChess[x][y])return 1;
-        if((x>0&&!ExistChess[x-1][y])||(x<8&&!ExistChess[x+1][y])||(y>0&&!ExistChess[x][y-1])||(y<8&&!ExistChess[x][y+1]))return 1;
-        int flag=0;
-        for(int i=0;i<=3;i++)
-        {
-            if(i==0)
-            {
-                if(x==0)continue;
-                if(ExistChess[x-1][y]!=ExistChess[x][y])continue;
-                if(if_scanned[x-1][y])continue;
-                if(ExistChess[x-1][y]==ExistChess[x][y])
-                {if_scanned[x][y]=1;flag+=if_legal(x-1,y);}
-            }
-            if(i==1)
-            {
-                if(x==8)continue;
-                if(ExistChess[x+1][y]!=ExistChess[x][y])continue;
-                if(if_scanned[x+1][y])continue;
-                if(ExistChess[x+1][y]==ExistChess[x][y])
-                {if_scanned[x][y]=1;flag+=if_legal(x+1,y);}
-            }
-            if(i==2)
-            {
-                if(y==0)continue;
-                if(ExistChess[x][y-1]!=ExistChess[x][y])continue;
-                if(if_scanned[x][y-1])continue;
-                if(ExistChess[x][y-1]==ExistChess[x][y])
-                {if_scanned[x][y]=1;flag+=if_legal(x,y-1);}
-            }
-            if(i==3)
-            {
-                if(y==8)continue;
-                if(ExistChess[x][y+1]!=ExistChess[x][y])continue;
-                if(if_scanned[x][y+1])continue;
-                if(ExistChess[x][y+1]==ExistChess[x][y])
-                {if_scanned[x][y]=1;flag+=if_legal(x,y+1);}
-            }
-        }
-        return flag;
-
-    }
+    int ExistChess[9][9]={{0,0}};//0代表没有棋子，1代表黑棋，2代表白棋
+    int if_scanned[9][9]={{0,0}};//在递归回溯时记录已经判断过的棋子，避免造成死循环
+    int if_legal(int x,int y);//判断x行y列的棋子是否存活
+   
 
 private slots:
     void give_up_clicked();//当按下认输按钮
