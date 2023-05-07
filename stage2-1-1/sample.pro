@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     chess.cpp \
+    inputdialog.cpp \
     main.cpp \
     #mainwindow.cpp \
     networkdata.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
 
 HEADERS += \
     chess.h \
+    inputdialog.h \
     #mainwindow.h \
     networkdata.h \
     networkserver.h \
