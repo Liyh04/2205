@@ -14,6 +14,11 @@
 //#include <QSoundEffect>
 #include <QBrush>
 #include <qcolor.h>
+#include <QFile>
+#include <QTextStream>
+#include <QFileDialog>
+#include <inputdialog.h>
+
 int TIMELIMIT=10;
 int step=0;
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始化ui界面
@@ -21,11 +26,20 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始�
     #define PAINT_X 80
     #define PAINT_Y 40
     setFixedSize(1100,600);
+    ui->setupUi(this);
+    
+    this->init();
+    
+    //设置标题
     setWindowTitle("NoGo_group5");
     m_isBlackTurn = true;//黑子先行
-    ui->setupUi(this);
-    //设置窗口大小和标题
-    this->init();
+    fail_state=0;
+    //复现---
+    QPushButton *fxbtn = new QPushButton("复现",this);
+    fxbtn->move(790,450);
+    fxbtn->resize(110,22);
+    connect(fxbtn,&QPushButton::clicked,this,&Widget::on_fxbtn_clicked);
+    
     IP = "127.0.0.1";
     // 端口，不要太简单，要避免和别的软件冲突
     PORT = 16667;
@@ -79,12 +93,27 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始�
     // 阻塞等待，2000ms超时
     this->socket->base()->waitForConnected(2000);
 
-
 }
 Widget::~Widget()//析构函数
 {
     delete ui;
 }
+//复现--------
+void Widget::on_fxbtn_clicked()
+{
+    InputDialog* inputDialog = new InputDialog(this);
+    connect(inputDialog,&InputDialog::inputFinished,this,&Widget::onInputFinished);
+    inputDialog->show();
+
+}
+bool Widget::legalInput(QChar c1,QChar c2)
+{
+    if('A'<=c1&&c1<='I'&&c2>='1'&&c2>='1'&&c2<='9')
+        return true;
+    else
+        return false;
+}
+
 void Widget::receieveData(QTcpSocket* client, NetworkData data)//这是服务端
 {
     qDebug()<<"Server get a data: "<<client<<" "<<data.encode();
@@ -427,14 +456,100 @@ void Widget::DrawChesses()//画棋子
         //高亮棋子
         if(i==m_Chess.size()-1||i==m_Chess.size()-2)
         {
-            QColor PaleVioletRed(0xDB7093);//设置颜色--苍白的紫罗兰红色~
-            QPen pen(PaleVioletRed);//定义画笔
+            QColor Viva_Magenta(0xCE0B4D);//设置颜色--Viva_Magenta_18-1750_2023年度色彩_By_Pantone，
+            QPen pen(Viva_Magenta);//定义画笔
             pen.setWidth(2);//
             // pen.setStyle(Qt::DashDotDotLine);
             painter_Yu_chess.setPen(pen);
             painter_Yu_chess.drawEllipse(chess_seted.m_ChessPossition.rx(),chess_seted.m_ChessPossition.ry(),40,40);
-            // painter_Yu_chess.setBrush();
+           // painter_Yu_chess.setBrush();
         }
+    }
+}
+void Widget::onInputFinished(const QString& text)
+{
+    m_isBlackTurn=1;
+    pTimer->stop();
+    m_Chess.clear();//G3 H3 F3 G4 G5 G6 G
+
+    if(text.size()==1)
+        return;
+    for (QString::const_iterator it = text.begin()+1;it!=text.end();it+=3)
+    {
+        QChar c1 = *(it-1);//G
+        char c_1 = c1.toLatin1();
+        QChar c2 = (*it);//3
+        int c_2  = (int)(c2.toLatin1())-'0';
+
+        if(!legalInput(c1,c2))
+        {
+            QMessageBox *warning=new QMessageBox;
+            warning->information(this, "Warning", QString("Illegal input."));
+            delete warning;
+            return;
+        }
+        else
+        {
+            Chess a;
+            a.m_ChessColor=m_isBlackTurn;
+            a.m_ChessPossition.setY((char2num[(char)c_1])*height+PAINT_Y-20);
+            a.m_ChessPossition.setX((c_2)*width+PAINT_X-20);
+            m_Chess+=a;
+            m_isBlackTurn=!m_isBlackTurn;
+        }
+    }
+    DrawChesses();
+}
+int Widget::if_legal(int x,int y)
+{
+    if(!ExistChess[x][y])return 1;
+    if((x>0&&!ExistChess[x-1][y])||(x<8&&!ExistChess[x+1][y])||(y>0&&!ExistChess[x][y-1])||(y<8&&!ExistChess[x][y+1]))return 1;
+    int flag=0;
+    for(int i=0;i<=3;i++)
+    {
+        if(i==0)
+        {
+            if(x==0)continue;
+            if(ExistChess[x-1][y]!=ExistChess[x][y])continue;
+            if(if_scanned[x-1][y])continue;
+            if(ExistChess[x-1][y]==ExistChess[x][y])
+            {if_scanned[x][y]=1;flag+=if_legal(x-1,y);}
+        }
+        if(i==1)
+        {
+            if(x==8)continue;
+            if(ExistChess[x+1][y]!=ExistChess[x][y])continue;
+            if(if_scanned[x+1][y])continue;
+            if(ExistChess[x+1][y]==ExistChess[x][y])
+            {if_scanned[x][y]=1;flag+=if_legal(x+1,y);}
+        }
+        if(i==2)
+        {
+            if(y==0)continue;
+            if(ExistChess[x][y-1]!=ExistChess[x][y])continue;
+            if(if_scanned[x][y-1])continue;
+            if(ExistChess[x][y-1]==ExistChess[x][y])
+            {if_scanned[x][y]=1;flag+=if_legal(x,y-1);}
+        }
+        if(i==3)
+        {
+            if(y==8)continue;
+            if(ExistChess[x][y+1]!=ExistChess[x][y])continue;
+            if(if_scanned[x][y+1])continue;
+            if(ExistChess[x][y+1]==ExistChess[x][y])
+            {if_scanned[x][y]=1;flag+=if_legal(x,y+1);}
+        }
+    }
+    return flag;
+}
+void Widget::getCY()
+{
+    for (int i = 0; i<m_Chess.size(); i++)
+    {
+        chesspo[i].x=(m_Chess[i].m_ChessPossition.rx()-PAINT_X)/Widget::width+1;
+        chesspo[i].y=(m_Chess[i].m_ChessPossition.ry()-PAINT_Y)/Widget::height+1;
+        chesspo[i].c_y=num2char[chesspo[i].y];
+        //qDebug()<<chesspo[i].x<<","<<chesspo[i].y<<"."<<chesspo[i].c_y;
     }
 }
 void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
@@ -673,14 +788,12 @@ void Widget::updatedisplay()//实时更新计时器
         }
         else
         {
-
-            /*QString content=QString("Time limit exceed");
-            QMessageBox *dialog1=new QMessageBox;
-            dialog1->resize(1000,700);
-            if(Widget::m_isBlackTurn)
-            dialog1->information(this, content, QString("    BLACK LOSE!    \n    Total Steps: %1   ").arg(step) );
-            else dialog1->information(this, content, QString("    WHITE LOSE!    \n    Total Steps: %1    ").arg(step));*/
             pTimer->stop();
+            fail_state=1;
+            QString content=QString("Time limit exceed");
+            //按顺序获取已下棋子的坐标
+            getCY();
+            
             if(Widget::m_isBlackTurn){
                 step++;
                 if(!client_color_white){
@@ -690,7 +803,15 @@ void Widget::updatedisplay()//实时更新计时器
                 }
                 QString strr=" (BLACK) LOSE!\nTotal Steps: ";
                 QString message=QString("%1 %2 %3").arg(clientName).arg(strr).arg(step);
-                QMessageBox::information(this, "Game Over", message );
+                QMessageBox TLEbox(QMessageBox::Information,content,
+                                   message,
+                                   QMessageBox::Close,this);
+
+                QAbstractButton* save_button=TLEbox.addButton("Save",QMessageBox::YesRole);
+
+                connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+
+                TLEbox.exec();
                 }
                 else{
                 if(is_client){
@@ -699,7 +820,15 @@ void Widget::updatedisplay()//实时更新计时器
                 }
                 QString strr=" (BLACK) LOSE!\nTotal Steps: ";
                 QString message=QString("%1 %2 %3").arg(serverName).arg(strr).arg(step);
-                QMessageBox::information(this, "Game Over", message );
+                QMessageBox TLEbox(QMessageBox::Information,content,
+                                   message,
+                                   QMessageBox::Close,this);
+
+                QAbstractButton* save_button=TLEbox.addButton("Save",QMessageBox::YesRole);
+
+                connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+
+                TLEbox.exec();
                 }
                 step=0;
             }
@@ -712,7 +841,15 @@ void Widget::updatedisplay()//实时更新计时器
                 }
                 QString strr=" (White) LOSE!\nTotal Steps: ";
                 QString message=QString("%1 %2 %3").arg(serverName).arg(strr).arg(step);
-                QMessageBox::information(this, "Game Over", message );
+                QMessageBox TLEbox(QMessageBox::Information,content,
+                                   message,
+                                   QMessageBox::Close,this);
+
+                QAbstractButton* save_button=TLEbox.addButton("Save",QMessageBox::YesRole);
+
+                connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+
+                TLEbox.exec();
                 }
                 else{
                 if(is_server){
@@ -721,7 +858,15 @@ void Widget::updatedisplay()//实时更新计时器
                 }
                 QString strr=" (White) LOSE!\nTotal Steps: ";
                 QString message=QString("%1 %2 %3").arg(clientName).arg(strr).arg(step);
-                QMessageBox::information(this, "Game Over", message );
+                QMessageBox TLEbox(QMessageBox::Information,content,
+                                   message,
+                                   QMessageBox::Close,this);
+
+                QAbstractButton* save_button=TLEbox.addButton("Save",QMessageBox::YesRole);
+
+                connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+
+                TLEbox.exec();
                 }
                 step=0;
             }
@@ -739,17 +884,37 @@ int Widget::n_column=9;
 void Widget::give_up_clicked()//当按下认输按钮
 {
     pTimer->stop();
+    
+    fail_state=2;
+    //按顺序获取已下棋子的坐标
+    getCY();
+    
     if(Widget::m_isBlackTurn){
         step++;
         if(!client_color_white){
+        
             QString strr=" (BLACK) LOSE!\nTotal Steps: ";
             QString message=QString("%1 %2 %3").arg(clientName).arg(strr).arg(step);
-            QMessageBox::information(this, "Game Over", message );
+            QMessageBox GIVEUPbox(QMessageBox::Information,"Game Over",
+                           message,
+                           QMessageBox::Close,this);
+            QAbstractButton* save_button=GIVEUPbox.addButton("Save",QMessageBox::YesRole);
+
+            connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+
+            GIVEUPbox.exec();     
         }
         else{
             QString strr=" (BLACK) LOSE!\nTotal Steps: ";
             QString message=QString("%1 %2 %3").arg(serverName).arg(strr).arg(step);
-            QMessageBox::information(this, "Game Over", message );
+            QMessageBox GIVEUPbox(QMessageBox::Information,"Game Over",
+                           message,
+                           QMessageBox::Close,this);
+            QAbstractButton* save_button=GIVEUPbox.addButton("Save",QMessageBox::YesRole);
+
+            connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+
+            GIVEUPbox.exec();   
         }
         step=0;
     }
@@ -758,12 +923,27 @@ void Widget::give_up_clicked()//当按下认输按钮
         if(!client_color_white){
             QString strr=" (White) LOSE!\nTotal Steps: ";
             QString message=QString("%1 %2 %3").arg(serverName).arg(strr).arg(step);
-            QMessageBox::information(this, "Game Over", message );
+            
+            QMessageBox GIVEUPbox(QMessageBox::Information,"Game Over",
+                           message,
+                           QMessageBox::Close,this);
+            QAbstractButton* save_button=GIVEUPbox.addButton("Save",QMessageBox::YesRole);
+
+            connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+
+            GIVEUPbox.exec();   
         }
         else{
             QString strr=" (White) LOSE!\nTotal Steps: ";
             QString message=QString("%1 %2 %3").arg(clientName).arg(strr).arg(step);
-            QMessageBox::information(this, "Game Over", message );
+            QMessageBox GIVEUPbox(QMessageBox::Information,"Game Over",
+                           message,
+                           QMessageBox::Close,this);
+            QAbstractButton* save_button=GIVEUPbox.addButton("Save",QMessageBox::YesRole);
+
+            connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+
+            GIVEUPbox.exec();   
         }
         step=0;
     }
