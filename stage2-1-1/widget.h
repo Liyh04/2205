@@ -113,7 +113,6 @@ public:
 
     Widget(QWidget *parent = nullptr);
     void init();//游戏开局时初始化
-    void if_scanned_init();//将if_scanned数组所有元素重置为0
     QTime baseTime;
     QTimer *pTimer;
     ~Widget();
@@ -123,8 +122,6 @@ public:
     static int n_row;
     static int n_column;
     int ExistChess[9][9]={{0,0}};//0代表没有棋子，1代表黑棋，2代表白棋
-    int if_scanned[9][9]={{0,0}};//在递归回溯时记录已经判断过的棋子，避免造成死循环
-    int if_legal(int x,int y);//判断x行y列的棋子是否存活
    
 
 private slots:

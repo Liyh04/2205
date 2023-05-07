@@ -16,6 +16,7 @@ SOURCES += \
     networkdata.cpp \
     networkserver.cpp \
     networksocket.cpp \
+    rules.cpp \
     widget.cpp
 
 
@@ -26,6 +27,7 @@ HEADERS += \
     networkdata.h \
     networkserver.h \
     networksocket.h \
+    rules.h \
     widget.h
 
 

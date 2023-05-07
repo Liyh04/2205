@@ -18,6 +18,7 @@
 #include <QTextStream>
 #include <QFileDialog>
 #include <inputdialog.h>
+#include <rules.h>
 
 int TIMELIMIT=10;
 int step=0;
@@ -500,48 +501,6 @@ void Widget::onInputFinished(const QString& text)
     }
     DrawChesses();
 }
-int Widget::if_legal(int x,int y)
-{
-    if(!ExistChess[x][y])return 1;
-    if((x>0&&!ExistChess[x-1][y])||(x<8&&!ExistChess[x+1][y])||(y>0&&!ExistChess[x][y-1])||(y<8&&!ExistChess[x][y+1]))return 1;
-    int flag=0;
-    for(int i=0;i<=3;i++)
-    {
-        if(i==0)
-        {
-            if(x==0)continue;
-            if(ExistChess[x-1][y]!=ExistChess[x][y])continue;
-            if(if_scanned[x-1][y])continue;
-            if(ExistChess[x-1][y]==ExistChess[x][y])
-            {if_scanned[x][y]=1;flag+=if_legal(x-1,y);}
-        }
-        if(i==1)
-        {
-            if(x==8)continue;
-            if(ExistChess[x+1][y]!=ExistChess[x][y])continue;
-            if(if_scanned[x+1][y])continue;
-            if(ExistChess[x+1][y]==ExistChess[x][y])
-            {if_scanned[x][y]=1;flag+=if_legal(x+1,y);}
-        }
-        if(i==2)
-        {
-            if(y==0)continue;
-            if(ExistChess[x][y-1]!=ExistChess[x][y])continue;
-            if(if_scanned[x][y-1])continue;
-            if(ExistChess[x][y-1]==ExistChess[x][y])
-            {if_scanned[x][y]=1;flag+=if_legal(x,y-1);}
-        }
-        if(i==3)
-        {
-            if(y==8)continue;
-            if(ExistChess[x][y+1]!=ExistChess[x][y])continue;
-            if(if_scanned[x][y+1])continue;
-            if(ExistChess[x][y+1]==ExistChess[x][y])
-            {if_scanned[x][y]=1;flag+=if_legal(x,y+1);}
-        }
-    }
-    return flag;
-}
 void Widget::getCY()
 {
     for (int i = 0; i<m_Chess.size(); i++)
@@ -597,53 +556,17 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         }
 }
     //如果不存在棋子，则先判断这一步是否合法，如果合法，则构造一个棋子
-    Widget::if_scanned_init();
     if(m_isBlackTurn)ExistChess[X][Y]=1;
     if(!m_isBlackTurn)ExistChess[X][Y]=2;
     //判断合法前，先假设点击的位置已经下了棋子，如果不合法，则将数组中对应元素重置为0
-    //以下5个if函数分别判断点击处以及上下左右五个棋子是否存活
-    if(!if_legal(X,Y))
+    Rules r;
+    if(!r.Rules::illegal_operation_judging(ExistChess,X,Y))
     {
         ExistChess[X][Y]=0;
         QMessageBox *warning1=new QMessageBox;
         warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
         return;
     }
-    Widget::if_scanned_init();
-    if(X>0&&!if_legal(X-1,Y))
-    {
-        ExistChess[X][Y]=0;
-        QMessageBox *warning1=new QMessageBox;
-        warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
-        return;
-    }
-    Widget::if_scanned_init();
-    if(X<8&&!if_legal(X+1,Y))
-    {
-        ExistChess[X][Y]=0;
-        QMessageBox *warning1=new QMessageBox;
-        warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
-        return;
-    }
-    Widget::if_scanned_init();
-    if(Y>0&&!if_legal(X,Y-1))
-    {
-        ExistChess[X][Y]=0;
-        QMessageBox *warning1=new QMessageBox;
-        warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
-        return;
-    }
-    Widget::if_scanned_init();
-    if(Y<8&&!if_legal(X,Y+1))
-    {
-        ExistChess[X][Y]=0;
-        QMessageBox *warning1=new QMessageBox;
-        warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
-        return;
-    }
-    Widget::if_scanned_init();
-    ExistChess[X][Y]=0;
-    Widget::if_scanned_init();
     Chess chess_to_set(pt,m_isBlackTurn);
     pTimer->stop();//计时器重新开始计时
     this->baseTime=this->baseTime.currentTime();
@@ -703,9 +626,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     }
     m_Chess+=chess_to_set;//添加到已下棋子容器中
     step++;
-
 }
-
 
 void Widget::DrawChess(int X,int Y)
 {
@@ -732,10 +653,6 @@ void Widget::DrawChess(int X,int Y)
     step++;
 }
 
-void Widget::if_scanned_init()//在递归回溯时记录已经判断过的棋子，避免造成死循环
-{
-    for(int i1=0;i1<9;i1++)for(int j1=0;j1<9;j1++)if_scanned[i1][j1]=0;
-}
 void Widget::init()//游戏开局时初始化：设置每步限时，初始化计时器
 {
 
@@ -874,6 +791,10 @@ void Widget::updatedisplay()//实时更新计时器
 
          }
     }
+}
+void Widget::on_saveButton_clicked()
+{
+
 }
 //初始化静态成员
 int Widget::height=50;
