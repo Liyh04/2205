@@ -42,8 +42,8 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始�
     fail_state=0;
     //复现---
     QPushButton *fxbtn = new QPushButton("复现",this);
-    fxbtn->move(790,450);
-    fxbtn->resize(110,22);
+    fxbtn->move(900,55);
+    fxbtn->resize(90,25);
     connect(fxbtn,&QPushButton::clicked,this,&Widget::on_fxbtn_clicked);
     
     IP = "127.0.0.1";
