@@ -25,7 +25,7 @@ int Widget::width=50;
 int Widget::n_row=9;
 int Widget::n_column=9;
 
-int TIMELIMIT=10;
+int TIMELIMIT=30;
 int step=0;
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始化ui界面
 {
