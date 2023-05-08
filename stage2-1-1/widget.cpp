@@ -50,7 +50,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始�
     // 端口，不要太简单，要避免和别的软件冲突
     PORT = 16667;
     this->ui->IPEdit->setText(IP);
-    this->ui->PORTEdit->setText(QString::number(PORT));
+
     // 创建一个服务端
     this->server = new NetworkServer(this);
     lastOne = nullptr;
@@ -282,6 +282,7 @@ void Widget::onServerSendButtonClicked()
 
 void Widget::reStartServer()
 {
+    this->ui->PORTEdit->setText(QString::number(PORT));
     qDebug()<<"restart the server.";
     this->ui->lastOneLabel->setText("LastOne: ");
     this->ui->connectLabel->setText("disconnect");
@@ -324,6 +325,7 @@ void Widget::reStartServer()
 
 void Widget::reConnect()
 {
+    this->ui->PORTEdit->setText(QString::number(PORT));
     qDebug()<<"client reconnect to the server.";
     this->ui->connectLabel->setText("connection fail");
 
