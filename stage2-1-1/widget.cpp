@@ -378,29 +378,33 @@ void Widget::on_CREJECT_OP_clicked(){
 
 void Widget::on_CilentGiveup_clicked()//客户端投降
 {
-    this->socket->send(NetworkData(OPCODE::GIVEUP_OP,"",""));
+   if((client_color_white&&!m_isBlackTurn)||(!client_color_white&&m_isBlackTurn)){
+        this->socket->send(NetworkData(OPCODE::GIVEUP_OP,"",""));
 
-    if(client_color_white){
-        m_isBlackTurn=0;
-        give_up_clicked();
-    }
-    else{
-        m_isBlackTurn=1;
-        give_up_clicked();
+        if(client_color_white){
+            m_isBlackTurn=0;
+            give_up_clicked();
+        }
+        else{
+            m_isBlackTurn=1;
+            give_up_clicked();
+        }
     }
 
 }
 void Widget::on_ServerGiveup_2_clicked()//服务端投降
 {
-    if(lastOne)
-    this->server->send(lastOne,NetworkData(OPCODE::GIVEUP_OP,"",""));
-    if(!client_color_white){
-        m_isBlackTurn=0;
-        give_up_clicked();
-    }
-    else{
-        m_isBlackTurn=1;
-        give_up_clicked();
+   if((client_color_white&&m_isBlackTurn)||(!client_color_white&&!m_isBlackTurn)){
+        if(lastOne)
+        this->server->send(lastOne,NetworkData(OPCODE::GIVEUP_OP,"",""));
+        if(!client_color_white){
+            m_isBlackTurn=0;
+            give_up_clicked();
+        }
+        else{
+            m_isBlackTurn=1;
+            give_up_clicked();
+        }
     }
 }
 void Widget::on_CLEAVE_OP_clicked()
