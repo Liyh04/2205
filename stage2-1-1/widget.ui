@@ -16,7 +16,7 @@
   <widget class="QLCDNumber" name="lcd_sec">
    <property name="geometry">
     <rect>
-     <x>845</x>
+     <x>805</x>
      <y>20</y>
      <width>81</width>
      <height>71</height>
@@ -32,7 +32,7 @@
   <widget class="QLCDNumber" name="lcd_min">
    <property name="geometry">
     <rect>
-     <x>765</x>
+     <x>725</x>
      <y>20</y>
      <width>81</width>
      <height>71</height>
@@ -48,7 +48,7 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>800</x>
+     <x>750</x>
      <y>100</y>
      <width>111</width>
      <height>23</height>

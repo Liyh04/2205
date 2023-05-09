@@ -25,7 +25,7 @@ int Widget::width=50;
 int Widget::n_row=9;
 int Widget::n_column=9;
 
-int TIMELIMIT=10;
+int TIMELIMIT=30;
 int step=0;
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始化ui界面
 {
@@ -42,15 +42,15 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始�
     fail_state=0;
     //复现---
     QPushButton *fxbtn = new QPushButton("复现",this);
-    fxbtn->move(790,450);
-    fxbtn->resize(110,22);
+    fxbtn->move(900,55);
+    fxbtn->resize(90,25);
     connect(fxbtn,&QPushButton::clicked,this,&Widget::on_fxbtn_clicked);
     
     IP = "127.0.0.1";
     // 端口，不要太简单，要避免和别的软件冲突
     PORT = 16667;
     this->ui->IPEdit->setText(IP);
-    this->ui->PORTEdit->setText(QString::number(PORT));
+
     // 创建一个服务端
     this->server = new NetworkServer(this);
     lastOne = nullptr;
@@ -282,6 +282,7 @@ void Widget::onServerSendButtonClicked()
 
 void Widget::reStartServer()
 {
+    this->ui->PORTEdit->setText(QString::number(PORT));
     qDebug()<<"restart the server.";
     this->ui->lastOneLabel->setText("LastOne: ");
     this->ui->connectLabel->setText("disconnect");
@@ -324,6 +325,7 @@ void Widget::reStartServer()
 
 void Widget::reConnect()
 {
+    this->ui->PORTEdit->setText(QString::number(PORT));
     qDebug()<<"client reconnect to the server.";
     this->ui->connectLabel->setText("connection fail");
 
@@ -799,7 +801,41 @@ void Widget::updatedisplay()//实时更新计时器
 }
 void Widget::on_saveButton_clicked()
 {
+        // 弹出一个对话框，让用户选择文件保存的目录
+        QString dir = QFileDialog::getExistingDirectory(this, tr("选择文件保存目录"), QDir::homePath());
 
+        // 如果用户取消选择，返回
+        if (dir.isEmpty())
+            return;
+    
+        // 生成一个当前时间的字符串
+        QString timestamp = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss");
+        // 将当前时间的字符串添加到文件名中
+        QString fileName = QString("save_%1.txt").arg(timestamp);
+        // 将选定的目录与文件名结合起来形成完整的文件路径
+        QString filePath = dir + "/" + fileName;
+
+        // 创建一个新文件
+        QFile file(filePath);
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+            return;
+
+        // 创建一个QTextEdit对象textEdit
+        QTextEdit *textEdit = new QTextEdit(this);
+        //获得save内容
+        for (int i = 0; i < m_Chess.size(); ++i)
+        {
+            textEdit->insertPlainText(chesspo[i].c_y+QString::number(chesspo[i].x)+" ");
+        }
+        //结尾标识结束状态
+        if(fail_state==1)
+            textEdit->insertPlainText("T");
+        else if(fail_state==2)
+            textEdit->insertPlainText("G");
+        // 使用QTextStream类将textEdit写入新文件
+        QTextStream out(&file);
+        out << textEdit->toPlainText().trimmed().toUtf8();
+        file.close();
 }
 
 void Widget::give_up_clicked()//当按下认输按钮
