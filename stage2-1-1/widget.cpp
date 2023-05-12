@@ -174,6 +174,7 @@ void Widget::receieveData(QTcpSocket* client, NetworkData data)//这是服务端
         X_Other=str[0]-'A';
         Y_Other=str[1]-'1';
         DrawChess(X_Other,Y_Other);
+        receive_time=data.data2.toLongLong();
        // m_isBlackTurn=!m_isBlackTurn;
     }
 
@@ -282,7 +283,8 @@ void Widget::onServerSendButtonClicked()
 
 void Widget::reStartServer()
 {
-    this->ui->PORTEdit->setText(QString::number(PORT));
+    IP=this->ui->IPEdit->text();
+    PORT=this->ui->PORTEdit->text().toInt();
     qDebug()<<"restart the server.";
     this->ui->lastOneLabel->setText("LastOne: ");
     this->ui->connectLabel->setText("disconnect");
@@ -325,7 +327,8 @@ void Widget::reStartServer()
 
 void Widget::reConnect()
 {
-    this->ui->PORTEdit->setText(QString::number(PORT));
+    IP=this->ui->IPEdit->text();
+    PORT=this->ui->PORTEdit->text().toInt();
     qDebug()<<"client reconnect to the server.";
     this->ui->connectLabel->setText("connection fail");
 
@@ -378,29 +381,33 @@ void Widget::on_CREJECT_OP_clicked(){
 
 void Widget::on_CilentGiveup_clicked()//客户端投降
 {
-    this->socket->send(NetworkData(OPCODE::GIVEUP_OP,"",""));
+   if((client_color_white&&!m_isBlackTurn)||(!client_color_white&&m_isBlackTurn)){
+        this->socket->send(NetworkData(OPCODE::GIVEUP_OP,"",""));
 
-    if(client_color_white){
-        m_isBlackTurn=0;
-        give_up_clicked();
-    }
-    else{
-        m_isBlackTurn=1;
-        give_up_clicked();
+        if(client_color_white){
+            m_isBlackTurn=0;
+            give_up_clicked();
+        }
+        else{
+            m_isBlackTurn=1;
+            give_up_clicked();
+        }
     }
 
 }
 void Widget::on_ServerGiveup_2_clicked()//服务端投降
 {
-    if(lastOne)
-    this->server->send(lastOne,NetworkData(OPCODE::GIVEUP_OP,"",""));
-    if(!client_color_white){
-        m_isBlackTurn=0;
-        give_up_clicked();
-    }
-    else{
-        m_isBlackTurn=1;
-        give_up_clicked();
+   if((client_color_white&&m_isBlackTurn)||(!client_color_white&&!m_isBlackTurn)){
+        if(lastOne)
+        this->server->send(lastOne,NetworkData(OPCODE::GIVEUP_OP,"",""));
+        if(!client_color_white){
+            m_isBlackTurn=0;
+            give_up_clicked();
+        }
+        else{
+            m_isBlackTurn=1;
+            give_up_clicked();
+        }
     }
 }
 void Widget::on_CLEAVE_OP_clicked()
@@ -574,52 +581,29 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
         return;
     }
+    qint64 curtime=QDateTime::currentMSecsSinceEpoch();
     Chess chess_to_set(pt,m_isBlackTurn);
     pTimer->stop();//计时器重新开始计时
     this->baseTime=this->baseTime.currentTime();
     pTimer->start(1);
     if(is_client){
-        if(m_isBlackTurn){
-            if(!client_color_white){//客户端是黑
+        if(m_isBlackTurn^client_color_white){
                 QString st;
                 std::string s;
                 s=X+'A';
                 st=QString::fromStdString(s);
-                this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y+1),""));//客户端传下的棋子过去
-            }
-        }
-        else{
-            if(client_color_white){//客户端是白
-                QString st;
-                std::string s;
-                s=X+'A';
-                st=QString::fromStdString(s);
-                this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y+1),""));
-            }
+                this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y+1),QString("%1").arg(curtime)));//客户端传下的棋子过去
         }
     }
     if(is_server){
-        if(m_isBlackTurn){
-            if(server_color_black){
+        if(m_isBlackTurn==server_color_black){
                 QString st;
                 std::string s;
                 s=X+'A';
                 st=QString::fromStdString(s);
                 if(lastOne)
-                this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y+1),""));
-            }
+                this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y+1),QString("%1").arg(curtime)));
         }
-        if(!m_isBlackTurn){
-            if(!server_color_black){
-                QString st;
-                std::string s;
-                s=X+'A';
-                st=QString::fromStdString(s);
-                if(lastOne)
-                this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y+1),""));
-            }
-        }
-
     }
     if(m_isBlackTurn)//这个设计的是下一次棋子就改变一下颜色
     {

@@ -114,6 +114,7 @@ public:
     Widget(QWidget *parent = nullptr);
     void init();//游戏开局时初始化
     QTime baseTime;
+    qint64 receive_time;
     QTimer *pTimer;
     ~Widget();
     //静态成员
