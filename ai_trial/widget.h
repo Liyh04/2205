@@ -129,6 +129,6 @@ private:
     void DrawChessAtPoint(QPainter& painter,QPoint& pt);//在pt 位置,以Painter 画棋子
     void StopGame();  //停止当前棋局（暂未实现）
     void RepentanceGame(); //悔棋（暂未实现）
-
+    void GG(bool black_turn,bool if_client,bool client_color_white,int opcode);
 };
 #endif // WIDGET_H

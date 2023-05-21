@@ -19,6 +19,7 @@
 #include <QFileDialog>
 #include <inputdialog.h>
 #include <rules.h>
+#include <available.h>
 //初始化静态成员
 int Widget::height=50;
 int Widget::width=50;
@@ -214,6 +215,15 @@ void Widget::receieveData(QTcpSocket* client, NetworkData data)//这是服务端
                 if(lastOne)this->server->send(lastOne,NetworkData(OPCODE::TIMEOUT_END_OP,serverName,"wenhouyu"));
         }
     }
+
+    if(data.op==OPCODE::SUICIDE_END_OP){
+
+        if(twice==1){
+                twice=2;
+
+                if(lastOne)this->server->send(lastOne,NetworkData(OPCODE::SUICIDE_END_OP,serverName,"wenhouyu"));
+        }
+    }
 }
 
 void Widget::receieveDataFromServer(NetworkData data)
@@ -265,6 +275,13 @@ void Widget::receieveDataFromServer(NetworkData data)
         if(twice==1){
             twice=2;
             this->socket->send(NetworkData(OPCODE::TIMEOUT_END_OP,clientName,"wenhouyu"));
+        }
+    }
+
+    if(data.op==OPCODE::SUICIDE_END_OP){
+        if(twice==1){
+            twice=2;
+            this->socket->send(NetworkData(OPCODE::SUICIDE_END_OP,clientName,"wenhouyu"));
         }
     }
 }
@@ -615,6 +632,9 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         ExistChess[(pt.y()-PAINT_Y)/Widget::height][(pt.x()-PAINT_X)/Widget::width]=2;
     }
     m_Chess+=chess_to_set;//添加到已下棋子容器中
+    available a;
+    ui->b_avi->setText(QString("Black_ava:%1").arg(a.ava_number(ExistChess,1)));
+    ui->w_avi->setText(QString("White_ava:%1").arg(a.ava_number(ExistChess,0)));
     step++;
 }
 
@@ -623,15 +643,9 @@ void Widget::DrawChess(int X,int Y)
     QPoint pt;
     pt.setY(X*Widget::height+PAINT_Y+30);
     pt.setX(Y*Widget::width+PAINT_X+30);
-    Rules r;
-    if(ExistChess[X][Y]||!r.illegal_operation_judging(ExistChess,X,Y))
-    {
 
-    }
     Chess chess_to_set(pt,m_isBlackTurn);
-    pTimer->stop();//计时器重新开始计时
-    this->baseTime=this->baseTime.currentTime();
-    pTimer->start(1);
+
     if(m_isBlackTurn)//这个设计的是下一次棋子就改变一下颜色
     {
         m_isBlackTurn=0;
@@ -644,6 +658,100 @@ void Widget::DrawChess(int X,int Y)
     }
     m_Chess+=chess_to_set;//添加到已下棋子容器中
     step++;
+    Rules r;
+    if(!r.illegal_operation_judging(ExistChess,X,Y))
+    {
+        pTimer->stop();
+        fail_state=1;
+        QString content=QString("suicide");
+        //按顺序获取已下棋子的坐标
+        getCY();
+        if(Widget::m_isBlackTurn){
+                step++;
+                if(!client_color_white){
+                if(is_server){
+                    twice=1;
+                    if(lastOne)this->server->send(lastOne,NetworkData(OPCODE::SUICIDE_END_OP,"SUICIDE_END_OP",""));
+                }
+                QString strr=" (BLACK) LOSE!\nTotal Steps: ";
+                QString message=QString("%1 %2 %3").arg(clientName).arg(strr).arg(step);
+                QMessageBox TLEbox(QMessageBox::Information,content,
+                                   message,
+                                   QMessageBox::Close,this);
+
+                QAbstractButton* save_button=TLEbox.addButton("Save",QMessageBox::YesRole);
+
+                connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+
+                TLEbox.exec();
+                }
+                else{
+                if(is_client){
+                    twice=1;
+                    this->socket->send(NetworkData(OPCODE::SUICIDE_END_OP,"SUICIDE_END_OP",""));
+                }
+                QString strr=" (BLACK) LOSE!\nTotal Steps: ";
+                QString message=QString("%1 %2 %3").arg(serverName).arg(strr).arg(step);
+                QMessageBox TLEbox(QMessageBox::Information,content,
+                                   message,
+                                   QMessageBox::Close,this);
+
+                QAbstractButton* save_button=TLEbox.addButton("Save",QMessageBox::YesRole);
+
+                connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+
+                TLEbox.exec();
+                }
+                step=0;
+        }
+        else {
+                step++;
+                if(!client_color_white){
+                if(is_client){
+                    twice=1;
+                    this->socket->send(NetworkData(OPCODE::SUICIDE_END_OP,"SUICIDE_END_OP",""));
+                }
+                QString strr=" (White) LOSE!\nTotal Steps: ";
+                QString message=QString("%1 %2 %3").arg(serverName).arg(strr).arg(step);
+                QMessageBox TLEbox(QMessageBox::Information,content,
+                                   message,
+                                   QMessageBox::Close,this);
+
+                QAbstractButton* save_button=TLEbox.addButton("Save",QMessageBox::YesRole);
+
+                connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+
+                TLEbox.exec();
+                }
+                else{
+                if(is_server){
+                    twice=1;
+                    if(lastOne)this->server->send(lastOne,NetworkData(OPCODE::SUICIDE_END_OP,"SUICIDE_END_OP",""));
+                }
+                QString strr=" (White) LOSE!\nTotal Steps: ";
+                QString message=QString("%1 %2 %3").arg(clientName).arg(strr).arg(step);
+                QMessageBox TLEbox(QMessageBox::Information,content,
+                                   message,
+                                   QMessageBox::Close,this);
+
+                QAbstractButton* save_button=TLEbox.addButton("Save",QMessageBox::YesRole);
+
+                connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+
+                TLEbox.exec();
+                }
+                step=0;
+        }
+        restart();
+        return;
+    }
+    pTimer->stop();//计时器重新开始计时
+    this->baseTime=this->baseTime.currentTime();
+    pTimer->start(1);
+    available a;
+    ui->b_avi->setText(QString("Black_ava:%1").arg(a.ava_number(ExistChess,1)));
+    ui->w_avi->setText(QString("White_ava:%1").arg(a.ava_number(ExistChess,0)));
+
 }
 
 void Widget::init()//游戏开局时初始化：设置每步限时，初始化计时器
@@ -668,7 +776,8 @@ void Widget::init()//游戏开局时初始化：设置每步限时，初始化�
     this->ui->lcd_min->display(minstr);
     this->ui->lcd_sec->display(secstr);
     ui->label_3->setText("BLACK");
-
+    ui->b_avi->setText("Black_ava:81");
+    ui->w_avi->setText("White_ava:81");
 }
 void Widget::updatedisplay()//实时更新计时器
 {
@@ -698,9 +807,9 @@ void Widget::updatedisplay()//实时更新计时器
         }
         else
         {
-            pTimer->stop();
-            fail_state=1;
             QString content=QString("Time limit exceed");
+            pTimer->stop();
+            fail_state=1;           
             //按顺序获取已下棋子的坐标
             getCY();
             
