@@ -17,6 +17,7 @@ SOURCES += \
     networkdata.cpp \
     networkserver.cpp \
     networksocket.cpp \
+    randomnumbergenerator.cpp \
     rules.cpp \
     widget.cpp
 
@@ -29,6 +30,7 @@ HEADERS += \
     networkdata.h \
     networkserver.h \
     networksocket.h \
+    randomnumbergenerator.h \
     rules.h \
     widget.h
 
