@@ -103,6 +103,7 @@ public:
     int fail_state;//代表输了的状态，1-tle，2-giveup，0-初始值；
 
     Widget(QWidget *parent = nullptr);
+    void setmode();//打开游戏界面前设置模式
     void init();//游戏开局时初始化
     QTime baseTime;
     qint64 curtime;

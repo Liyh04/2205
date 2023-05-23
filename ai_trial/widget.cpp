@@ -25,7 +25,7 @@ int Widget::height=50;
 int Widget::width=50;
 int Widget::n_row=9;
 int Widget::n_column=9;
-
+int if_netmode=0;
 int TIMELIMIT=30;
 int step=0;
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始化ui界面
@@ -34,7 +34,8 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始�
     #define PAINT_Y 40
     setFixedSize(1100,600);
     ui->setupUi(this);
-    
+
+    this->setmode();
     this->init();
     
     //设置标题
@@ -104,6 +105,25 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始�
 Widget::~Widget()//析构函数
 {
     delete ui;
+}
+void Widget::setmode()
+{
+    QPushButton *netmode,*singlemode_9,*singlemode_11,*singlemode_13;
+    QMessageBox MyBox(QMessageBox::Information,"",
+                      "",
+                      QMessageBox::Close,this);
+    MyBox.setWindowFlags(Qt::Dialog);
+    MyBox.setWindowTitle("mode setting");
+    MyBox.setText("请选择游戏模式");
+    netmode=MyBox.addButton("联机模式",QMessageBox::YesRole);
+    singlemode_9=MyBox.addButton("单机9路",QMessageBox::YesRole);
+    singlemode_11=MyBox.addButton("单机11路",QMessageBox::YesRole);
+    singlemode_13=MyBox.addButton("单机13路",QMessageBox::YesRole);
+    connect(netmode,&QPushButton::clicked,this,[&](){if_netmode=1;n_row=9;});
+    connect(singlemode_9,&QPushButton::clicked,this,[&](){if_netmode=0;n_row=9;});
+    connect(singlemode_11,&QPushButton::clicked,this,[&](){if_netmode=0;n_row=11;});
+    connect(singlemode_13,&QPushButton::clicked,this,[&](){if_netmode=0;n_row=13;});
+
 }
 //复现--------
 void Widget::on_fxbtn_clicked()
@@ -759,14 +779,14 @@ void Widget::init()//游戏开局时初始化：设置每步限时，初始化�
 
     flag_start=0;
     twice=0;
-    /*bool ok=false;
+    bool ok=false;
     QString dlgTitle="Timelimit Setting";
     QString txtLabel="Please enter the timelimit of each step(an integer).";
     int timelimit=QInputDialog::getInt(this,dlgTitle,txtLabel,30,10,3600,1,&ok);
     if(ok)
     {
         TIMELIMIT=timelimit;
-    }*/
+    }
     this->pTimer=new QTimer;
     connect(this->pTimer,SIGNAL(timeout()),this,SLOT(updatedisplay()));
     QString min_str=QString::number(TIMELIMIT/60);
