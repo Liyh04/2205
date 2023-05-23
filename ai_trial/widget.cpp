@@ -19,35 +19,35 @@
 #include <QFileDialog>
 #include <inputdialog.h>
 #include <rules.h>
-#include <available.h>
+#include "available.h"
 //初始化静态成员
 int Widget::height=50;
 int Widget::width=50;
 int Widget::n_row=9;
 int Widget::n_column=9;
-int if_netmode=0;
+bool if_netmode;
 int TIMELIMIT=30;
 int step=0;
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始化ui界面
 {
-    #define PAINT_X 80
-    #define PAINT_Y 40
-    setFixedSize(1100,600);
+    #define PAINT_X 0
+    #define PAINT_Y 0
+    setFixedSize(1200,700);
     ui->setupUi(this);
 
     this->setmode();
     this->init();
-    
+
     //设置标题
     setWindowTitle("NoGo_group5");
     m_isBlackTurn = true;//黑子先行
     fail_state=0;
     //复现---
     QPushButton *fxbtn = new QPushButton("复现",this);
-    fxbtn->move(900,55);
+    fxbtn->move(1000,60);
     fxbtn->resize(90,25);
     connect(fxbtn,&QPushButton::clicked,this,&Widget::on_fxbtn_clicked);
-    
+
     IP = "127.0.0.1";
     // 端口，不要太简单，要避免和别的软件冲突
     PORT = 16667;
@@ -95,6 +95,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始�
     connect(this->ui->reSetButton,&QPushButton::clicked,this,&Widget::reSet);
     connect(this->ui->reConnectButton,&QPushButton::clicked,this,&Widget::reConnect);
     connect(this->ui->reStartButton,&QPushButton::clicked,this,&Widget::reStartServer);
+    connect(this->ui->local_giveup,&QPushButton::clicked,this,&Widget::local_giveup);
     // 客户端向 IP:PORT 连接，不会连到自己
     IP=this->ui->IPEdit->text();
     this->socket->hello(IP,PORT);
@@ -110,22 +111,16 @@ void Widget::setmode()
 {
     QPushButton *netmode,*singlemode_9,*singlemode_11,*singlemode_13;
     QMessageBox *MyBox=new QMessageBox;
-    //QString dlgtitle="Question消息框";
-    //QString strinfo="请选择游戏模式";
-    //QPushButton* customButton = new QPushButton("Custom Button", this);
-    //MyBox->addButton(customButton, QMessageBox::ActionRole);
-    //QMessageBox::StandardButton result;
-    //result=QMessageBox::question(this,dlgtitle,strinfo,QMessageBox::No|QMessageBox::Cancel);
+    MyBox->setText("请选择游戏模式");
     netmode=MyBox->addButton("联机模式",QMessageBox::YesRole);
     singlemode_9=MyBox->addButton("单机9路",QMessageBox::YesRole);
     singlemode_11=MyBox->addButton("单机11路",QMessageBox::YesRole);
     singlemode_13=MyBox->addButton("单机13路",QMessageBox::YesRole);
+    connect(netmode,&QPushButton::clicked,this,[&](){if_netmode=true;n_row=9;});
+    connect(singlemode_9,&QPushButton::clicked,this,[&](){if_netmode=false;n_row=9;});
+    connect(singlemode_11,&QPushButton::clicked,this,[&](){if_netmode=false;n_row=11;});
+    connect(singlemode_13,&QPushButton::clicked,this,[&](){if_netmode=false;n_row=13;});
     MyBox->exec();
-    connect(netmode,&QPushButton::clicked,this,[&](){if_netmode=1;n_row=9;});
-    connect(singlemode_9,&QPushButton::clicked,this,[&](){if_netmode=0;n_row=9;});
-    connect(singlemode_11,&QPushButton::clicked,this,[&](){if_netmode=0;n_row=11;});
-    connect(singlemode_13,&QPushButton::clicked,this,[&](){if_netmode=0;n_row=13;});
-
 }
 //复现--------
 void Widget::on_fxbtn_clicked()
@@ -464,6 +459,7 @@ void Widget::TIMEOUT_END_OP_send()
 {
 
 }
+
 void Widget::paintEvent(QPaintEvent *)//画棋盘和棋子
 {
     DrawChessboard();        //画棋盘
@@ -473,14 +469,34 @@ void Widget::paintEvent(QPaintEvent *)//画棋盘和棋子
 void Widget::DrawChessboard()//初始化棋盘
 {
     //设置画家
-    QPainter painter_Yujx_board(this);
-    //图片-棋盘
-    QPixmap pix_chessmap;
-    pix_chessmap.load(":/images/qipan.jpg");
-    //改变大小，500,500
-    pix_chessmap=pix_chessmap.scaled(500,500,Qt::KeepAspectRatio,Qt::SmoothTransformation);
-    //画图
-    painter_Yujx_board.drawPixmap(PAINT_X,PAINT_Y,pix_chessmap);
+    if(n_row!=9)
+    {
+        QPainter painter(this);
+        int squareSize = 50;
+        int x = PAINT_X+50;
+        int y = PAINT_Y+50;
+
+        for (int row = 0; row < n_row-1; ++row) {
+            for (int col = 0; col < n_row-1; ++col) {
+                QRectF square(x, y, squareSize, squareSize);
+                painter.drawRect(square);
+                x += squareSize;
+            }
+            x = PAINT_X+50;
+            y += squareSize;
+        }
+    }
+    else
+    {
+        QPainter painter_Yujx_board(this);
+        //图片-棋盘
+        QPixmap pix_chessmap;
+        pix_chessmap.load(":/images/qipan.jpg");
+        //改变大小，500,500
+        pix_chessmap=pix_chessmap.scaled(500,500,Qt::KeepAspectRatio,Qt::SmoothTransformation);
+        //画图
+        painter_Yujx_board.drawPixmap(PAINT_X,PAINT_Y,pix_chessmap);
+    }
 }
 void Widget::DrawChesses()//画棋子
 {
@@ -566,18 +582,21 @@ void Widget::getCY()
 }
 void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
 {
-    if(flag_start!=1)return;
-    if(is_client&&client_color_white&&m_isBlackTurn)return;
-    if(is_client&&!client_color_white&&!m_isBlackTurn)return;
-    if(!is_client&&server_color_black&&!m_isBlackTurn)return;
-    if(!is_client&&!server_color_black&&m_isBlackTurn)return;
+    if(if_netmode)
+    {
+        if(flag_start!=1)return;
+        if(is_client&&client_color_white&&m_isBlackTurn)return;
+        if(is_client&&!client_color_white&&!m_isBlackTurn)return;
+        if(!is_client&&server_color_black&&!m_isBlackTurn)return;
+        if(!is_client&&!server_color_black&&m_isBlackTurn)return;
+    }
     //求鼠标点击处的棋子点pt↓
     QPoint pt;
     int x=e->pos().x() ;
     int y=e->pos().y();
     //如果鼠标不是在棋盘区域按下,则放弃
     {
-    if (x<30+PAINT_X || x>470+PAINT_X || y<30+PAINT_Y || y>470+PAINT_Y )
+    if (x<30+PAINT_X || x>50*n_row+20+PAINT_X || y<30+PAINT_Y || y>50*n_row+20+PAINT_Y )
         return;
     }
     //判定鼠标的位置更接近哪一个座标点, 将该座标点作为要下棋子的点
@@ -613,7 +632,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     if(!m_isBlackTurn)ExistChess[X][Y]=2;
     //判断合法前，先假设点击的位置已经下了棋子，如果不合法，则将数组中对应元素重置为0
     Rules r;
-    if(!r.Rules::illegal_operation_judging(ExistChess,X,Y))
+    if(!r.Rules::illegal_operation_judging(ExistChess,n_row,X,Y))
     {
         ExistChess[X][Y]=0;
         QMessageBox *warning1=new QMessageBox;
@@ -624,6 +643,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     pTimer->stop();//计时器重新开始计时
     this->baseTime=this->baseTime.currentTime();
     pTimer->start(1);
+
     if(is_client){
         if(m_isBlackTurn^client_color_white){
                 QString st;
@@ -643,6 +663,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
                 this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y+1),""));
         }
     }
+
     if(m_isBlackTurn)//这个设计的是下一次棋子就改变一下颜色
     {
         m_isBlackTurn=0;
@@ -655,8 +676,8 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     }
     m_Chess+=chess_to_set;//添加到已下棋子容器中
     available a;
-    ui->b_avi->setText(QString("Black_ava:%1").arg(a.ava_number(ExistChess,1)));
-    ui->w_avi->setText(QString("White_ava:%1").arg(a.ava_number(ExistChess,0)));
+    ui->b_avi->setText(QString("Black_ava:%1").arg(a.ava_number(ExistChess,n_row,1)));
+    ui->w_avi->setText(QString("White_ava:%1").arg(a.ava_number(ExistChess,n_row,0)));
     step++;
 }
 
@@ -681,7 +702,7 @@ void Widget::DrawChess(int X,int Y)
     m_Chess+=chess_to_set;//添加到已下棋子容器中
     step++;
     Rules r;
-    if(!r.illegal_operation_judging(ExistChess,X,Y))
+    if(!r.illegal_operation_judging(ExistChess,n_row,X,Y))
     {
         pTimer->stop();
         fail_state=1;
@@ -771,14 +792,47 @@ void Widget::DrawChess(int X,int Y)
     this->baseTime=this->baseTime.currentTime();
     pTimer->start(1);
     available a;
-    ui->b_avi->setText(QString("Black_ava:%1").arg(a.ava_number(ExistChess,1)));
-    ui->w_avi->setText(QString("White_ava:%1").arg(a.ava_number(ExistChess,0)));
+    ui->b_avi->setText(QString("Black_ava:%1").arg(a.ava_number(ExistChess,n_row,1)));
+    ui->w_avi->setText(QString("White_ava:%1").arg(a.ava_number(ExistChess,n_row,0)));
 
 }
 
 void Widget::init()//游戏开局时初始化：设置每步限时，初始化计时器
 {
-
+    if(!if_netmode)
+    {
+        ui->serverGet->setEnabled(false);
+        ui->serverGetEdit->setEnabled(false);
+        ui->serverSend->setEnabled(false);
+        ui->serverSendEdit->setEnabled(false);
+        ui->getButton_2->setEnabled(false);
+        ui->serverSendButton->setEnabled(false);
+        ui->SGG_OP->setEnabled(false);
+        ui->SLEAVE_OP->setEnabled(false);
+        ui->SMOVE_OP->setEnabled(false);
+        ui->SREADY_OP->setEnabled(false);
+        ui->SREJECT_OP->setEnabled(false);
+        ui->ServerGiveup_2->setEnabled(false);
+        ui->reStartButton->setEnabled(false);//
+        ui->clientGet->setEnabled(false);
+        ui->clientGetEdit->setEnabled(false);
+        ui->clientSend->setEnabled(false);
+        ui->clientSendEdit->setEnabled(false);
+        ui->getButton_1->setEnabled(false);
+        ui->clientSendButton->setEnabled(false);
+        ui->CGG_OP->setEnabled(false);
+        ui->CLEAVE_OP->setEnabled(false);
+        ui->CMOVE_OP->setEnabled(false);
+        ui->CREADY_OP->setEnabled(false);
+        ui->CREJECT_OP->setEnabled(false);
+        ui->CilentGiveup->setEnabled(false);
+        ui->reConnectButton->setEnabled(false);
+        ui->reSetButton->setEnabled(false);
+        ui->showClientButton->setEnabled(false);
+        ui->IPEdit->setEnabled(false);
+        ui->PORTEdit->setEnabled(false);
+    }
+    else ui->local_giveup->setEnabled(false);
     flag_start=0;
     twice=0;
     bool ok=false;
@@ -798,8 +852,8 @@ void Widget::init()//游戏开局时初始化：设置每步限时，初始化�
     this->ui->lcd_min->display(minstr);
     this->ui->lcd_sec->display(secstr);
     ui->label_3->setText("BLACK");
-    ui->b_avi->setText("Black_ava:81");
-    ui->w_avi->setText("White_ava:81");
+    ui->b_avi->setText(QString("Black_ava:%1").arg(n_row*n_row));
+    ui->w_avi->setText(QString("White_ava:%1").arg(n_row*n_row));
 }
 void Widget::updatedisplay()//实时更新计时器
 {
@@ -834,7 +888,6 @@ void Widget::updatedisplay()//实时更新计时器
             fail_state=1;           
             //按顺序获取已下棋子的坐标
             getCY();
-            
             if(Widget::m_isBlackTurn){
                 step++;
                 if(!client_color_white){
@@ -1019,6 +1072,22 @@ void Widget::give_up_clicked()//当按下认输按钮
 
             GIVEUPbox.exec();   
         }
+        step=0;
+    }
+    restart();
+}
+void Widget::local_giveup()
+{
+    QMessageBox *GiveUpBox=new QMessageBox;
+    pTimer->stop();
+    if(Widget::m_isBlackTurn){
+        step++;
+        GiveUpBox->information(this, "Game Over", QString("BLACK LOSE!\nTotal Steps: %1").arg(step) );
+        step=0;
+    }
+    else {
+        step++;
+        GiveUpBox->information(this, "Game Over", QString("WHITE LOSE!\nTotal Steps: %1").arg(step) );
         step=0;
     }
     restart();
