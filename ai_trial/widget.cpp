@@ -109,16 +109,18 @@ Widget::~Widget()//析构函数
 void Widget::setmode()
 {
     QPushButton *netmode,*singlemode_9,*singlemode_11,*singlemode_13;
-    QMessageBox MyBox(QMessageBox::Information,"",
-                      "",
-                      QMessageBox::Close,this);
-    MyBox.setWindowFlags(Qt::Dialog);
-    MyBox.setWindowTitle("mode setting");
-    MyBox.setText("请选择游戏模式");
-    netmode=MyBox.addButton("联机模式",QMessageBox::YesRole);
-    singlemode_9=MyBox.addButton("单机9路",QMessageBox::YesRole);
-    singlemode_11=MyBox.addButton("单机11路",QMessageBox::YesRole);
-    singlemode_13=MyBox.addButton("单机13路",QMessageBox::YesRole);
+    QMessageBox *MyBox=new QMessageBox;
+    //QString dlgtitle="Question消息框";
+    //QString strinfo="请选择游戏模式";
+    //QPushButton* customButton = new QPushButton("Custom Button", this);
+    //MyBox->addButton(customButton, QMessageBox::ActionRole);
+    //QMessageBox::StandardButton result;
+    //result=QMessageBox::question(this,dlgtitle,strinfo,QMessageBox::No|QMessageBox::Cancel);
+    netmode=MyBox->addButton("联机模式",QMessageBox::YesRole);
+    singlemode_9=MyBox->addButton("单机9路",QMessageBox::YesRole);
+    singlemode_11=MyBox->addButton("单机11路",QMessageBox::YesRole);
+    singlemode_13=MyBox->addButton("单机13路",QMessageBox::YesRole);
+    MyBox->exec();
     connect(netmode,&QPushButton::clicked,this,[&](){if_netmode=1;n_row=9;});
     connect(singlemode_9,&QPushButton::clicked,this,[&](){if_netmode=0;n_row=9;});
     connect(singlemode_11,&QPushButton::clicked,this,[&](){if_netmode=0;n_row=11;});
