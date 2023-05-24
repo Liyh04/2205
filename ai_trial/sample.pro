@@ -17,6 +17,8 @@ SOURCES += \
     networkdata.cpp \
     networkserver.cpp \
     networksocket.cpp \
+    randomnumbergenerator.cpp \
+    replay.cpp \
     rules.cpp \
     widget.cpp
 
@@ -25,15 +27,17 @@ HEADERS += \
     available.h \
     chess.h \
     inputdialog.h \
-    #mainwindow.h \
     networkdata.h \
     networkserver.h \
     networksocket.h \
+    randomnumbergenerator.h \
+    replay.h \
     rules.h \
     widget.h
 
 
 FORMS += \
+    replay.ui \
     widget.ui
 
 

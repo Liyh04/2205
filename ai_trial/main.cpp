@@ -18,7 +18,9 @@ int main(int argc, char *argv[])
             break;
         }
     }
+
     Widget w;
     w.show();
     return a.exec();
 }
+

@@ -32,6 +32,7 @@ public:
     int twice;
     int X_Other;
     int Y_Other;
+
     bool is_server=false;
     bool is_client=false;
     void DrawChess(int X,int Y);
@@ -77,6 +78,7 @@ public:
     //复现
     void on_fxbtn_clicked();
     void onInputFinished(const QString& text);
+    void local_giveup();
     
 public slots:
     void updatedisplay();//更新计时器显示
@@ -103,6 +105,7 @@ public:
     int fail_state;//代表输了的状态，1-tle，2-giveup，0-初始值；
 
     Widget(QWidget *parent = nullptr);
+    void setmode();//打开游戏界面前设置模式
     void init();//游戏开局时初始化
     QTime baseTime;
     qint64 curtime;
@@ -113,7 +116,7 @@ public:
     static int width;
     static int n_row;
     static int n_column;
-    int ExistChess[9][9]={{0,0}};//0代表没有棋子，1代表黑棋，2代表白棋
+    int ExistChess[13][13]={{0,0}};//0代表没有棋子，1代表黑棋，2代表白棋
    
 
 private slots:
