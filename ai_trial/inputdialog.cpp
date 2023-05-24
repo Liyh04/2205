@@ -3,7 +3,7 @@
 
 InputDialog::InputDialog(QWidget *parent):QDialog(parent)
 {
-    setWindowTitle("请输入save文件");
+    setWindowTitle("请输入🙌");
     m_lineEdit = new QLineEdit(this);
 
     m_okButton = new QPushButton("OK",this);

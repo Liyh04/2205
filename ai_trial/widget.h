@@ -78,8 +78,15 @@ public:
     //复现
     void on_fxbtn_clicked();
     void onInputFinished(const QString& text);
+    void onInputNumFinished(const QString& text);
+    void onPlayButtonClicked();
+    void fx_drawChesses();
+    void onPauseButtonClicked();
+    void onNextButtonClicked();
+    void onPreviousButtonClicked();
+    void onExitReplayButtonClicked();
+    void onReplayToStepButtonClicked();
     void local_giveup();
-    
 public slots:
     void updatedisplay();//更新计时器显示
 protected:
@@ -110,6 +117,8 @@ public:
     QTime baseTime;
     qint64 curtime;
     QTimer *pTimer;
+    QTimer* fxtimer;//用于复现
+    int currentIndex;
     ~Widget();
     //静态成员
     static int height;
@@ -125,7 +134,18 @@ private slots:
 private:
     Ui::Widget *ui;
     bool m_isBlackTurn;    //当前该黑棋下
+
+    bool m_isReplayMode;   //是否处于复现模式
     QVector<Chess> m_Chess;//已下的棋子座标容器
+    QVector<Chess> toReplay;//用于复现
+
+    QPushButton* rpbtn;
+    QPushButton *psbtn;
+    QPushButton *prebtn;
+    QPushButton *etbtn;
+    QPushButton *ntbtn;
+    QPushButton *fxbtn;
+    QPushButton *r2sbtn;
 
     void DrawChessboard();  //画棋盘
     void DrawChesses();     //画已下的棋子

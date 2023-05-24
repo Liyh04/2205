@@ -45,10 +45,51 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始�
     //复现---
     if(n_row==9)
     {
-        QPushButton *fxbtn = new QPushButton("复现",this);
+        fxbtn = new QPushButton("复现",this);
         fxbtn->move(1000,60);
         fxbtn->resize(90,25);
         connect(fxbtn,&QPushButton::clicked,this,&Widget::on_fxbtn_clicked);
+        m_isReplayMode = false;
+        fxtimer = new QTimer(this);
+        currentIndex = 0;
+
+        connect(fxtimer,&QTimer::timeout,this,&Widget::fx_drawChesses);//待改正
+
+        rpbtn = new QPushButton("播放",this);
+        rpbtn->move(690,480);
+        rpbtn->resize(110,22);
+        connect(rpbtn,&QPushButton::clicked,this,&Widget::onPlayButtonClicked);
+        rpbtn->setDisabled(true);
+
+        psbtn = new QPushButton("暂停",this);
+        psbtn->move(690,510);
+        psbtn->resize(110,22);
+        connect(psbtn,&QPushButton::clicked,this,&Widget::onPauseButtonClicked);
+        psbtn->setDisabled(true);
+
+        prebtn = new QPushButton("上一个",this);
+        prebtn->move(690,540);
+        prebtn->resize(110,22);
+        connect(prebtn,&QPushButton::clicked,this,&Widget::onPreviousButtonClicked);
+        prebtn->setDisabled(true);
+
+        ntbtn = new QPushButton("下一个",this);
+        ntbtn->move(690,570);
+        ntbtn->resize(110,22);
+        connect(ntbtn,&QPushButton::clicked,this,&Widget::onNextButtonClicked);
+        ntbtn->setDisabled(true);
+
+        etbtn = new QPushButton("退出复现",this);
+        etbtn->move(690,600);
+        etbtn->resize(110,22);
+        connect(etbtn,&QPushButton::clicked,this,&Widget::onExitReplayButtonClicked);
+        etbtn->setDisabled(true);
+
+        r2sbtn = new QPushButton("到第n步",this);
+        r2sbtn->move(690,630);
+        r2sbtn->resize(110,22);
+        connect(r2sbtn,&QPushButton::clicked,this,&Widget::onReplayToStepButtonClicked);
+        r2sbtn->setDisabled(true);
     }
     IP = "127.0.0.1";
     // 端口，不要太简单，要避免和别的软件冲突
@@ -310,7 +351,6 @@ void Widget::onClientSendButtonClicked()
     this->socket->send(NetworkData(OPCODE::CHAT_OP,this->ui->clientSendEdit->text(),this->ui->clientSend->text()));//有点问题
 }
 
-
 void Widget::onServerSendButtonClicked()
 {
     if(lastOne)
@@ -395,7 +435,6 @@ void Widget::on_CREADY_OP_clicked()//客户端申请
     //receive处的data2对应客户端棋子的颜色另一个则为服务端棋子的颜色
 }
 
-
 void Widget::on_SREADY_OP_clicked()//服务端同意
 {
     if(lastOne)
@@ -404,7 +443,6 @@ void Widget::on_SREADY_OP_clicked()//服务端同意
     is_server=true;
     flag_start=1;//游戏可以开始
 }
-
 
 void Widget::on_SREJECT_OP_clicked()//服务端拒绝
 {
@@ -566,11 +604,126 @@ void Widget::onInputFinished(const QString& text)
             a.m_ChessColor=m_isBlackTurn;
             a.m_ChessPossition.setY((char2num[(char)c_1])*height+PAINT_Y-20);
             a.m_ChessPossition.setX((c_2)*width+PAINT_X-20);
-            m_Chess+=a;
+            toReplay+=a;
             m_isBlackTurn=!m_isBlackTurn;
         }
     }
+   // qDebug()<<1<<"----------------";
+    m_isReplayMode = true;
+    //qDebug()<<2<<"----------------";
+
+    fxbtn->setDisabled(true);
+    //qDebug()<<3<<"----------------";
+
+    rpbtn->setEnabled(true);
+    psbtn->setEnabled(true);
+    prebtn->setEnabled(true);
+    ntbtn->setEnabled(true);
+    etbtn->setEnabled(true);
+    r2sbtn->setEnabled(true);
+   // qDebug()<<4<<"----------------";
+}
+void Widget::onInputNumFinished(const QString& text)
+{
+    int n = text.toInt();
+    currentIndex = n;
+    //qDebug()<<"n==-----------------------"<<n<<"-----"<<toReplay.size();
+    if(n<0||n>toReplay.size())
+    {
+        QMessageBox *warning=new QMessageBox;
+        warning->information(this, "Warning", QString("Illegal input."));
+        delete warning;
+        return;
+    }
+    m_Chess.clear();
+    std::copy_n(toReplay.begin(),currentIndex,std::back_inserter(m_Chess));
     DrawChesses();
+}
+void Widget::fx_drawChesses()
+{
+    if(currentIndex >= toReplay.size())
+    {
+        QMessageBox *inf=new QMessageBox;
+        inf->information(this, "🤣", QString("已经是最后一个啦"));
+        delete inf;
+        return;
+    }
+    m_Chess+=toReplay[currentIndex];
+
+    currentIndex++;
+
+    DrawChesses();
+
+    if(currentIndex >= toReplay.size())
+    {
+        fxtimer->stop();
+        QMessageBox *inf=new QMessageBox;
+        inf->information(this, "😊", QString("复现完成啦"));
+        delete inf;
+    }
+
+}
+void Widget::onPlayButtonClicked()
+{
+    if(!m_isReplayMode)
+        return;
+
+    fxtimer->setInterval(800);
+
+    fxtimer->start();
+
+}
+void Widget::onPauseButtonClicked()
+{
+    fxtimer->stop();
+}
+void Widget::onNextButtonClicked()
+{
+    if(currentIndex >= toReplay.size())
+    {
+        QMessageBox *inf=new QMessageBox;
+        inf->information(this, "🤣", QString("已经是最后一个啦"));
+        delete inf;
+        return;
+    }
+    //m_Chess+=toReplay[currentIndex];
+    m_Chess.clear();
+    std::copy_n(toReplay.begin(),currentIndex+1,std::back_inserter(m_Chess));
+    DrawChesses();
+    currentIndex++;
+
+}
+void Widget::onPreviousButtonClicked()
+{
+    if(currentIndex<=0)
+    {
+        QMessageBox *inf=new QMessageBox;
+        inf->information(this, "🤣", QString("已经是第一个啦"));
+        delete inf;
+        return;
+    }
+    currentIndex--;
+    m_Chess.pop_back();
+    DrawChesses();
+}
+void Widget::onReplayToStepButtonClicked()
+{
+    InputDialog* inputDialog1 = new InputDialog(this);
+    connect(inputDialog1,&InputDialog::inputFinished,this,&Widget::onInputNumFinished);
+    inputDialog1->show();
+}
+void Widget::onExitReplayButtonClicked()
+{
+    fxtimer->stop();
+    m_Chess.clear();
+    m_isReplayMode = false;
+    rpbtn->setDisabled(true);
+    prebtn->setDisabled(true);
+    psbtn->setDisabled(true);
+    etbtn->setDisabled(true);
+    ntbtn->setDisabled(true);
+    r2sbtn->setDisabled(true);
+    fxbtn->setEnabled(true);
 }
 void Widget::getCY()
 {
