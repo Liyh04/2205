@@ -43,11 +43,13 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始�
     m_isBlackTurn = true;//黑子先行
     fail_state=0;
     //复现---
-    QPushButton *fxbtn = new QPushButton("复现",this);
-    fxbtn->move(1000,60);
-    fxbtn->resize(90,25);
-    connect(fxbtn,&QPushButton::clicked,this,&Widget::on_fxbtn_clicked);
-
+    if(n_row==9)
+    {
+        QPushButton *fxbtn = new QPushButton("复现",this);
+        fxbtn->move(1000,60);
+        fxbtn->resize(90,25);
+        connect(fxbtn,&QPushButton::clicked,this,&Widget::on_fxbtn_clicked);
+    }
     IP = "127.0.0.1";
     // 端口，不要太简单，要避免和别的软件冲突
     PORT = 16667;

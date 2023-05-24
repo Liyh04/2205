@@ -534,6 +534,19 @@
     <string>GiveUp(local)</string>
    </property>
   </widget>
+  <widget class="QLabel" name="flag_label">
+   <property name="geometry">
+    <rect>
+     <x>830</x>
+     <y>620</y>
+     <width>69</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>flag:</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
