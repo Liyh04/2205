@@ -18,7 +18,7 @@ SOURCES += \
     networkserver.cpp \
     networksocket.cpp \
     randomnumbergenerator.cpp \
-    replay.cpp \
+    #replay.cpp \
     rules.cpp \
     widget.cpp
 
@@ -31,13 +31,13 @@ HEADERS += \
     networkserver.h \
     networksocket.h \
     randomnumbergenerator.h \
-    replay.h \
+    #replay.h \
     rules.h \
     widget.h
 
 
 FORMS += \
-    replay.ui \
+    #replay.ui \
     widget.ui
 
 

@@ -18,11 +18,10 @@
 #include <QTextStream>
 #include <QTextEdit>
 #include <QMap>
-
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
-
+class replay;
 class Widget : public QWidget
 {
     Q_OBJECT
@@ -86,6 +85,8 @@ public:
     void onPreviousButtonClicked();
     void onExitReplayButtonClicked();
     void onReplayToStepButtonClicked();
+    void on_new_try_btn_clicked();
+    void on_exit_try_btn_clicked();
     void local_giveup();
 public slots:
     void updatedisplay();//更新计时器显示
@@ -134,7 +135,7 @@ private slots:
 private:
     Ui::Widget *ui;
     bool m_isBlackTurn;    //当前该黑棋下
-
+    bool m_isTryMode;
     bool m_isReplayMode;   //是否处于复现模式
     QVector<Chess> m_Chess;//已下的棋子座标容器
     QVector<Chess> toReplay;//用于复现
@@ -146,6 +147,8 @@ private:
     QPushButton *ntbtn;
     QPushButton *fxbtn;
     QPushButton *r2sbtn;
+    QPushButton *new_try_btn;
+    QPushButton *exit_try_btn;
 
     void DrawChessboard();  //画棋盘
     void DrawChesses();     //画已下的棋子

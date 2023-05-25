@@ -3,20 +3,14 @@
 
 #include <QWidget>
 
-namespace Ui {
-class replay;
-}
-
-class replay : public QWidget
+class replay : public Widget
 {
     Q_OBJECT
 
 public:
-    explicit replay(QWidget *parent = nullptr);
-    ~replay();
+    replay();
 
-private:
-    Ui::replay *ui;
+
 };
 
 #endif // REPLAY_H

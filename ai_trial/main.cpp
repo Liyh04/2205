@@ -2,7 +2,7 @@
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
-
+#include "replay.h"
 //enum{WHITE=2;BLACK=1;EMPTY=0;}
 
 int main(int argc, char *argv[])

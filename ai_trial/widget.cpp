@@ -26,6 +26,7 @@ int Widget::width=50;
 int Widget::n_row=9;
 int Widget::n_column=9;
 bool if_netmode;
+bool replay_mode=false;
 int TIMELIMIT=30;
 int step=0;
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始化ui界面
@@ -56,40 +57,53 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始�
         connect(fxtimer,&QTimer::timeout,this,&Widget::fx_drawChesses);//待改正
 
         rpbtn = new QPushButton("播放",this);
-        rpbtn->move(690,480);
+        rpbtn->move(20,540);
         rpbtn->resize(110,22);
         connect(rpbtn,&QPushButton::clicked,this,&Widget::onPlayButtonClicked);
         rpbtn->setDisabled(true);
 
         psbtn = new QPushButton("暂停",this);
-        psbtn->move(690,510);
+        psbtn->move(20,570);
         psbtn->resize(110,22);
         connect(psbtn,&QPushButton::clicked,this,&Widget::onPauseButtonClicked);
         psbtn->setDisabled(true);
 
         prebtn = new QPushButton("上一个",this);
-        prebtn->move(690,540);
+        prebtn->move(140,540);
         prebtn->resize(110,22);
         connect(prebtn,&QPushButton::clicked,this,&Widget::onPreviousButtonClicked);
         prebtn->setDisabled(true);
 
         ntbtn = new QPushButton("下一个",this);
-        ntbtn->move(690,570);
+        ntbtn->move(260,540);
         ntbtn->resize(110,22);
         connect(ntbtn,&QPushButton::clicked,this,&Widget::onNextButtonClicked);
         ntbtn->setDisabled(true);
 
         etbtn = new QPushButton("退出复现",this);
-        etbtn->move(690,600);
+        etbtn->move(260,570);
         etbtn->resize(110,22);
         connect(etbtn,&QPushButton::clicked,this,&Widget::onExitReplayButtonClicked);
         etbtn->setDisabled(true);
 
         r2sbtn = new QPushButton("到第n步",this);
-        r2sbtn->move(690,630);
+        r2sbtn->move(140,570);
         r2sbtn->resize(110,22);
         connect(r2sbtn,&QPushButton::clicked,this,&Widget::onReplayToStepButtonClicked);
         r2sbtn->setDisabled(true);
+
+        new_try_btn = new QPushButton("新的尝试",this);
+        new_try_btn->move(380,540);
+        new_try_btn->resize(110,22);
+        connect(new_try_btn,&QPushButton::clicked,this,&Widget::on_new_try_btn_clicked);
+        new_try_btn->setDisabled(true);
+
+        exit_try_btn = new QPushButton("退出尝试",this);
+        exit_try_btn->move(380,570);
+        exit_try_btn->resize(110,22);
+        connect(exit_try_btn,&QPushButton::clicked,this,&Widget::on_exit_try_btn_clicked);
+        exit_try_btn->setDisabled(true);
+
     }
     IP = "127.0.0.1";
     // 端口，不要太简单，要避免和别的软件冲突
@@ -171,6 +185,14 @@ void Widget::on_fxbtn_clicked()
     InputDialog* inputDialog = new InputDialog(this);
     connect(inputDialog,&InputDialog::inputFinished,this,&Widget::onInputFinished);
     inputDialog->show();
+    m_isReplayMode=true;
+    for(int i=0;i<9;i++)
+    {
+        for(int j=0;j<9;j++)
+        {
+            ExistChess[i][j]=0;
+        }
+    }
 
 }
 bool Widget::legalInput(QChar c1,QChar c2)
@@ -576,12 +598,57 @@ void Widget::DrawChesses()//画棋子
         }
     }
 }
+void Widget::on_new_try_btn_clicked()
+{
+    m_isReplayMode=false;
+    m_isTryMode=true;
+    rpbtn->setEnabled(false);
+    psbtn->setEnabled(false);
+    prebtn->setEnabled(false);
+    ntbtn->setEnabled(false);
+    r2sbtn->setEnabled(false);
+    exit_try_btn->setEnabled(true);
+    onPauseButtonClicked();
+}
+void Widget::on_exit_try_btn_clicked()
+{
+    m_isReplayMode=true;
+    m_isTryMode=false;
+    rpbtn->setEnabled(true);
+    psbtn->setEnabled(true);
+    prebtn->setEnabled(true);
+    ntbtn->setEnabled(true);
+    r2sbtn->setEnabled(true);
+    exit_try_btn->setEnabled(false);
+    m_Chess.clear();
+    for(int i=0;i<9;i++)for(int j=0;j<9;j++)ExistChess[i][j]=0;
+    std::copy_n(toReplay.begin(),currentIndex,std::back_inserter(m_Chess));
+    for(int i=0;i<m_Chess.size();i++)
+    {
+        int X=(m_Chess[i].m_ChessPossition.y()-PAINT_Y)/Widget::height;
+        int Y=(m_Chess[i].m_ChessPossition.x()-PAINT_X)/Widget::width;
+        if(m_Chess[i].m_ChessColor)ExistChess[X][Y]=1;
+        else ExistChess[X][Y]=2;
+    }
+    available a;
+    ui->b_avi->setText(QString("Black_ava:%1").arg(a.ava_number(ExistChess,n_row,1)));
+    ui->w_avi->setText(QString("White_ava:%1").arg(a.ava_number(ExistChess,n_row,0)));
+    if(m_Chess.back().m_ChessColor)ui->label_3->setText("WHITE");
+    else ui->label_3->setText("BLACK");
+    DrawChesses();
+}
 void Widget::onInputFinished(const QString& text)
 {
     m_isBlackTurn=1;
     pTimer->stop();
     m_Chess.clear();//G3 H3 F3 G4 G5 G6 G
-
+    for(int i=0;i<9;i++)
+    {
+        for(int j=0;j<9;j++)
+        {
+            ExistChess[i][j]=0;
+        }
+    }
     if(text.size()==1)
         return;
     for (QString::const_iterator it = text.begin()+1;it!=text.end();it+=3)
@@ -621,6 +688,7 @@ void Widget::onInputFinished(const QString& text)
     ntbtn->setEnabled(true);
     etbtn->setEnabled(true);
     r2sbtn->setEnabled(true);
+    new_try_btn->setEnabled(true);
    // qDebug()<<4<<"----------------";
 }
 void Widget::onInputNumFinished(const QString& text)
@@ -636,7 +704,20 @@ void Widget::onInputNumFinished(const QString& text)
         return;
     }
     m_Chess.clear();
+    for(int i=0;i<9;i++)for(int j=0;j<9;j++)ExistChess[i][j]=0;
     std::copy_n(toReplay.begin(),currentIndex,std::back_inserter(m_Chess));
+    for(int i=0;i<m_Chess.size();i++)
+    {
+        int X=(m_Chess[i].m_ChessPossition.y()-PAINT_Y)/Widget::height;
+        int Y=(m_Chess[i].m_ChessPossition.x()-PAINT_X)/Widget::width;
+        if(m_Chess[i].m_ChessColor)ExistChess[X][Y]=1;
+        else ExistChess[X][Y]=2;
+    }
+    available a;
+    ui->b_avi->setText(QString("Black_ava:%1").arg(a.ava_number(ExistChess,n_row,1)));
+    ui->w_avi->setText(QString("White_ava:%1").arg(a.ava_number(ExistChess,n_row,0)));
+    if(m_Chess.back().m_ChessColor)ui->label_3->setText("WHITE");
+    else ui->label_3->setText("BLACK");
     DrawChesses();
 }
 void Widget::fx_drawChesses()
@@ -649,7 +730,15 @@ void Widget::fx_drawChesses()
         return;
     }
     m_Chess+=toReplay[currentIndex];
-
+    int X=(toReplay[currentIndex].m_ChessPossition.y()-PAINT_Y)/Widget::height;
+    int Y=(toReplay[currentIndex].m_ChessPossition.x()-PAINT_X)/Widget::width;
+    if(toReplay[currentIndex].m_ChessColor)ExistChess[X][Y]=1;
+    else ExistChess[X][Y]=2;
+    available a;
+    ui->b_avi->setText(QString("Black_ava:%1").arg(a.ava_number(ExistChess,n_row,1)));
+    ui->w_avi->setText(QString("White_ava:%1").arg(a.ava_number(ExistChess,n_row,0)));
+    if(m_Chess.back().m_ChessColor)ui->label_3->setText("WHITE");
+    else ui->label_3->setText("BLACK");
     currentIndex++;
 
     DrawChesses();
@@ -688,7 +777,20 @@ void Widget::onNextButtonClicked()
     }
     //m_Chess+=toReplay[currentIndex];
     m_Chess.clear();
+    for(int i=0;i<9;i++)for(int j=0;j<9;j++)ExistChess[i][j]=0;
     std::copy_n(toReplay.begin(),currentIndex+1,std::back_inserter(m_Chess));
+    for(int i=0;i<m_Chess.size();i++)
+    {
+        int X=(m_Chess[i].m_ChessPossition.y()-PAINT_Y)/Widget::height;
+        int Y=(m_Chess[i].m_ChessPossition.x()-PAINT_X)/Widget::width;
+        if(m_Chess[i].m_ChessColor)ExistChess[X][Y]=1;
+        else ExistChess[X][Y]=2;
+    }
+    available a;
+    ui->b_avi->setText(QString("Black_ava:%1").arg(a.ava_number(ExistChess,n_row,1)));
+    ui->w_avi->setText(QString("White_ava:%1").arg(a.ava_number(ExistChess,n_row,0)));
+    if(m_Chess.back().m_ChessColor)ui->label_3->setText("WHITE");
+    else ui->label_3->setText("BLACK");
     DrawChesses();
     currentIndex++;
 
@@ -702,8 +804,22 @@ void Widget::onPreviousButtonClicked()
         delete inf;
         return;
     }
+    m_Chess.clear();
+    for(int i=0;i<9;i++)for(int j=0;j<9;j++)ExistChess[i][j]=0;
+    std::copy_n(toReplay.begin(),currentIndex-1,std::back_inserter(m_Chess));
+    for(int i=0;i<m_Chess.size();i++)
+    {
+        int X=(m_Chess[i].m_ChessPossition.y()-PAINT_Y)/Widget::height;
+        int Y=(m_Chess[i].m_ChessPossition.x()-PAINT_X)/Widget::width;
+        if(m_Chess[i].m_ChessColor)ExistChess[X][Y]=1;
+        else ExistChess[X][Y]=2;
+    }
+    available a;
+    ui->b_avi->setText(QString("Black_ava:%1").arg(a.ava_number(ExistChess,n_row,1)));
+    ui->w_avi->setText(QString("White_ava:%1").arg(a.ava_number(ExistChess,n_row,0)));
+    if(m_Chess.back().m_ChessColor)ui->label_3->setText("WHITE");
+    else ui->label_3->setText("BLACK");
     currentIndex--;
-    m_Chess.pop_back();
     DrawChesses();
 }
 void Widget::onReplayToStepButtonClicked()
@@ -745,6 +861,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         if(!is_client&&server_color_black&&!m_isBlackTurn)return;
         if(!is_client&&!server_color_black&&m_isBlackTurn)return;
     }
+    if(m_isReplayMode)return;
     //求鼠标点击处的棋子点pt↓
     QPoint pt;
     int x=e->pos().x() ;
@@ -783,8 +900,8 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         }
     }
     //如果不存在棋子，则先判断这一步是否合法，如果合法，则构造一个棋子
-    if(m_isBlackTurn)ExistChess[X][Y]=1;
-    if(!m_isBlackTurn)ExistChess[X][Y]=2;
+    if(m_isBlackTurn){ExistChess[X][Y]=1;}
+    if(!m_isBlackTurn){ExistChess[X][Y]=2;}
     //判断合法前，先假设点击的位置已经下了棋子，如果不合法，则将数组中对应元素重置为0
     Rules r;
     if(!r.Rules::illegal_operation_judging(ExistChess,n_row,X,Y))
@@ -794,10 +911,15 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         warning1->information(this, "Warning", QString("Illegal operation. Please try again."));
         return;
     }
+    if(m_isBlackTurn){ui->label_3->setText("WHITE");}
+    if(!m_isBlackTurn){ui->label_3->setText("BLACK");}
     Chess chess_to_set(pt,m_isBlackTurn);
-    pTimer->stop();//计时器重新开始计时
-    this->baseTime=this->baseTime.currentTime();
-    pTimer->start(1);
+    if(!m_isReplayMode&&!m_isTryMode)
+    {
+        pTimer->stop();//计时器重新开始计时
+        this->baseTime=this->baseTime.currentTime();
+        pTimer->start(1);
+    }
 
     if(is_client){
         if(m_isBlackTurn^client_color_white){
@@ -1148,6 +1270,7 @@ void Widget::on_saveButton_clicked()
         // 创建一个QTextEdit对象textEdit
         QTextEdit *textEdit = new QTextEdit(this);
         //获得save内容
+        getCY();
         for (int i = 0; i < m_Chess.size(); ++i)
         {
             textEdit->insertPlainText(chesspo[i].c_y+QString::number(chesspo[i].x)+" ");
@@ -1155,8 +1278,7 @@ void Widget::on_saveButton_clicked()
         //结尾标识结束状态
         if(fail_state==1)
             textEdit->insertPlainText("T");
-        else if(fail_state==2)
-            textEdit->insertPlainText("G");
+        else textEdit->insertPlainText("G");
         // 使用QTextStream类将textEdit写入新文件
         QTextStream out(&file);
         out << textEdit->toPlainText().trimmed().toUtf8();
@@ -1233,16 +1355,35 @@ void Widget::give_up_clicked()//当按下认输按钮
 }
 void Widget::local_giveup()
 {
-    QMessageBox *GiveUpBox=new QMessageBox;
+//    QMessageBox *GiveUpBox=new QMessageBox;
     pTimer->stop();
+    fail_state=2;
     if(Widget::m_isBlackTurn){
         step++;
-        GiveUpBox->information(this, "Game Over", QString("BLACK LOSE!\nTotal Steps: %1").arg(step) );
+        QString strr=" (Black) LOSE!\nTotal Steps: ";
+        QString message=QString("%1 %2 %3").arg(clientName).arg(strr).arg(step);
+        QMessageBox GIVEUPbox(QMessageBox::Information,"Game Over",
+                              message,
+                              QMessageBox::Close,this);
+        QAbstractButton* save_button=GIVEUPbox.addButton("Save",QMessageBox::YesRole);
+
+        connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+
+        GIVEUPbox.exec();
         step=0;
     }
     else {
         step++;
-        GiveUpBox->information(this, "Game Over", QString("WHITE LOSE!\nTotal Steps: %1").arg(step) );
+        QString strr=" (White) LOSE!\nTotal Steps: ";
+        QString message=QString("%1 %2 %3").arg(clientName).arg(strr).arg(step);
+        QMessageBox GIVEUPbox(QMessageBox::Information,"Game Over",
+                              message,
+                              QMessageBox::Close,this);
+        QAbstractButton* save_button=GIVEUPbox.addButton("Save",QMessageBox::YesRole);
+
+        connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+
+        GIVEUPbox.exec();
         step=0;
     }
     restart();
