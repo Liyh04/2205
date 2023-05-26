@@ -746,6 +746,7 @@ void Widget::fx_drawChesses()
     if(currentIndex >= toReplay.size())
     {
         fxtimer->stop();
+        disconnect(fxtimer,&QTimer::timeout,this,&Widget::fx_drawChesses);
         QMessageBox *inf=new QMessageBox;
         inf->information(this, "😊", QString("复现完成啦"));
         delete inf;
@@ -756,7 +757,6 @@ void Widget::onPlayButtonClicked()
 {
     if(!m_isReplayMode)
         return;
-
     fxtimer->setInterval(800);
 
     fxtimer->start();
@@ -776,7 +776,10 @@ void Widget::onNextButtonClicked()
         return;
     }
     //m_Chess+=toReplay[currentIndex];
-    m_Chess.clear();
+    currentIndex++;
+    QString text=QString::number(currentIndex);
+    onInputNumFinished(text);
+    /*m_Chess.clear();
     for(int i=0;i<9;i++)for(int j=0;j<9;j++)ExistChess[i][j]=0;
     std::copy_n(toReplay.begin(),currentIndex+1,std::back_inserter(m_Chess));
     for(int i=0;i<m_Chess.size();i++)
@@ -792,7 +795,7 @@ void Widget::onNextButtonClicked()
     if(m_Chess.back().m_ChessColor)ui->label_3->setText("WHITE");
     else ui->label_3->setText("BLACK");
     DrawChesses();
-    currentIndex++;
+    currentIndex++;*/
 
 }
 void Widget::onPreviousButtonClicked()
@@ -804,7 +807,18 @@ void Widget::onPreviousButtonClicked()
         delete inf;
         return;
     }
-    m_Chess.clear();
+    else if(currentIndex==1)
+    {
+        m_Chess.clear();
+        currentIndex=0;
+        ui->label_3->setText("BLACK");
+        DrawChesses();
+        return;
+    }
+    currentIndex--;
+    QString text=QString::number(currentIndex);
+    onInputNumFinished(text);
+    /*m_Chess.clear();
     for(int i=0;i<9;i++)for(int j=0;j<9;j++)ExistChess[i][j]=0;
     std::copy_n(toReplay.begin(),currentIndex-1,std::back_inserter(m_Chess));
     for(int i=0;i<m_Chess.size();i++)
@@ -820,7 +834,7 @@ void Widget::onPreviousButtonClicked()
     if(m_Chess.back().m_ChessColor)ui->label_3->setText("WHITE");
     else ui->label_3->setText("BLACK");
     currentIndex--;
-    DrawChesses();
+    DrawChesses();*/
 }
 void Widget::onReplayToStepButtonClicked()
 {
@@ -832,6 +846,14 @@ void Widget::onExitReplayButtonClicked()
 {
     fxtimer->stop();
     m_Chess.clear();
+    toReplay.clear();
+    m_isBlackTurn=1;
+    m_isReplayMode=false;
+    m_isTryMode=false;
+    ui->label_3->setText("BLACK");
+    for(int i=0;i<9;i++)for(int j=0;j<9;j++)ExistChess[i][j]=0;
+    ui->b_avi->setText(QString("Black_ava:81"));
+    ui->w_avi->setText(QString("White_ava:81"));
     m_isReplayMode = false;
     rpbtn->setDisabled(true);
     prebtn->setDisabled(true);
@@ -840,6 +862,7 @@ void Widget::onExitReplayButtonClicked()
     ntbtn->setDisabled(true);
     r2sbtn->setDisabled(true);
     fxbtn->setEnabled(true);
+    new_try_btn->setEnabled(false);
 }
 void Widget::getCY()
 {
@@ -862,6 +885,8 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         if(!is_client&&!server_color_black&&m_isBlackTurn)return;
     }
     if(m_isReplayMode)return;
+    if(ui->label_3->text()=="BLACK")m_isBlackTurn=1;
+    else m_isBlackTurn=0;
     //求鼠标点击处的棋子点pt↓
     QPoint pt;
     int x=e->pos().x() ;
@@ -1135,6 +1160,7 @@ void Widget::init()//游戏开局时初始化：设置每步限时，初始化�
 void Widget::updatedisplay()//实时更新计时器
 {
     {
+        fxbtn->setEnabled(false);
         QTime curTime=QTime::currentTime();
         int t=this->baseTime.msecsTo(curTime);
         QTime showTime(0,0,0,0);
@@ -1390,6 +1416,7 @@ void Widget::local_giveup()
 }
 void Widget::restart()//游戏重开
 {
+    fxbtn->setEnabled(true);
     pTimer->stop();
     m_Chess.clear();
     m_isBlackTurn=1;
