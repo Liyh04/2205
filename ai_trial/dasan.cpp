@@ -31,7 +31,7 @@ Point DaSan::shuffleBoard(int chess[13][13]) {
     for (const auto& emptyPoint : emptyPoints) {
         for (int i = 0; i < 9; ++i) {
             for (int j = 0; j < 9; ++j) {
-                if (chess[i][j] != 0) {
+                if (!r.illegal_operation_judging( chess,9,i,j)) {
                     int distance = calculateManhattanDistance(emptyPoint, Point(i, j));
                     minDistance = std::min(minDistance, distance);
                 }
@@ -44,7 +44,7 @@ Point DaSan::shuffleBoard(int chess[13][13]) {
         int maxDistance = 0;
         for (int i = 0; i < 9; ++i){
             for (int j = 0; j < 9; ++j) {
-                if (chess[i][j] != 0) {
+                if (!r.illegal_operation_judging( chess,9,i,j)) {
                     int distance = calculateManhattanDistance(emptyPoint, Point(i, j));
                     if (distance == minDistance) {
                         maxDistance = std::max(maxDistance, distance);
@@ -52,7 +52,7 @@ Point DaSan::shuffleBoard(int chess[13][13]) {
                 }
             }
         }
-        if (maxDistance == minDistance) {
+        if (maxDistance == minDistance){
             candidates.append(emptyPoint);
             *point=emptyPoint;
         }

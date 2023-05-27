@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 9.0.2, 2023-05-27T13:21:56. -->
+<!-- Written by QtCreator 9.0.2, 2023-05-27T15:55:51. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -140,7 +140,7 @@
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
       <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">QtProjectManager.QMakeBuildStep</value>
-      <value type="bool" key="QtProjectManager.QMakeBuildStep.QMakeForced">false</value>
+      <value type="bool" key="QtProjectManager.QMakeBuildStep.QMakeForced">true</value>
       <valuelist type="QVariantList" key="QtProjectManager.QMakeBuildStep.SelectedAbis"/>
      </valuemap>
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.1">
@@ -181,7 +181,7 @@
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
       <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">QtProjectManager.QMakeBuildStep</value>
-      <value type="bool" key="QtProjectManager.QMakeBuildStep.QMakeForced">false</value>
+      <value type="bool" key="QtProjectManager.QMakeBuildStep.QMakeForced">true</value>
       <valuelist type="QVariantList" key="QtProjectManager.QMakeBuildStep.SelectedAbis"/>
      </valuemap>
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.1">
@@ -244,6 +244,7 @@
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/yang1.0/YDL/2205/build-sample-Desktop_Qt_6_4_2_MinGW_64_bit-Debug</value>
    </valuemap>
    <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>

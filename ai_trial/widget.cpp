@@ -19,6 +19,7 @@
 #include <QFileDialog>
 #include <inputdialog.h>
 #include <rules.h>
+#include"alphanogo.h"
 #include "available.h"
 //初始化静态成员
 int Widget::height=50;
@@ -164,6 +165,28 @@ Widget::~Widget()//析构函数
 {
     delete ui;
 }
+
+
+void Widget::Go(){
+    AlphaNoGO Ai;
+    if(AI_is_Awake){
+        if(m_isBlackTurn&&AI_is_black){
+            Point point=Ai.search(ExistChess,m_isBlackTurn);
+            DrawChess(point.x,point.y);
+            m_isBlackTurn=0;
+        }
+        if(!m_isBlackTurn&&!AI_is_black){
+            Point point=Ai.search(ExistChess,m_isBlackTurn);
+            DrawChess(point.x,point.y);
+            m_isBlackTurn=1;
+        }
+    }
+}
+
+
+
+
+
 void Widget::setmode()
 {
     QPushButton *netmode,*singlemode_9,*singlemode_11,*singlemode_13;
@@ -174,7 +197,7 @@ void Widget::setmode()
     singlemode_11=MyBox->addButton("单机11路",QMessageBox::YesRole);
     singlemode_13=MyBox->addButton("单机13路",QMessageBox::YesRole);
     connect(netmode,&QPushButton::clicked,this,[&](){if_netmode=true;n_row=9;});
-    connect(singlemode_9,&QPushButton::clicked,this,[&](){if_netmode=false;n_row=9;});
+    connect(singlemode_9,&QPushButton::clicked,this,[&](){if_netmode=false;n_row=9;AI_is_Awake=true;AI_is_black=true;});
     connect(singlemode_11,&QPushButton::clicked,this,[&](){if_netmode=false;n_row=11;});
     connect(singlemode_13,&QPushButton::clicked,this,[&](){if_netmode=false;n_row=13;});
     MyBox->exec();
@@ -527,6 +550,7 @@ void Widget::paintEvent(QPaintEvent *)//画棋盘和棋子
     DrawChessboard();        //画棋盘
     DrawChesses();            //画棋子
     update();//实时更新
+
 }
 void Widget::DrawChessboard()//初始化棋盘
 {
@@ -981,6 +1005,7 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
     ui->b_avi->setText(QString("Black_ava:%1").arg(a.ava_number(ExistChess,n_row,1)));
     ui->w_avi->setText(QString("White_ava:%1").arg(a.ava_number(ExistChess,n_row,0)));
     step++;
+    Go();
 }
 
 void Widget::DrawChess(int X,int Y)
@@ -988,9 +1013,7 @@ void Widget::DrawChess(int X,int Y)
     QPoint pt;
     pt.setY(X*Widget::height+PAINT_Y+30);
     pt.setX(Y*Widget::width+PAINT_X+30);
-
     Chess chess_to_set(pt,m_isBlackTurn);
-
     if(m_isBlackTurn)//这个设计的是下一次棋子就改变一下颜色
     {
         m_isBlackTurn=0;
@@ -1156,6 +1179,7 @@ void Widget::init()//游戏开局时初始化：设置每步限时，初始化�
     ui->label_3->setText("BLACK");
     ui->b_avi->setText(QString("Black_ava:%1").arg(n_row*n_row));
     ui->w_avi->setText(QString("White_ava:%1").arg(n_row*n_row));
+    Go();
 }
 void Widget::updatedisplay()//实时更新计时器
 {

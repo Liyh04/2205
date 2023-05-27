@@ -6,11 +6,12 @@
 #include"rules.h"
 int flagg=0;
 int flagg_2=0;
+int NewChessBoardOfAI[13][13];
 AlphaNoGO::AlphaNoGO()
 {
 
 }
-Point search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空0
+Point AlphaNoGO::search(int ExistChess[][13],bool isblackturn){//黑1 白2 空0
     Point *p_start=new Point(0,0);
     if(ExistChess[4][4]==0){
         p_start->x=4;
@@ -18,41 +19,41 @@ Point search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空0
         return *p_start;
     }
 
-    std::copy(&ExistChess[0][0], &ExistChess[0][0] + 13 * 13, &NewChessBoard[0][0]);
+    std::copy(&ExistChess[0][0], &ExistChess[0][0] + 13 * 13, &NewChessBoardOfAI[0][0]);
     available av;
     int init_score_black=av.ava_number(ExistChess,9,1)-av.ava_number(ExistChess,9,2);
     Point *p=new Point(0,0);
     int max_score_black=init_score_black;
     int max_score_white=-init_score_black;
-    int init_score_white=- init_score_black;
+    int init_score_white=-init_score_black;
 
 //先找最理想的点
     for(int i=0;i<9;i++){
         for(int j=0;j<9;j++){
-            if(NewChessBoard[i][j])continue;
+            if(NewChessBoardOfAI[i][j])continue;
             Rules r;
-            if(!r.illegal_operation_judging( NewChessBoard,9,i,j))continue;
+            if(!r.illegal_operation_judging( NewChessBoardOfAI,9,i,j))continue;
             if(isblackturn){
                 int new_score;
-                NewChessBoard[i][j]=1;//下子了
-                new_score=av.ava_number(NewChessBoard,9,1)-av.ava_number(NewChessBoard,9,2);
+                NewChessBoardOfAI[i][j]=1;//下子了
+                new_score=av.ava_number(NewChessBoardOfAI,9,1)-av.ava_number(NewChessBoardOfAI,9,2);
                 if(max_score_black<new_score){
                     p->x=i;
                     p->y=j;
                     max_score_black=new_score;
                 }
-                NewChessBoard[i][j]=0;
+                NewChessBoardOfAI[i][j]=0;
             }
             else{
                 int new_score;
-                NewChessBoard[i][j]=2;
-                new_score=-av.ava_number(NewChessBoard,9,1)+av.ava_number(NewChessBoard,9,2);
+                NewChessBoardOfAI[i][j]=2;
+                new_score=-av.ava_number(NewChessBoardOfAI,9,1)+av.ava_number(NewChessBoardOfAI,9,2);
                 if(max_score_white<new_score){
                     p->x=i;
                     p->y=j;
                     max_score_white=new_score;
                 }
-                NewChessBoard[i][j]=0;
+                NewChessBoardOfAI[i][j]=0;
             }
         }
     }
@@ -65,29 +66,29 @@ Point search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空0
     //差点
     for(int i=0;i<9;i++){
         for(int j=0;j<9;j++){
-            if(NewChessBoard[i][j])continue;
+            if(NewChessBoardOfAI[i][j])continue;
             Rules r;
-            if(!r.illegal_operation_judging( NewChessBoard,9,i,j))continue;
+            if(!r.illegal_operation_judging( NewChessBoardOfAI,9,i,j))continue;
             if(isblackturn){
                 int new_score;
-                NewChessBoard[i][j]=1;
+                NewChessBoardOfAI[i][j]=1;
                 flagg++;
-                new_score=av.ava_number(NewChessBoard,9,1)-av.ava_number(NewChessBoard,9,2);
+                new_score=av.ava_number(NewChessBoardOfAI,9,1)-av.ava_number(NewChessBoardOfAI,9,2);
                 if(init_score_black>new_score){
                     flagg_2++;
                 }
-                NewChessBoard[i][j]=0;
+                NewChessBoardOfAI[i][j]=0;
             }
             else{
                 int new_score;
-                NewChessBoard[i][j]=2;
+                NewChessBoardOfAI[i][j]=2;
                 flagg++;
-                new_score=-av.ava_number(NewChessBoard,9,1)+av.ava_number(NewChessBoard,9,2);
+                new_score=-av.ava_number(NewChessBoardOfAI,9,1)+av.ava_number(NewChessBoardOfAI,9,2);
 
                 if(init_score_black>new_score){
                     flagg_2++;
                 }
-                NewChessBoard[i][j]=0;
+                NewChessBoardOfAI[i][j]=0;
             }
         }
     }
@@ -100,34 +101,34 @@ Point search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空0
 
     for(int i=0;i<9;i++){
         for(int j=0;j<9;j++){
-            if(NewChessBoard[i][j])continue;
+            if(NewChessBoardOfAI[i][j])continue;
             Rules r;
-            if(!r.illegal_operation_judging( NewChessBoard,9,i,j))continue;
+            if(!r.illegal_operation_judging( NewChessBoardOfAI,9,i,j))continue;
             if(isblackturn){
                 int new_score;
-                NewChessBoard[i][j]=1;
-                new_score=av.ava_number(NewChessBoard,9,1)-av.ava_number(NewChessBoard,9,2);
+                NewChessBoardOfAI[i][j]=1;
+                new_score=av.ava_number(NewChessBoardOfAI,9,1)-av.ava_number(NewChessBoardOfAI,9,2);
                 if(init_score_black>new_score){
-                    NewChessBoard[i][j]=3;
+                    NewChessBoardOfAI[i][j]=3;
                 }
             }
             else{
                 int new_score;
-                NewChessBoard[i][j]=2;
+                NewChessBoardOfAI[i][j]=2;
 
-                new_score=-av.ava_number(NewChessBoard,9,1)+av.ava_number(NewChessBoard,9,2);
+                new_score=-av.ava_number(NewChessBoardOfAI,9,1)+av.ava_number(NewChessBoardOfAI,9,2);
 
                 if(init_score_black>new_score){
-                    NewChessBoard[i][j]=3;
+                    NewChessBoardOfAI[i][j]=3;
                 }
             }
         }
     }
-        Point pp= D.shuffleBoard(NewChessBoard);
+        Point pp= D.shuffleBoard(NewChessBoardOfAI);
         return pp;
-
-
-
-
-
 }
+
+
+
+
+

@@ -18,6 +18,7 @@
 #include <QTextStream>
 #include <QTextEdit>
 #include <QMap>
+#include"alphanogo.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
@@ -26,8 +27,12 @@ class Widget : public QWidget
 {
     Q_OBJECT
 public:
+    bool isAIturn;
+    bool AI_is_black;
+    bool AI_is_Awake;
     QString clientName;
     QString serverName;
+    void Go();
     int twice;
     int X_Other;
     int Y_Other;
@@ -132,7 +137,7 @@ public:
 private slots:
     void give_up_clicked();//当按下认输按钮
 
-private:
+public:
     Ui::Widget *ui;
     bool m_isBlackTurn;    //当前该黑棋下
     bool m_isTryMode;
