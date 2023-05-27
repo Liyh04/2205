@@ -12,6 +12,7 @@ SOURCES += \
     alphanogo.cpp \
     available.cpp \
     chess.cpp \
+    dasan.cpp \
     inputdialog.cpp \
     main.cpp \
     #mainwindow.cpp \
@@ -28,6 +29,7 @@ HEADERS += \
     alphanogo.h \
     available.h \
     chess.h \
+    dasan.h \
     inputdialog.h \
     networkdata.h \
     networkserver.h \
