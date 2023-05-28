@@ -6,20 +6,23 @@
 #include"rules.h"
 int flagg=0;
 int flagg_2=0;
-int NewChessBoardOfAI[13][13];
 AlphaNoGO::AlphaNoGO()
 {
 
 }
-Point AlphaNoGO::search(int ExistChess[][13],bool isblackturn){//黑1 白2 空0
+Point AlphaNoGO::search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空0
+    int NewChessBoardOfAI[13][13];
     Point *p_start=new Point(0,0);
     if(ExistChess[4][4]==0){
         p_start->x=4;
         p_start->y=4;
         return *p_start;
     }
-
-    std::copy(&ExistChess[0][0], &ExistChess[0][0] + 13 * 13, &NewChessBoardOfAI[0][0]);
+    for(int i=0;i<9;i++){
+        for(int j=0;j<9;j++){
+            NewChessBoardOfAI[i][j]=ExistChess[i][j];
+        }
+    }
     available av;
     int init_score_black=av.ava_number(ExistChess,9,1)-av.ava_number(ExistChess,9,2);
     Point *p=new Point(0,0);
@@ -30,9 +33,9 @@ Point AlphaNoGO::search(int ExistChess[][13],bool isblackturn){//黑1 白2 空0
 //先找最理想的点
     for(int i=0;i<9;i++){
         for(int j=0;j<9;j++){
-            if(NewChessBoardOfAI[i][j])continue;
+            if(ExistChess[i][j])continue;
             Rules r;
-            if(!r.illegal_operation_judging( NewChessBoardOfAI,9,i,j))continue;
+            if(!r.illegal_operation_judging( ExistChess,9,i,j))continue;
             if(isblackturn){
                 int new_score;
                 NewChessBoardOfAI[i][j]=1;//下子了
@@ -66,9 +69,9 @@ Point AlphaNoGO::search(int ExistChess[][13],bool isblackturn){//黑1 白2 空0
     //差点
     for(int i=0;i<9;i++){
         for(int j=0;j<9;j++){
-            if(NewChessBoardOfAI[i][j])continue;
+            if(ExistChess[i][j])continue;
             Rules r;
-            if(!r.illegal_operation_judging( NewChessBoardOfAI,9,i,j))continue;
+            if(!r.illegal_operation_judging( ExistChess,9,i,j))continue;
             if(isblackturn){
                 int new_score;
                 NewChessBoardOfAI[i][j]=1;
@@ -101,9 +104,10 @@ Point AlphaNoGO::search(int ExistChess[][13],bool isblackturn){//黑1 白2 空0
 
     for(int i=0;i<9;i++){
         for(int j=0;j<9;j++){
-            if(NewChessBoardOfAI[i][j])continue;
+            if(ExistChess[i][j])continue;
             Rules r;
-            if(!r.illegal_operation_judging( NewChessBoardOfAI,9,i,j))continue;
+            if(!r.illegal_operation_judging(ExistChess,9,i,j))continue;
+
             if(isblackturn){
                 int new_score;
                 NewChessBoardOfAI[i][j]=1;
@@ -115,9 +119,7 @@ Point AlphaNoGO::search(int ExistChess[][13],bool isblackturn){//黑1 白2 空0
             else{
                 int new_score;
                 NewChessBoardOfAI[i][j]=2;
-
                 new_score=-av.ava_number(NewChessBoardOfAI,9,1)+av.ava_number(NewChessBoardOfAI,9,2);
-
                 if(init_score_black>new_score){
                     NewChessBoardOfAI[i][j]=3;
                 }

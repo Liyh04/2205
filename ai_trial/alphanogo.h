@@ -9,7 +9,7 @@ class AlphaNoGO
 {
 public:
     AlphaNoGO();
-    Point search(int ExistChess[][13],bool isblackturn);
+    Point search(int ExistChess[13][13],bool isblackturn);
 };
 
 #endif // ALPHANOGO_H

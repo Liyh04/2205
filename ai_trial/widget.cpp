@@ -159,7 +159,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始�
     this->socket->hello(IP,PORT);
     // 阻塞等待，2000ms超时
     this->socket->base()->waitForConnected(2000);
-
+    Go();
 }
 Widget::~Widget()//析构函数
 {
@@ -1018,11 +1018,13 @@ void Widget::DrawChess(int X,int Y)
     {
         m_isBlackTurn=0;
         ExistChess[X][Y]=1;
+        ui->label_3->setText("WHITE");
     }
     else
     {
         m_isBlackTurn=1;
         ExistChess[X][Y]=2;
+        ui->label_3->setText("BLACK");
     }
     m_Chess+=chess_to_set;//添加到已下棋子容器中
     step++;
@@ -1179,7 +1181,7 @@ void Widget::init()//游戏开局时初始化：设置每步限时，初始化�
     ui->label_3->setText("BLACK");
     ui->b_avi->setText(QString("Black_ava:%1").arg(n_row*n_row));
     ui->w_avi->setText(QString("White_ava:%1").arg(n_row*n_row));
-    Go();
+
 }
 void Widget::updatedisplay()//实时更新计时器
 {
