@@ -172,6 +172,12 @@ void Widget::Go(){
     if(AI_is_Awake){
         if(m_isBlackTurn){
             Point point=Ai.search(ExistChess,m_isBlackTurn);
+            if(point.x==-1)
+            {
+                if(if_client)on_CilentGiveup_clicked();
+                else on_ServerGiveup_2_clicked();
+                return;
+            }
             if(ExistChess[point.x][point.y])return;
             DrawChess(point.x,point.y);
             m_isBlackTurn=0;
@@ -195,6 +201,12 @@ void Widget::Go(){
         }
         if(!m_isBlackTurn){
             Point point=Ai.search(ExistChess,m_isBlackTurn);
+            if(point.x==-1)
+            {
+                if(if_client)on_CilentGiveup_clicked();
+                else on_ServerGiveup_2_clicked();
+                return;
+            }
             DrawChess(point.x,point.y);
             m_isBlackTurn=1;
             if(if_client==1){
@@ -837,24 +849,6 @@ void Widget::onNextButtonClicked()
     currentIndex++;
     QString text=QString::number(currentIndex);
     onInputNumFinished(text);
-    /*m_Chess.clear();
-    for(int i=0;i<9;i++)for(int j=0;j<9;j++)ExistChess[i][j]=0;
-    std::copy_n(toReplay.begin(),currentIndex+1,std::back_inserter(m_Chess));
-    for(int i=0;i<m_Chess.size();i++)
-    {
-        int X=(m_Chess[i].m_ChessPossition.y()-PAINT_Y)/Widget::height;
-        int Y=(m_Chess[i].m_ChessPossition.x()-PAINT_X)/Widget::width;
-        if(m_Chess[i].m_ChessColor)ExistChess[X][Y]=1;
-        else ExistChess[X][Y]=2;
-    }
-    available a;
-    ui->b_avi->setText(QString("Black_ava:%1").arg(a.ava_number(ExistChess,n_row,1)));
-    ui->w_avi->setText(QString("White_ava:%1").arg(a.ava_number(ExistChess,n_row,0)));
-    if(m_Chess.back().m_ChessColor)ui->label_3->setText("WHITE");
-    else ui->label_3->setText("BLACK");
-    DrawChesses();
-    currentIndex++;*/
-
 }
 void Widget::onPreviousButtonClicked()
 {
@@ -876,23 +870,6 @@ void Widget::onPreviousButtonClicked()
     currentIndex--;
     QString text=QString::number(currentIndex);
     onInputNumFinished(text);
-    /*m_Chess.clear();
-    for(int i=0;i<9;i++)for(int j=0;j<9;j++)ExistChess[i][j]=0;
-    std::copy_n(toReplay.begin(),currentIndex-1,std::back_inserter(m_Chess));
-    for(int i=0;i<m_Chess.size();i++)
-    {
-        int X=(m_Chess[i].m_ChessPossition.y()-PAINT_Y)/Widget::height;
-        int Y=(m_Chess[i].m_ChessPossition.x()-PAINT_X)/Widget::width;
-        if(m_Chess[i].m_ChessColor)ExistChess[X][Y]=1;
-        else ExistChess[X][Y]=2;
-    }
-    available a;
-    ui->b_avi->setText(QString("Black_ava:%1").arg(a.ava_number(ExistChess,n_row,1)));
-    ui->w_avi->setText(QString("White_ava:%1").arg(a.ava_number(ExistChess,n_row,0)));
-    if(m_Chess.back().m_ChessColor)ui->label_3->setText("WHITE");
-    else ui->label_3->setText("BLACK");
-    currentIndex--;
-    DrawChesses();*/
 }
 void Widget::onReplayToStepButtonClicked()
 {

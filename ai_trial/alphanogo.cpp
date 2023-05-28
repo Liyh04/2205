@@ -18,7 +18,7 @@ Point AlphaNoGO::search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空
     int NewChessBoardOfAI[13][13];
     DaSan D;
     QVector<Point> bests;
-    Point *p_start=new Point(0,0);
+    Point *p_start=new Point(-1,-1);
     if(ExistChess[4][4]==0){
         p_start->x=4;
         p_start->y=4;
@@ -74,7 +74,7 @@ Point AlphaNoGO::search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空
                     bests.clear();
                     bests.push_back(*p);
                 }
-                else if(max_score_black==new_score)
+                else if(max_score_white==new_score)
                 {
                     p->x=i;
                     p->y=j;
