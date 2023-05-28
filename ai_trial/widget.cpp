@@ -172,14 +172,47 @@ void Widget::Go(){
     if(AI_is_Awake){
         if(m_isBlackTurn){
             Point point=Ai.search(ExistChess,m_isBlackTurn);
+            if(ExistChess[point.x][point.y])return;
             DrawChess(point.x,point.y);
             m_isBlackTurn=0;
+            if(if_client==1){
+                //this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(point.x).arg(point.y),""));
+                QString st;
+                std::string s;
+                s=point.x+'A';
+                st=QString::fromStdString(s);
+                this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(point.y+1),""));//客户端传下的棋子过去
+            }
+            if(if_client==0){
+                 //this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(point.x).arg(point.y),""));
+                QString st;
+                std::string s;
+                s=point.x+'A';
+                st=QString::fromStdString(s);
+                this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(point.y+1),""));
+            }
             return;
         }
         if(!m_isBlackTurn){
             Point point=Ai.search(ExistChess,m_isBlackTurn);
             DrawChess(point.x,point.y);
             m_isBlackTurn=1;
+            if(if_client==1){
+                //this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(point.x).arg(point.y),""));
+                QString st;
+                std::string s;
+                s=point.x+'A';
+                st=QString::fromStdString(s);
+                this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(point.y+1),""));//客户端传下的棋子过去
+            }
+            if(if_client==0){
+                 //this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(point.x).arg(point.y),""));
+                QString st;
+                std::string s;
+                s=point.x+'A';
+                st=QString::fromStdString(s);
+                this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(point.y+1),""));
+            }
             return;
         }
     }
@@ -343,8 +376,6 @@ void Widget::receieveDataFromServer(NetworkData data)
     if(data.op==OPCODE::LEAVE_OP){
         socket->bye();
     }
-
-
     if(data.op==OPCODE::MOVE_OP){
         //int tmp = str.toInt();字符串转化为int
         QString  qstr = data.data1;
@@ -455,7 +486,7 @@ void Widget::reConnect()
     PORT=this->ui->PORTEdit->text().toInt();
     qDebug()<<"client reconnect to the server.";
     this->ui->connectLabel->setText("connection fail");
-
+    if_client=1;
     this->socket->bye();
     this->socket->hello(IP,PORT);
     if(!this->socket->base()->waitForConnected(3000)){
