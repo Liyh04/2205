@@ -1,7 +1,8 @@
 #ifndef ALPHANOGO_H
 #define ALPHANOGO_H
-
+#include <QVector>
 #include "dasan.h"
+#include "randomnumbergenerator.h"
 //int NewChessBoardOfAI[13][13];
 
 

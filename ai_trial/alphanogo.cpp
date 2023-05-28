@@ -5,6 +5,9 @@
 #include <iterator>
 #include "qdebug.h"
 #include"rules.h"
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
 int flagg=0;
 int flagg_2=0;
 AlphaNoGO::AlphaNoGO()
@@ -14,6 +17,7 @@ AlphaNoGO::AlphaNoGO()
 Point AlphaNoGO::search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空0
     int NewChessBoardOfAI[13][13];
     DaSan D;
+    QVector<Point> bests;
     Point *p_start=new Point(0,0);
     if(ExistChess[4][4]==0){
         p_start->x=4;
@@ -48,6 +52,14 @@ Point AlphaNoGO::search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空
                     p->x=i;
                     p->y=j;
                     max_score_black=new_score;
+                    bests.clear();
+                    bests.push_back(*p);
+                }
+                else if(max_score_black==new_score)
+                {
+                    p->x=i;
+                    p->y=j;
+                    bests.push_back(*p);
                 }
                 NewChessBoardOfAI[i][j]=0;
             }
@@ -60,6 +72,14 @@ Point AlphaNoGO::search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空
                     p->x=i;
                     p->y=j;
                     max_score_white=new_score;
+                    bests.clear();
+                    bests.push_back(*p);
+                }
+                else if(max_score_black==new_score)
+                {
+                    p->x=i;
+                    p->y=j;
+                    bests.push_back(*p);
                 }
                 NewChessBoardOfAI[i][j]=0;
             }
@@ -67,13 +87,15 @@ Point AlphaNoGO::search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空
     }
     //if(max_score_black>=init_score_black||max_score_white>=init_score_white)
     {
-        return *p;
+        int size=bests.size();
+        int num=std::rand()%size;
+        return bests[num];
     }
 
 
 
     //差点
-    for(int i=0;i<9;i++){
+    /*for(int i=0;i<9;i++){
         for(int j=0;j<9;j++){
             if(ExistChess[i][j])continue;
             Rules r;
@@ -107,7 +129,7 @@ Point AlphaNoGO::search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空
     if(flagg==flagg_2){//只能下差点
         Point p= D.shuffleBoard(ExistChess);
         return p;
-    }
+    }*/
 
 
     for(int i=0;i<9;i++){
@@ -136,7 +158,7 @@ Point AlphaNoGO::search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空
             }
         }
     }
-        Point pp= D.shuffleBoard(NewChessBoardOfAI);
+        Point pp= D.shuffleBoard(NewChessBoardOfAI,isblackturn);
         return pp;
 }
 

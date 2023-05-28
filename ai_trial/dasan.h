@@ -20,7 +20,7 @@ public:
     public:
 
         // 打散棋盘
-        Point shuffleBoard(int chess[13][13]);
+        Point shuffleBoard(int chess[13][13],bool black);
 
 };
 

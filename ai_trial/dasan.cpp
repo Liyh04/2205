@@ -10,16 +10,25 @@ int DaSan::calculateManhattanDistance(const Point& p1, const Point& p2) {
     return std::abs(p1.x - p2.x) + std::abs(p1.y - p2.y);
 }
 
-Point DaSan::shuffleBoard(int chess[13][13]) {
+Point DaSan::shuffleBoard(int chess[13][13],bool black) {
     // 存储所有可下点的坐标
     Point *point=new Point(0,0);
+    int NewChessBoardOfAI[13][13];
+    for(int i=0;i<9;i++){
+        for(int j=0;j<9;j++){
+            NewChessBoardOfAI[i][j]=chess[i][j];
+        }
+    }
     QVector<Point> emptyPoints;
     // 第一步：选出所有可下点
     for (int i = 0; i < 9; ++i) {
         for (int j = 0; j < 9; ++j) {
-            if (!r.illegal_operation_judging( chess,9,i,j)) {
+            if(NewChessBoardOfAI[i][j])continue;
+            NewChessBoardOfAI[i][j]=black?1:2;
+            if (!r.illegal_operation_judging( NewChessBoardOfAI,9,i,j)) {
                 emptyPoints.append(Point(i, j));
             }
+            NewChessBoardOfAI[i][j]=0;
         }
     }
     // 没有可下点，直接返回空列表
@@ -31,10 +40,13 @@ Point DaSan::shuffleBoard(int chess[13][13]) {
     for (const auto& emptyPoint : emptyPoints) {
         for (int i = 0; i < 9; ++i) {
             for (int j = 0; j < 9; ++j) {
-                if (!r.illegal_operation_judging( chess,9,i,j)) {
+                if(NewChessBoardOfAI[i][j])continue;
+                NewChessBoardOfAI[i][j]=black?1:2;
+                if (!r.illegal_operation_judging( NewChessBoardOfAI,9,i,j)) {
                     int distance = calculateManhattanDistance(emptyPoint, Point(i, j));
                     minDistance = std::min(minDistance, distance);
                 }
+                NewChessBoardOfAI[i][j]=0;
             }
         }
     }
@@ -44,12 +56,15 @@ Point DaSan::shuffleBoard(int chess[13][13]) {
         int maxDistance = 0;
         for (int i = 0; i < 9; ++i){
             for (int j = 0; j < 9; ++j) {
-                if (!r.illegal_operation_judging( chess,9,i,j)) {
+                if(NewChessBoardOfAI[i][j])continue;
+                NewChessBoardOfAI[i][j]=black?1:2;
+                if (!r.illegal_operation_judging( NewChessBoardOfAI,9,i,j)) {
                     int distance = calculateManhattanDistance(emptyPoint, Point(i, j));
                     if (distance == minDistance) {
                         maxDistance = std::max(maxDistance, distance);
                     }
                 }
+                NewChessBoardOfAI[i][j]=0;
             }
         }
         if (maxDistance == minDistance){
