@@ -30,11 +30,11 @@ Point AlphaNoGO::search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空
         }
     }
     available av;
-    int init_score_black=av.ava_number(ExistChess,9,1)-av.ava_number(ExistChess,9,2);
+    //int init_score_black=av.ava_number(ExistChess,9,1)-av.ava_number(ExistChess,9,2);
     Point *p=new Point(0,0);
     int max_score_black=-999;//init_score_black;
     int max_score_white=-999;//-init_score_black;
-    int init_score_white=-init_score_black;
+    //int init_score_white=-init_score_black;
 
 //先找最理想的点
     for(int i=0;i<9;i++){
@@ -132,7 +132,7 @@ Point AlphaNoGO::search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空
     }*/
 
 
-    for(int i=0;i<9;i++){
+    /*for(int i=0;i<9;i++){
         for(int j=0;j<9;j++){
             if(ExistChess[i][j])continue;
             Rules r;
@@ -159,7 +159,7 @@ Point AlphaNoGO::search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空
         }
     }
         Point pp= D.shuffleBoard(NewChessBoardOfAI,isblackturn);
-        return pp;
+        return pp;*/
 }
 
 
