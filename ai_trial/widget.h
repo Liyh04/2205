@@ -137,6 +137,10 @@ public:
 private slots:
     void give_up_clicked();//当按下认输按钮
 
+    void on_pushButton_2_clicked();
+
+    void on_pushButton_clicked();
+
 public:
     Ui::Widget *ui;
     bool m_isBlackTurn;    //当前该黑棋下

@@ -159,7 +159,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始�
     this->socket->hello(IP,PORT);
     // 阻塞等待，2000ms超时
     this->socket->base()->waitForConnected(2000);
-    Go();
+
 }
 Widget::~Widget()//析构函数
 {
@@ -170,15 +170,17 @@ Widget::~Widget()//析构函数
 void Widget::Go(){
     AlphaNoGO Ai;
     if(AI_is_Awake){
-        if(m_isBlackTurn&&AI_is_black){
+        if(m_isBlackTurn){
             Point point=Ai.search(ExistChess,m_isBlackTurn);
             DrawChess(point.x,point.y);
             m_isBlackTurn=0;
+            return;
         }
-        if(!m_isBlackTurn&&!AI_is_black){
+        if(!m_isBlackTurn){
             Point point=Ai.search(ExistChess,m_isBlackTurn);
             DrawChess(point.x,point.y);
             m_isBlackTurn=1;
+            return;
         }
     }
 }
@@ -280,7 +282,7 @@ void Widget::receieveData(QTcpSocket* client, NetworkData data)//这是服务端
         X_Other=str[0]-'A';
         Y_Other=str[1]-'1';
         DrawChess(X_Other,Y_Other);
-
+        Go();
        // m_isBlackTurn=!m_isBlackTurn;
     }
 
@@ -350,6 +352,7 @@ void Widget::receieveDataFromServer(NetworkData data)
         X_Other=str[0]-'A';
         Y_Other=str[1]-'1';
         DrawChess(X_Other,Y_Other);
+        Go();
     }
 
 
@@ -1459,3 +1462,16 @@ void Widget::restart()//游戏重开
         }
     }
 }
+
+void Widget::on_pushButton_2_clicked()
+{
+    AI_is_Awake=true;
+    Go();
+}
+
+
+void Widget::on_pushButton_clicked()
+{
+    AI_is_Awake=false;
+}
+
