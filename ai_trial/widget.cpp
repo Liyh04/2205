@@ -246,7 +246,7 @@ void Widget::setmode()
     singlemode_11=MyBox->addButton("单机11路",QMessageBox::YesRole);
     singlemode_13=MyBox->addButton("单机13路",QMessageBox::YesRole);
     connect(netmode,&QPushButton::clicked,this,[&](){if_netmode=true;n_row=9;});
-    connect(singlemode_9,&QPushButton::clicked,this,[&](){if_netmode=false;n_row=9;AI_is_Awake=true;AI_is_black=true;});
+    connect(singlemode_9,&QPushButton::clicked,this,[&](){if_netmode=false;n_row=9;});
     connect(singlemode_11,&QPushButton::clicked,this,[&](){if_netmode=false;n_row=11;});
     connect(singlemode_13,&QPushButton::clicked,this,[&](){if_netmode=false;n_row=13;});
     MyBox->exec();
