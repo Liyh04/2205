@@ -88,11 +88,13 @@ Point AlphaNoGO::search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空
         return *p_start;
     }
     //if(max_score_black>=init_score_black||max_score_white>=init_score_white)
+
     {
         int size=bests.size();
         int num=std::rand()%size;
         return bests[num];
     }
+
 
 
 

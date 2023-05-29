@@ -172,6 +172,7 @@ void Widget::Go(){
     if(AI_is_Awake){
         if(m_isBlackTurn){
             Point point=Ai.search(ExistChess,m_isBlackTurn);
+            if(point.x==-1&&!if_netmode){local_giveup();return;}
             if(point.x==-1)
             {
                 if(if_client)on_CilentGiveup_clicked();
@@ -181,7 +182,7 @@ void Widget::Go(){
             if(ExistChess[point.x][point.y])return;
             DrawChess(point.x,point.y);
             m_isBlackTurn=0;
-            if(if_client==1){
+            if(if_client==1&&if_netmode){
                 //this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(point.x).arg(point.y),""));
                 QString st;
                 std::string s;
@@ -189,7 +190,7 @@ void Widget::Go(){
                 st=QString::fromStdString(s);
                 this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(point.y+1),""));//客户端传下的棋子过去
             }
-            if(if_client==0){
+            if(if_client==0&&if_netmode){
                  //this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(point.x).arg(point.y),""));
                 QString st;
                 std::string s;
@@ -201,6 +202,7 @@ void Widget::Go(){
         }
         if(!m_isBlackTurn){
             Point point=Ai.search(ExistChess,m_isBlackTurn);
+            if(point.x==-1&&!if_netmode){local_giveup();return;}
             if(point.x==-1)
             {
                 if(if_client)on_CilentGiveup_clicked();
@@ -209,7 +211,7 @@ void Widget::Go(){
             }
             DrawChess(point.x,point.y);
             m_isBlackTurn=1;
-            if(if_client==1){
+            if(if_client==1&&if_netmode){
                 //this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(point.x).arg(point.y),""));
                 QString st;
                 std::string s;
@@ -217,7 +219,7 @@ void Widget::Go(){
                 st=QString::fromStdString(s);
                 this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(point.y+1),""));//客户端传下的棋子过去
             }
-            if(if_client==0){
+            if(if_client==0&&if_netmode){
                  //this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(point.x).arg(point.y),""));
                 QString st;
                 std::string s;
