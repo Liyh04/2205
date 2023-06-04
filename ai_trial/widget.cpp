@@ -108,7 +108,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始�
     }
     IP = "127.0.0.1";
     // 端口，不要太简单，要避免和别的软件冲突
-    PORT = 16667;
+    PORT = 16677;
     this->ui->IPEdit->setText(IP);
 
     // 创建一个服务端
@@ -1049,12 +1049,13 @@ void Widget::DrawChess(int X,int Y)
         QString content=QString("suicide");
         //按顺序获取已下棋子的坐标
         getCY();
-        if(Widget::m_isBlackTurn){
+        if(!Widget::m_isBlackTurn){
                 step++;
                 if(!client_color_white){
                 if(is_server){
                     twice=1;
                     if(lastOne)this->server->send(lastOne,NetworkData(OPCODE::SUICIDE_END_OP,"SUICIDE_END_OP",""));
+                    else;
                 }
                 QString strr=" (BLACK) LOSE!\nTotal Steps: ";
                 QString message=QString("%1 %2 %3").arg(clientName).arg(strr).arg(step);
@@ -1110,6 +1111,7 @@ void Widget::DrawChess(int X,int Y)
                 if(is_server){
                     twice=1;
                     if(lastOne)this->server->send(lastOne,NetworkData(OPCODE::SUICIDE_END_OP,"SUICIDE_END_OP",""));
+                    else;
                 }
                 QString strr=" (White) LOSE!\nTotal Steps: ";
                 QString message=QString("%1 %2 %3").arg(clientName).arg(strr).arg(step);
