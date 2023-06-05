@@ -24,12 +24,12 @@
 //初始化静态成员
 int Widget::height=50;
 int Widget::width=50;
-int Widget::n_row=9;
-int Widget::n_column=9;
+int Widget::n_row;
 bool if_netmode;
 bool replay_mode=false;
 int TIMELIMIT=30;
 int step=0;
+bool AI_is_Awake=false;
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始化ui界面
 {
     #define PAINT_X 0
@@ -168,6 +168,7 @@ Widget::~Widget()//析构函数
 
 
 void Widget::Go(){
+    if(n_row!=9)return;
     AlphaNoGO Ai;
     if(AI_is_Awake){
         if(m_isBlackTurn){
@@ -247,8 +248,10 @@ void Widget::setmode()
     singlemode_13=MyBox->addButton("单机13路",QMessageBox::YesRole);
     connect(netmode,&QPushButton::clicked,this,[&](){if_netmode=true;n_row=9;});
     connect(singlemode_9,&QPushButton::clicked,this,[&](){if_netmode=false;n_row=9;});
-    connect(singlemode_11,&QPushButton::clicked,this,[&](){if_netmode=false;n_row=11;});
-    connect(singlemode_13,&QPushButton::clicked,this,[&](){if_netmode=false;n_row=13;});
+    connect(singlemode_11,&QPushButton::clicked,this,[&](){if_netmode=false;AI_is_Awake=false;n_row=11;
+    ui->pushButton->setEnabled(false);ui->pushButton_2->setEnabled(false);});
+    connect(singlemode_13,&QPushButton::clicked,this,[&](){if_netmode=false;AI_is_Awake=false;n_row=13;
+    ui->pushButton->setEnabled(false);ui->pushButton_2->setEnabled(false);});
     MyBox->exec();
 }
 //复现--------
@@ -258,9 +261,9 @@ void Widget::on_fxbtn_clicked()
     connect(inputDialog,&InputDialog::inputFinished,this,&Widget::onInputFinished);
     inputDialog->show();
     m_isReplayMode=true;
-    for(int i=0;i<9;i++)
+    for(int i=0;i<13;i++)
     {
-        for(int j=0;j<9;j++)
+        for(int j=0;j<13;j++)
         {
             ExistChess[i][j]=0;
         }
@@ -598,7 +601,6 @@ void Widget::paintEvent(QPaintEvent *)//画棋盘和棋子
     DrawChessboard();        //画棋盘
     DrawChesses();            //画棋子
     update();//实时更新
-
 }
 void Widget::DrawChessboard()//初始化棋盘
 {
@@ -658,6 +660,7 @@ void Widget::DrawChesses()//画棋子
             painter_Yu_chess.drawPixmap(chess_seted.m_ChessPossition,pix_chessmap_White);
         }
         //高亮棋子
+
         if(i==m_Chess.size()-1||i==m_Chess.size()-2)
         {
             QColor Viva_Magenta(0xCE0B4D);//设置颜色--Viva_Magenta_18-1750_2023年度色彩_By_Pantone，
@@ -747,13 +750,8 @@ void Widget::onInputFinished(const QString& text)
             m_isBlackTurn=!m_isBlackTurn;
         }
     }
-   // qDebug()<<1<<"----------------";
     m_isReplayMode = true;
-    //qDebug()<<2<<"----------------";
-
     fxbtn->setDisabled(true);
-    //qDebug()<<3<<"----------------";
-
     rpbtn->setEnabled(true);
     psbtn->setEnabled(true);
     prebtn->setEnabled(true);
@@ -761,7 +759,6 @@ void Widget::onInputFinished(const QString& text)
     etbtn->setEnabled(true);
     r2sbtn->setEnabled(true);
     new_try_btn->setEnabled(true);
-   // qDebug()<<4<<"----------------";
 }
 void Widget::onInputNumFinished(const QString& text)
 {
@@ -776,7 +773,7 @@ void Widget::onInputNumFinished(const QString& text)
         return;
     }
     m_Chess.clear();
-    for(int i=0;i<9;i++)for(int j=0;j<9;j++)ExistChess[i][j]=0;
+    for(int i=0;i<13;i++)for(int j=0;j<13;j++)ExistChess[i][j]=0;
     std::copy_n(toReplay.begin(),currentIndex,std::back_inserter(m_Chess));
     for(int i=0;i<m_Chess.size();i++)
     {
@@ -888,7 +885,7 @@ void Widget::onExitReplayButtonClicked()
     m_isReplayMode=false;
     m_isTryMode=false;
     ui->label_3->setText("BLACK");
-    for(int i=0;i<9;i++)for(int j=0;j<9;j++)ExistChess[i][j]=0;
+    for(int i=0;i<13;i++)for(int j=0;j<13;j++)ExistChess[i][j]=0;
     ui->b_avi->setText(QString("Black_ava:81"));
     ui->w_avi->setText(QString("White_ava:81"));
     m_isReplayMode = false;
@@ -982,43 +979,44 @@ void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
         this->baseTime=this->baseTime.currentTime();
         pTimer->start(1);
     }
-
-    if(is_client){
-        if(m_isBlackTurn^client_color_white){
+    if(if_netmode)
+    {
+        if(is_client){
+            if(m_isBlackTurn^client_color_white){
                 QString st;
                 std::string s;
                 s=X+'A';
                 st=QString::fromStdString(s);
                 this->socket->send(NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y+1),""));//客户端传下的棋子过去
+            }
         }
-    }
-    if(is_server){
-        if(m_isBlackTurn==server_color_black){
+        if(is_server){
+            if(m_isBlackTurn==server_color_black){
                 QString st;
                 std::string s;
                 s=X+'A';
                 st=QString::fromStdString(s);
                 if(lastOne)
-                this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y+1),""));
+                    this->server->send(lastOne,NetworkData(OPCODE::MOVE_OP,QString("%1%2").arg(st).arg(Y+1),""));
+            }
         }
     }
-
     if(m_isBlackTurn)//这个设计的是下一次棋子就改变一下颜色
     {
         m_isBlackTurn=0;
-        ExistChess[(pt.y()-PAINT_Y)/Widget::height][(pt.x()-PAINT_X)/Widget::width]=1;
+        ExistChess[X][Y]=1;
     }
     else
     {
         m_isBlackTurn=1;
-        ExistChess[(pt.y()-PAINT_Y)/Widget::height][(pt.x()-PAINT_X)/Widget::width]=2;
+        ExistChess[X][Y]=2;
     }
     m_Chess+=chess_to_set;//添加到已下棋子容器中
     available a;
     ui->b_avi->setText(QString("Black_ava:%1").arg(a.ava_number(ExistChess,n_row,1)));
     ui->w_avi->setText(QString("White_ava:%1").arg(a.ava_number(ExistChess,n_row,0)));
     step++;
-    Go();
+    if(n_row==9)Go();
 }
 
 void Widget::DrawChess(int X,int Y)
@@ -1048,7 +1046,7 @@ void Widget::DrawChess(int X,int Y)
         fail_state=1;
         QString content=QString("suicide");
         //按顺序获取已下棋子的坐标
-        getCY();
+        if(n_row==9)getCY();
         if(!Widget::m_isBlackTurn){
                 step++;
                 if(!client_color_white){
@@ -1175,6 +1173,8 @@ void Widget::init()//游戏开局时初始化：设置每步限时，初始化�
         ui->PORTEdit->setEnabled(false);
     }
     else ui->local_giveup->setEnabled(false);
+    for(int i=0;i<13;i++)for(int j=0;j<13;j++)ExistChess[i][j]=0;
+    m_Chess.clear();
     flag_start=0;
     twice=0;
     bool ok=false;
@@ -1196,12 +1196,11 @@ void Widget::init()//游戏开局时初始化：设置每步限时，初始化�
     ui->label_3->setText("BLACK");
     ui->b_avi->setText(QString("Black_ava:%1").arg(n_row*n_row));
     ui->w_avi->setText(QString("White_ava:%1").arg(n_row*n_row));
-
 }
 void Widget::updatedisplay()//实时更新计时器
 {
     {
-        fxbtn->setEnabled(false);
+        if(n_row==9)fxbtn->setEnabled(false);
         QTime curTime=QTime::currentTime();
         int t=this->baseTime.msecsTo(curTime);
         QTime showTime(0,0,0,0);
@@ -1215,15 +1214,18 @@ void Widget::updatedisplay()//实时更新计时器
             QString secstr=QString("%2").arg(sec_str.toInt(), 2, 10, QLatin1Char('0'));
             this->ui->lcd_min->display(minstr);
             this->ui->lcd_sec->display(secstr);
+            if(n_row==9)
+            {
+                if(m_isBlackTurn)
+                {
+                    ui->label_3->setText("BLACK");
+                }
+                if(!m_isBlackTurn)
+                {
+                    ui->label_3->setText("WHITE");
+                }
+            }
 
-            if(m_isBlackTurn)
-            {
-                ui->label_3->setText("BLACK");
-            }
-            if(!m_isBlackTurn)
-            {
-                ui->label_3->setText("WHITE");
-            }
         }
         else
         {
@@ -1231,7 +1233,7 @@ void Widget::updatedisplay()//实时更新计时器
             pTimer->stop();
             fail_state=1;           
             //按顺序获取已下棋子的坐标
-            getCY();
+            if(n_row==9)getCY();
             if(Widget::m_isBlackTurn){
                 step++;
                 if(!client_color_white){
@@ -1244,10 +1246,11 @@ void Widget::updatedisplay()//实时更新计时器
                 QMessageBox TLEbox(QMessageBox::Information,content,
                                    message,
                                    QMessageBox::Close,this);
-
-                QAbstractButton* save_button=TLEbox.addButton("Save",QMessageBox::YesRole);
-
-                connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+                if(n_row==9)
+                {
+                    QAbstractButton* save_button=TLEbox.addButton("Save",QMessageBox::YesRole);
+                    connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+                }
 
                 TLEbox.exec();
                 }
@@ -1261,11 +1264,11 @@ void Widget::updatedisplay()//实时更新计时器
                 QMessageBox TLEbox(QMessageBox::Information,content,
                                    message,
                                    QMessageBox::Close,this);
-
-                QAbstractButton* save_button=TLEbox.addButton("Save",QMessageBox::YesRole);
-
-                connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
-
+                if(n_row==9)
+                {
+                    QAbstractButton* save_button=TLEbox.addButton("Save",QMessageBox::YesRole);
+                    connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+                }
                 TLEbox.exec();
                 }
                 step=0;
@@ -1282,11 +1285,11 @@ void Widget::updatedisplay()//实时更新计时器
                 QMessageBox TLEbox(QMessageBox::Information,content,
                                    message,
                                    QMessageBox::Close,this);
-
-                QAbstractButton* save_button=TLEbox.addButton("Save",QMessageBox::YesRole);
-
-                connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
-
+                if(n_row==9)
+                {
+                    QAbstractButton* save_button=TLEbox.addButton("Save",QMessageBox::YesRole);
+                    connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+                }
                 TLEbox.exec();
                 }
                 else{
@@ -1299,11 +1302,11 @@ void Widget::updatedisplay()//实时更新计时器
                 QMessageBox TLEbox(QMessageBox::Information,content,
                                    message,
                                    QMessageBox::Close,this);
-
-                QAbstractButton* save_button=TLEbox.addButton("Save",QMessageBox::YesRole);
-
-                connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
-
+                if(n_row==9)
+                {
+                    QAbstractButton* save_button=TLEbox.addButton("Save",QMessageBox::YesRole);
+                    connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+                }
                 TLEbox.exec();
                 }
                 step=0;
@@ -1337,7 +1340,7 @@ void Widget::on_saveButton_clicked()
         // 创建一个QTextEdit对象textEdit
         QTextEdit *textEdit = new QTextEdit(this);
         //获得save内容
-        getCY();
+        if(n_row==9)getCY();
         for (int i = 0; i < m_Chess.size(); ++i)
         {
             textEdit->insertPlainText(chesspo[i].c_y+QString::number(chesspo[i].x)+" ");
@@ -1358,7 +1361,7 @@ void Widget::give_up_clicked()//当按下认输按钮
     
     fail_state=2;
     //按顺序获取已下棋子的坐标
-    getCY();
+    if(n_row==9)getCY();
     
     if(Widget::m_isBlackTurn){
         step++;
@@ -1422,7 +1425,6 @@ void Widget::give_up_clicked()//当按下认输按钮
 }
 void Widget::local_giveup()
 {
-//    QMessageBox *GiveUpBox=new QMessageBox;
     pTimer->stop();
     fail_state=2;
     if(Widget::m_isBlackTurn){
@@ -1432,9 +1434,11 @@ void Widget::local_giveup()
         QMessageBox GIVEUPbox(QMessageBox::Information,"Game Over",
                               message,
                               QMessageBox::Close,this);
-        QAbstractButton* save_button=GIVEUPbox.addButton("Save",QMessageBox::YesRole);
-
-        connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+        if(n_row==9)
+        {
+            QAbstractButton* save_button=GIVEUPbox.addButton("Save",QMessageBox::YesRole);
+            connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+        }
 
         GIVEUPbox.exec();
         step=0;
@@ -1446,9 +1450,11 @@ void Widget::local_giveup()
         QMessageBox GIVEUPbox(QMessageBox::Information,"Game Over",
                               message,
                               QMessageBox::Close,this);
-        QAbstractButton* save_button=GIVEUPbox.addButton("Save",QMessageBox::YesRole);
-
-        connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+        if(n_row==9)
+        {
+            QAbstractButton* save_button=GIVEUPbox.addButton("Save",QMessageBox::YesRole);
+            connect(save_button, &QAbstractButton::clicked, this, &Widget::on_saveButton_clicked);
+        }
 
         GIVEUPbox.exec();
         step=0;
@@ -1457,7 +1463,7 @@ void Widget::local_giveup()
 }
 void Widget::restart()//游戏重开
 {
-    fxbtn->setEnabled(true);
+    if(n_row==9)fxbtn->setEnabled(true);
     pTimer->stop();
     m_Chess.clear();
     m_isBlackTurn=1;
@@ -1466,9 +1472,9 @@ void Widget::restart()//游戏重开
     ui->label_3->setText("BLACK");
     step=0;
     Widget::init();
-    for(int i=0;i<9;i++)
+    for(int i=0;i<13;i++)
     {
-        for(int j=0;j<9;j++)
+        for(int j=0;j<13;j++)
         {
             ExistChess[i][j]=0;
         }

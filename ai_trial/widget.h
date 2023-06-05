@@ -29,7 +29,7 @@ class Widget : public QWidget
 public:
     bool isAIturn;
     bool AI_is_black;
-    bool AI_is_Awake;
+
     QString clientName;
     QString serverName;
     void Go();
@@ -107,10 +107,10 @@ public:
         int x;
         int y;
         char c_y;
-    }chesspo[81];
+    }chesspo[169];
     //复现&save
-    QMap<char,int> char2num = {{'A',1},{'B',2},{'C',3},{'D',4},{'E',5},{'F',6},{'G',7},{'H',8},{'I',9}};
-    QMap <int,char> num2char = {{1,'A'},{2,'B'},{3,'C'},{4,'D'},{5,'E'},{6,'F'},{7,'G'},{8,'H'},{9,'I'}};
+    QMap<char,int> char2num = {{'A',1},{'B',2},{'C',3},{'D',4},{'E',5},{'F',6},{'G',7},{'H',8},{'I',9},{'J',10},{'K',11},{'L',12},{'M',13}};
+    QMap <int,char> num2char = {{1,'A'},{2,'B'},{3,'C'},{4,'D'},{5,'E'},{6,'F'},{7,'G'},{8,'H'},{9,'I'},{10,'J'},{11,'K'},{12,'L'},{13,'M'}};
     bool legalInput(QChar c1,QChar c2);
 
     void getCY();//获取坐标的函数
@@ -131,7 +131,7 @@ public:
     static int width;
     static int n_row;
     static int n_column;
-    int ExistChess[13][13]={{0,0}};//0代表没有棋子，1代表黑棋，2代表白棋
+    int ExistChess[13][13];//0代表没有棋子，1代表黑棋，2代表白棋
    
 
 private slots:

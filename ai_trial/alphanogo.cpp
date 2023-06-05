@@ -15,6 +15,7 @@ AlphaNoGO::AlphaNoGO()
 
 }
 Point AlphaNoGO::search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空0
+    qDebug()<<"22";
     int NewChessBoardOfAI[13][13];
     int size;
     DaSan D;
