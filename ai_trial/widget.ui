@@ -158,19 +158,6 @@
     <string>CilentGet</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="SMOVE_OP">
-   <property name="geometry">
-    <rect>
-     <x>1040</x>
-     <y>465</y>
-     <width>108</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>MOVE_OP</string>
-   </property>
-  </widget>
   <widget class="QLineEdit" name="serverSendEdit">
    <property name="geometry">
     <rect>
@@ -291,19 +278,6 @@
     <string>RestartServer</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="CGG_OP">
-   <property name="geometry">
-    <rect>
-     <x>825</x>
-     <y>500</y>
-     <width>88</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>GG_OP</string>
-   </property>
-  </widget>
   <widget class="QLineEdit" name="serverSend">
    <property name="geometry">
     <rect>
@@ -385,19 +359,6 @@
     <string>READY_OP</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="SGG_OP">
-   <property name="geometry">
-    <rect>
-     <x>1040</x>
-     <y>500</y>
-     <width>108</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>GG_OP</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="serverSendButton">
    <property name="geometry">
     <rect>
@@ -454,19 +415,6 @@
    </property>
    <property name="text">
     <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="CMOVE_OP">
-   <property name="geometry">
-    <rect>
-     <x>825</x>
-     <y>465</y>
-     <width>88</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>MOVE_OP</string>
    </property>
   </widget>
   <widget class="QPushButton" name="clientSendButton">
@@ -532,19 +480,6 @@
    </property>
    <property name="text">
     <string>GiveUp(local)</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="flag_label">
-   <property name="geometry">
-    <rect>
-     <x>830</x>
-     <y>620</y>
-     <width>69</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>flag:</string>
    </property>
   </widget>
   <widget class="QWidget" name="layoutWidget">

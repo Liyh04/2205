@@ -12,15 +12,11 @@ SOURCES += \
     alphanogo.cpp \
     available.cpp \
     chess.cpp \
-    dasan.cpp \
     inputdialog.cpp \
     main.cpp \
-    #mainwindow.cpp \
     networkdata.cpp \
     networkserver.cpp \
     networksocket.cpp \
-    randomnumbergenerator.cpp \
-    #replay.cpp \
     rules.cpp \
     widget.cpp
 
@@ -29,19 +25,15 @@ HEADERS += \
     alphanogo.h \
     available.h \
     chess.h \
-    dasan.h \
     inputdialog.h \
     networkdata.h \
     networkserver.h \
     networksocket.h \
-    randomnumbergenerator.h \
-    #replay.h \
     rules.h \
     widget.h
 
 
 FORMS += \
-    #replay.ui \
     widget.ui
 
 

@@ -11,7 +11,6 @@
 #include <QMessageBox>
 #include <QLabel>
 #include <QInputDialog>
-//#include <QSoundEffect>
 #include <QBrush>
 #include <qcolor.h>
 #include <QFile>
@@ -125,9 +124,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始�
         ui->serverSendEdit->setEnabled(false);
         ui->getButton_2->setEnabled(false);
         ui->serverSendButton->setEnabled(false);
-        ui->SGG_OP->setEnabled(false);
         ui->SLEAVE_OP->setEnabled(false);
-        ui->SMOVE_OP->setEnabled(false);
         ui->SREADY_OP->setEnabled(false);
         ui->SREJECT_OP->setEnabled(false);
         ui->ServerGiveup_2->setEnabled(false);
@@ -138,9 +135,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始�
         ui->clientSendEdit->setEnabled(true);
         ui->getButton_1->setEnabled(true);
         ui->clientSendButton->setEnabled(true);
-        ui->CGG_OP->setEnabled(true);
         ui->CLEAVE_OP->setEnabled(true);
-        ui->CMOVE_OP->setEnabled(true);
         ui->CREADY_OP->setEnabled(true);
         ui->CREJECT_OP->setEnabled(true);
         ui->CilentGiveup->setEnabled(true);
@@ -232,10 +227,6 @@ void Widget::Go(){
         }
     }
 }
-
-
-
-
 
 void Widget::setmode()
 {
@@ -475,9 +466,7 @@ void Widget::reStartServer()
     ui->serverSendEdit->setEnabled(true);
     ui->getButton_2->setEnabled(true);
     ui->serverSendButton->setEnabled(true);
-    ui->SGG_OP->setEnabled(true);
     ui->SLEAVE_OP->setEnabled(true);
-    ui->SMOVE_OP->setEnabled(true);
     ui->SREADY_OP->setEnabled(true);
     ui->SREJECT_OP->setEnabled(true);
     ui->ServerGiveup_2->setEnabled(true);
@@ -488,9 +477,7 @@ void Widget::reStartServer()
     ui->clientSendEdit->setEnabled(false);
     ui->getButton_1->setEnabled(false);
     ui->clientSendButton->setEnabled(false);
-    ui->CGG_OP->setEnabled(false);
     ui->CLEAVE_OP->setEnabled(false);
-    ui->CMOVE_OP->setEnabled(false);
     ui->CREADY_OP->setEnabled(false);
     ui->CREJECT_OP->setEnabled(false);
     ui->CilentGiveup->setEnabled(false);
@@ -1151,9 +1138,7 @@ void Widget::init()//游戏开局时初始化：设置每步限时，初始化�
         ui->serverSendEdit->setEnabled(false);
         ui->getButton_2->setEnabled(false);
         ui->serverSendButton->setEnabled(false);
-        ui->SGG_OP->setEnabled(false);
         ui->SLEAVE_OP->setEnabled(false);
-        ui->SMOVE_OP->setEnabled(false);
         ui->SREADY_OP->setEnabled(false);
         ui->SREJECT_OP->setEnabled(false);
         ui->ServerGiveup_2->setEnabled(false);
@@ -1164,9 +1149,7 @@ void Widget::init()//游戏开局时初始化：设置每步限时，初始化�
         ui->clientSendEdit->setEnabled(false);
         ui->getButton_1->setEnabled(false);
         ui->clientSendButton->setEnabled(false);
-        ui->CGG_OP->setEnabled(false);
         ui->CLEAVE_OP->setEnabled(false);
-        ui->CMOVE_OP->setEnabled(false);
         ui->CREADY_OP->setEnabled(false);
         ui->CREJECT_OP->setEnabled(false);
         ui->CilentGiveup->setEnabled(false);

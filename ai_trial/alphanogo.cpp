@@ -1,5 +1,4 @@
 #include "alphanogo.h"
-#include"dasan.h"
 #include"available.h"
 #include <algorithm>
 #include <iterator>
@@ -15,13 +14,11 @@ AlphaNoGO::AlphaNoGO()
 
 }
 Point AlphaNoGO::search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空0
-    qDebug()<<"22";
     int NewChessBoardOfAI[13][13];
     int size;
-    DaSan D;
-    QVector<Point> bests,bests1;
+    QVector<Point> bests;//用来存放最佳落子位置的容器
     Point *p_start=new Point(-1,-1);
-    if(ExistChess[4][4]==0){
+    if(ExistChess[4][4]==0){//如果天元无子，则下天元
         p_start->x=4;
         p_start->y=4;
         return *p_start;
@@ -32,11 +29,9 @@ Point AlphaNoGO::search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空
         }
     }
     available av;
-    //int init_score_black=av.ava_number(ExistChess,9,1)-av.ava_number(ExistChess,9,2);
     Point *p=new Point(0,0);
-    int max_score_black=-999;//init_score_black;
-    int max_score_white=-999;//-init_score_black;
-    //int init_score_white=-init_score_black;
+    int max_score_black=-999;
+    int max_score_white=-999;
 
 //先找最理想的点
     for(int i=0;i<9;i++){
@@ -89,83 +84,11 @@ Point AlphaNoGO::search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空
     if(bests.isEmpty()){
         return *p_start;
     }
-    //if(max_score_black>=init_score_black||max_score_white>=init_score_white)
-
     {
         size=bests.size();
         int num=std::rand()%size;
-        return bests[num];
-    }
-
-
-
-
-    //差点
-    /*for(int i=0;i<9;i++){
-        for(int j=0;j<9;j++){
-            if(ExistChess[i][j])continue;
-            Rules r;
-
-            if(isblackturn){
-                int new_score;
-                NewChessBoardOfAI[i][j]=1;
-                if(!r.illegal_operation_judging( NewChessBoardOfAI,9,i,j)){NewChessBoardOfAI[i][j]=0;continue;}
-                flagg++;
-                new_score=av.ava_number(NewChessBoardOfAI,9,1)-av.ava_number(NewChessBoardOfAI,9,0);
-                if(init_score_black>new_score){
-                    flagg_2++;
-                }
-                NewChessBoardOfAI[i][j]=0;
-            }
-            else{
-                int new_score;
-                NewChessBoardOfAI[i][j]=2;
-                if(!r.illegal_operation_judging( NewChessBoardOfAI,9,i,j)){NewChessBoardOfAI[i][j]=0;continue;}
-                flagg++;
-                new_score=-av.ava_number(NewChessBoardOfAI,9,1)+av.ava_number(NewChessBoardOfAI,9,0);
-
-                if(init_score_black>new_score){
-                    flagg_2++;
-                }
-                NewChessBoardOfAI[i][j]=0;
-            }
-        }
-    }
-
-    if(flagg==flagg_2){//只能下差点
-        Point p= D.shuffleBoard(ExistChess);
-        return p;
-    }*/
-
-
-    /*for(int i=0;i<9;i++){
-        for(int j=0;j<9;j++){
-            if(ExistChess[i][j])continue;
-            Rules r;
-
-
-            if(isblackturn){
-                int new_score;
-                NewChessBoardOfAI[i][j]=1;
-                if(!r.illegal_operation_judging( NewChessBoardOfAI,9,i,j)){NewChessBoardOfAI[i][j]=3;continue;}
-                new_score=av.ava_number(NewChessBoardOfAI,9,1)-av.ava_number(NewChessBoardOfAI,9,0);
-                if(init_score_black>new_score){
-                    NewChessBoardOfAI[i][j]=3;
-                }
-            }
-            else{
-                int new_score;
-                NewChessBoardOfAI[i][j]=2;
-                if(!r.illegal_operation_judging( NewChessBoardOfAI,9,i,j)){NewChessBoardOfAI[i][j]=3;continue;}
-                new_score=-av.ava_number(NewChessBoardOfAI,9,1)+av.ava_number(NewChessBoardOfAI,9,0);
-                if(init_score_black>new_score){
-                    NewChessBoardOfAI[i][j]=3;
-                }
-            }
-        }
-    }
-        Point pp= D.shuffleBoard(NewChessBoardOfAI,isblackturn);
-        return pp;*/
+        return bests[num];//在最佳落子点中随机选择一个作为返回值
+    } 
 }
 
 
