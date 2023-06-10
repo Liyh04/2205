@@ -29,7 +29,7 @@ bool if_netmode;
 bool replay_mode=false;
 int TIMELIMIT=30;
 int step=0;
-bool AI_is_Awake=false;
+bool AI_is_Awake;
 Widget::Widget(QWidget *parent) : QWidget(parent) , ui(new Ui::Widget)//初始化ui界面
 {
     #define PAINT_X 0
@@ -824,6 +824,8 @@ void Widget::fx_drawChesses()
 }
 void Widget::onPlayButtonClicked()
 {
+    ui->pushButton->setEnabled(false);
+    ui->pushButton_2->setEnabled(false);
     if(!m_isReplayMode)
         return;
     fxtimer->setInterval(800);
@@ -897,6 +899,8 @@ void Widget::onExitReplayButtonClicked()
     r2sbtn->setDisabled(true);
     fxbtn->setEnabled(true);
     new_try_btn->setEnabled(false);
+    ui->pushButton->setEnabled(true);
+    ui->pushButton_2->setEnabled(true);
 }
 void Widget::getCY()
 {
@@ -910,7 +914,7 @@ void Widget::getCY()
 }
 void Widget::mousePressEvent(QMouseEvent * e) //鼠标按下事件
 {
-    if(if_netmode)
+    if(if_netmode&&!m_isTryMode)
     {
         if(flag_start!=1)return;
         if(is_client&&client_color_white&&m_isBlackTurn)return;
