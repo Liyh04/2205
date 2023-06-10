@@ -38,20 +38,20 @@ Point AlphaNoGO::search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空
         for(int j=0;j<9;j++){
             if(ExistChess[i][j])continue;
             Rules r;
-            if(isblackturn){
+            if(isblackturn){//如果该黑棋下
                 int new_score;
                 NewChessBoardOfAI[i][j]=1;//下子了
                 if(!r.illegal_operation_judging( NewChessBoardOfAI,9,i,j)){NewChessBoardOfAI[i][j]=0;continue;}
-                new_score=av.ava_number(NewChessBoardOfAI,9,1)-av.ava_number(NewChessBoardOfAI,9,0);
+                new_score=av.ava_number(NewChessBoardOfAI,9,1)-av.ava_number(NewChessBoardOfAI,9,0);//估值函数的值等于己方可下点位数-对方可下点位数
                 qDebug()<<new_score<<' '<<i<<' '<<j<<' ';
-                if(max_score_black<new_score){
+                if(max_score_black<new_score){//如果该点位的函数值大于之前的最大值，则将vector清空，加入这个点位
                     p->x=i;
                     p->y=j;
                     max_score_black=new_score;
                     bests.clear();
                     bests.push_back(*p);
                 }
-                else if(max_score_black==new_score)
+                else if(max_score_black==new_score)//如果该点位的函数值等于之前的最大值，则直接将这个点位加入到vector中
                 {
                     p->x=i;
                     p->y=j;
@@ -59,7 +59,7 @@ Point AlphaNoGO::search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空
                 }
                 NewChessBoardOfAI[i][j]=0;
             }
-            else{
+            else{//白棋同理
                 int new_score;
                 NewChessBoardOfAI[i][j]=2;
                 if(!r.illegal_operation_judging( NewChessBoardOfAI,9,i,j)){NewChessBoardOfAI[i][j]=0;continue;}
@@ -82,7 +82,7 @@ Point AlphaNoGO::search(int ExistChess[13][13],bool isblackturn){//黑1 白2 空
         }
     }
     if(bests.isEmpty()){
-        return *p_start;
+        return *p_start;//如果无子可下，返回一个异常点位
     }
     {
         size=bests.size();

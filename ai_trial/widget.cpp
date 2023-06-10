@@ -169,7 +169,7 @@ void Widget::Go(){
         if(m_isBlackTurn){
             Point point=Ai.search(ExistChess,m_isBlackTurn);
             if(point.x==-1&&!if_netmode){local_giveup();return;}
-            if(point.x==-1)
+            if(point.x==-1)//如果无子可下，则自动认输
             {
                 if(if_client)on_CilentGiveup_clicked();
                 else on_ServerGiveup_2_clicked();
